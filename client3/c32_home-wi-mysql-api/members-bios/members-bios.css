@@ -1,0 +1,409 @@
+:root {
+    --GlobalMaxWidth: 900px;
+    --DivisionLineWidth: 90%;
+}
+html {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+    overflow-x: hidden; 
+    overflow-y: auto;
+}
+body {
+    width: 100%;
+    /*background-color: cornflowerblue;*/
+}
+.container {            /* custom element style */
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+  } 
+.HeaderQuickNav {
+    display: none;
+    height: 0px;
+    top: 60px;
+    width: 1000px; /* var(--GlobalMaxWidth); */
+    position: fixed;
+    text-align: center;
+    color: blue;
+    font-weight: 800;
+    font-size: 20px;
+    padding-top: 10px;
+    z-index: 98;
+    /* opacity: 0.5; */
+}
+.QuickNav {
+    height: 25px;
+    width: var(--GlobalMaxWidth);
+    align-items: center;
+    text-align:center;
+    background-color:  var(--HeaderFooterBGColor);
+    color: blue;
+    letter-spacing: 4px;
+} 
+.QuickNav a {
+    text-decoration: none;
+    text-align: left;
+}
+.QuickNav a:hover,
+.QuickNav a:active {
+  color: red;
+}
+.MidpointBreak {
+    display: none;
+}
+.Section1 {
+    display: none;
+}
+.Section2 {
+    top: 30px;
+    height: 90%;
+    height: 100vh;
+    background-color: "#E5E4E2"; /*platinum*/
+}
+.Section2Title {
+    font-size: 150%;
+    font-family: var(--GlobalFontFamily);
+    padding: 30px 0px 20px 30px;
+}
+.Section2Title::first-letter {
+    font-size: 130%;
+    font-family: var(--GlobalFontFamily);
+}
+.Footer {
+    height: 50px;
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+.Footer a {
+    font-family: var(--GlobalFontFamily);
+    font-size: 18px;
+}
+.main-table {
+    margin: 20px 0 0 5px;
+    border-collapse: collapse;
+    width: 95%;
+    border: black 0px solid;
+}
+
+.members-list {
+    /*display: none; -- IMPORTANT*/
+    margin: -10px 0px 0px 40px;
+}
+.members-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: blue;
+    vertical-align: top;
+    text-align: left;
+    padding: 2px 20px 2px 10px;
+    border-top: solid 0px black;
+    border-left: solid 0px black;
+}
+.members-bio {
+    font-size: 15px;
+}
+.members-bio-table {
+    width: 98%;
+    padding: 10px 10px 10px 20px;
+    /* border: solid 1px black;
+    border-radius: 2%;
+    box-shadow: 5px 5px #888888; */
+}
+.members-bio td {
+    text-align: left;
+    vertical-align: top;
+    height: 200px;
+    padding: 0px 10px 0px 20px;
+    vertical-align: top;
+    font-size: 20px;
+}
+.member-bio-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.member-line hr {
+    position: relative;
+    margin: 10px 0px 20px 15px;    
+}
+.last-row {
+    height: 160px;
+    text-align: center;
+    vertical-align: top;
+}
+/*
+The @media MAX-width query properties
+***** IPHONE LANDSCAPE
+/*If Device Width is >= to 415px ADN <= 737px Then...*/
+
+/*=========================================*/
+@media only screen
+and (min-width: 441px)
+and (max-width: 740px) 
+{
+    html {
+        max-width: 98%;
+        /* max-width: var(--GlobalMaxWidth); */
+        margin: auto;
+    }
+    body {
+        width: 100%;
+    }
+    .QuickNav {
+        width: 737px;
+        letter-spacing: 4px;
+     }     
+    .MidpointBreak {
+        display: none;
+    }      
+    .Section1 {
+        display: none;
+    }
+    .Section2 {
+        display: block;
+        top: 60px; /*was70px;*/
+        height: 98%;
+/*      background-color: aliceblue; */
+/*      background-color: "#E5E4E2"; /*platinum*/
+        background-color: #EAEAEA; /*very light gray*/
+    }
+    .Section2Title {
+        color: blue;
+        font-size: 150%;
+        font-family: var(--GlobalFontFamily);
+        text-align: left;
+        padding: 0px 0px 0px 20px;
+    }
+    .Section2Title::first-letter {
+        font-size: 180%;
+        font-family: var(--GlobalFontFamily);
+    }
+    .Footer {
+        max-width: 737px;
+        margin: auto;
+        height: 60px;
+        background-color: transparent;
+        display: none;
+    }
+    /*----------------------------------*/
+    .main-table {
+        display: block;
+        margin: 10px 0px 0px -30px;
+        border-collapse: collapse;
+        width: 100%;
+        border: black 0px solid;
+    }
+    .members-name {
+        font-size: 20px;
+        font-weight: 700;
+        width: 40%;
+        color: blue;
+        vertical-align: top;
+        padding: 5px 20px 20px 20px;
+        /*margin: 0px 0px 0px -20px;*/
+        border-top: solid 0px black;
+        border-left: solid 0px black;
+    }
+    .members-bio {
+        font-size: 18px;
+    }    
+
+    .member-line hr {
+        position: relative;
+        /* border-top: 3px dotted red; */
+        margin: 20px 20px 20px 20px;
+    } 
+
+}
+/*
+The @media MAX-width query properties
+***** IPHONE PORTRAIT
+/*If Device Width is <= to 414px Then...*/
+
+/*=========================================*/
+  @media only screen
+  and (max-width: 440px)
+{
+    html {
+        max-width: 400px;
+        margin: auto;
+    }          
+    body {
+        width: 100%;
+        max-width: 400px;
+        margin: auto;
+    }
+    .Section1 {
+        display: none;
+    }
+    .Section2 {
+        top: 70px;
+        height: 89%;
+        width: 100%;
+        background-color: "#E5E4E2"; /*platinum*/
+        background-color: aliceblue;
+    }
+    .Section2Title {
+        color: blue;
+        font-size: 150%;
+        font-family: var(--GlobalFontFamily);
+        text-align: left;
+        padding: 0px 0px 0px 20px;
+    }
+    .Section2Title::first-letter {
+        font-size: 150%;
+        font-family: var(--GlobalFontFamily);
+    }
+    .Footer {
+        display: none;
+    }
+    /*----------------------------------*/
+    .main-table-laptop {
+        display: none;
+    }
+    /*----------------------------------*/
+    .main-table-mobile {
+        display: block;
+        margin: 10px 0px 0px -30px;
+        border-collapse: collapse;
+        width: 95%;
+        border: black 0px solid;
+    }
+    .members-info-mobile {
+        /*display: none;*/
+        width: 90%;
+        margin: 20px 0px 0px 0px;
+        border: black 0px solid;
+    }
+    .members-name-mobile {
+        font-size: 28px;
+        font-weight: 700;
+        width: 40%;
+        color: blue;
+        vertical-align: top;
+        padding: 10px 20px 20px 20px;
+        /*margin: 0px 0px 0px -20px;*/
+        border-top: solid 0px black;
+        border-left: solid 0px black;
+    }
+    .members-address-mobile {
+        margin: 0px 0px 5px -20px;
+        padding: 10px 0px 0px 0px;
+    }
+    .members-address-mobile tr td {
+        font-size: 15px;
+        width: 100%;
+        padding: 0px 0px 0px 40px;
+        border-bottom: solid 0px black;
+        border-top: solid 0px black;
+        border-left: solid 0px black;
+    }
+    .members-mobile-col3 {
+        width: 0px;
+    }        
+    .members-bio-table-mobile {
+        width: 90%;
+        padding: 10px 10px 10px 15px;
+        border: solid 1px black;
+        vertical-align: middle;
+        border-radius: 5%;
+        box-shadow: 5px 5px #888888;
+    }
+    .members-bio-title-mobile {
+        font-size: larger;
+        font-weight: 600;
+        margin: 0px 0px 0px -5px;
+    }
+    .members-bio-mobile {
+        font-size: 18px;
+    }    
+    .project-title-mobile {
+        font-size: 24px;
+        font-weight: 700;
+        color: blue;
+        padding: 0px 0px 0px 10px;
+    }
+    .project-title-line-mobile hr {
+        position: relative;
+        width: var(--DivisionLineWidth);
+        height: 1px;
+        border-top: 1px dashed black;
+        margin: 10px 20px 0px 10px;
+    }
+    .project-name-mobile td {
+        font-size: 118px;
+    }
+    .project-table {
+        font-size: 13px;
+        padding: 0px 5px 10px 15px;
+    }
+    .project-name-mobile {
+        font-size: 16px;
+        font-weight: 600;
+        color: blue;
+    }
+    .project-summary-list-mobile {
+        width: 99%;
+        border: 0px solid #000;
+        margin: 0 0;
+        font-family: var(--GlobalFontFamily);
+    }  
+    .project-summary-list-mobile ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 99%;
+        padding-left: 20px;
+    }
+    
+    .project-summary-list-mobile ul li {
+        list-style: none;
+        display: inline-block;
+        width: calc(100% / 1);
+        height: 4px;
+        text-align: left;
+        font-family: var(--GlobalFontFamily);
+        font-size: 15px;
+        margin: 10px 0px 10px 0px;
+    }
+    .project-summary-list-mobile ul li a {
+        color: blue;
+        font-family: var(--GlobalFontFamily);
+    }
+    .project-summary-list-mobile ul a:hover,
+    .project-summary-list-mobile ul a:active {
+        font-family: var(--GlobalFontFamily);
+        color: blue;
+    }
+    .project-summary-name-mobile,
+    .project-summary-web-mobile,
+    .project-summary-type-mobile, 
+    .project-summary-role-mobile {
+        padding: 0px 0px 20px 0px;
+    }
+    .project-details-mobile {
+        width: 110%;
+        font-size: 18px;
+        vertical-align: top;
+        text-align: left;
+        padding: 10px 0px 0px 0px;
+        border-top: dashed black 0px;
+    }
+    .project-details-td-mobile {
+        font-size: 12px;
+        width: 120%;
+        vertical-align: top;
+        text-align: left;
+        padding: 10px 20px 0px 20px;
+        border-top: dashed black 0px;
+    }
+    
+    hr {
+        position: relative;
+        border: none;
+        height: 2px;
+        width: var(--DivisionLineWidth);
+        background: blue;
+        margin: 20px 20px 20px 20px;
+    } 
+}

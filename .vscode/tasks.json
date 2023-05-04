@@ -1,0 +1,16 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label"  : "NPM Start",
+            "type"   : "shell",
+            "command": "npm start",
+            "options": {
+               "cwd" : "${workspaceFolder}/server3/s31a_iodd-data-api_u1.2.30330"
+                },
+            "problemMatcher": []
+        }
+    ]
+}

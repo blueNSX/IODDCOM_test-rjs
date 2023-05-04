@@ -1,0 +1,389 @@
+:root {
+    --DivisionLineWidth: 90%;
+
+}
+html {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+    overflow-x: hidden; 
+    overflow-y: auto;
+}
+body {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+.container {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+.HeaderQuickNav {
+    display: none;
+    height: 0px;
+    top: 60px;
+    width: 800px; /* var(--GlobalMaxWidth); */
+    position: fixed;
+    text-align: center;
+    color: blue;
+    font-weight: 800;
+    font-size: 20px;
+    padding-top: 10px;
+    z-index: 98;
+    /* opacity: 0.5; */
+}
+.QuickNav {
+    height: 25px;
+    width: var(--GlobalMaxWidth);
+    align-items: center;
+    background-color: "#E5E4E2"; /*platinum*/
+    color: blue;
+    letter-spacing: 4px;
+} 
+.QuickNav a {
+    text-decoration: none;
+}
+.QuickNav a:hover,
+.QuickNav a:active {
+  color: red;
+}
+.MidpointBreak {
+    display: none;
+}
+.TableSpacer{
+    height: 60px;
+}
+.Section1 {
+    display: none;
+}
+.Section2 {
+    top: 0px; /*orig 65*/
+    height: 90%;
+    height: 100vh;
+    background-color: "#E5E4E2"; /*platinum*/
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+.Section2Title {
+    font-size: 180%;
+    font-family: var(--GlobalFontFamily);
+    padding: 20px 0px 0px 40px;
+}
+.Section2Title::first-letter {
+    font-size: 150%;
+    font-family: var(--GlobalFontFamily);
+}
+.Footer {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;    
+    height: 55px;
+}
+.FooterNavListItem a {
+    font-size: 15px;
+    font-family: var(--GlobalFontFamily);
+}
+.title {
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+}
+.members-list {
+    margin: -10px 0px 0px 40px;
+    scroll-behavior: auto;
+}
+.main-table {
+    margin: 20px 0 0 5px;
+    border-collapse: collapse;
+    width: 95%;
+    border: black 0px solid;
+}
+
+.head-row td {
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-align: left;
+    padding-left: 5px;
+    background-color: #C0C0C0;
+    color: black;
+    height: 25px;
+}
+.last-row {
+    height: 100px;
+    text-align: center;
+    vertical-align: top;
+}
+.xrow-odd {
+    background-color: #DCDCDC;
+}
+.row-even {
+    background-color: #DCDCDC;
+}
+.head-name {
+    width: 30%;
+}
+.head-email {
+    width: 20%;
+}
+.head-phone1, 
+.head-phone2 {
+    width: 25%;
+}
+.name {
+    font-size: 18px;
+    font-weight: 800;
+    padding: 0 20px 0 0;
+    border-bottom: dotted 1px black;
+    height: 25px;
+}
+.email {
+    font-size: 20px;
+    padding: 0 20px 0 0;
+    border-bottom: dotted 1px black;
+}
+
+.phone1, .phone2 {
+    font-size: 16px;
+    padding: 0 20px 0 0;
+    border-bottom: dotted 1px black;
+}
+.cellphone {
+    font-size: 20px;
+    padding: 0 20px 0 0;
+}
+#bottom {
+    display: none;
+}
+/*
+The @media MAX-width query properties
+***** IPHONE - Landscape
+If Device Width 
+  is >= 440px AND 
+  <= 736px Then...*/
+
+/*=========================================*/
+@media only screen
+and (min-width: 440px)
+and (max-width: 736px) 
+{
+    html {
+        max-width: 737px;
+        margin: auto;
+    }
+    body {
+        max-width: 737px;
+        margin: auto;
+        /*background-color: cornflowerblue;*/
+    }
+    #arrowUp {
+        display: none;
+    }
+    .QuickNav {
+        width: 540px;
+        letter-spacing: 3px;
+        padding-right: 10px;
+     }     
+    .MidpointBreak {
+        display: none;
+    }      
+    .TableSpacer{
+        height: 30px;
+    }
+    .Section2 {
+        display: block;
+        top: 55px; /*orig 70*/
+        height: 89%;
+        border: 0px black solid;
+/*      background-color: aliceblue; */
+/*      background-color: "#E5E4E2"; /*platinum*/
+        background-color: #EAEAEA; /*very light gray*/
+      }
+        .Section2Title {
+        color: blue;
+        font-size: 150%;
+        font-family: var(--GlobalFontFamily);
+        text-align: left;
+        padding: 0px 0px 0px 20px;
+    }
+    .Section2Title::first-letter {
+        font-size:180%;
+    }
+    .members-list {
+        margin: -10px 0px 0 5px;
+        scroll-behavior: auto;
+    }
+    .main-table {
+        margin: 20px 0 0 5px;
+        padding: 0px 0px 0px -20px;
+        border-collapse: collapse;
+        width: 100%;
+        border: black 0px solid;
+    }
+    .head-row {
+        padding: 0px 20px 0px 0px;
+    }
+    .head-name {
+    /*    padding: 0px 10px 0px 20px;*/
+        width: 35%;
+    }
+    .head-email {
+        padding: 0px 20px 0px 20px;
+        width: 10%;
+        text-align: left;
+    }
+    .head-phone1 {
+    /*    padding: 0px 10px 0px 20px;*/
+        width: 25%;
+    }
+    .head-phone2 {
+        /*    padding: 0px 10px 0px 20px;*/
+        width: 30%;
+    }
+    .name {
+        width: 35%;
+        padding: 0px 0px 0px 5px;
+        height: 40px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .email {
+        width: 10%;
+        height: 40px;
+    }
+    .email-image  {
+        width: 60%;
+    }        
+    .phone1 {
+        width: 25%;
+        height: 40px;
+        font-size: 16px%;
+    }    
+    .phone2 {
+        width: 30%;
+        height: 40px;
+        font-size: 16px;
+    }
+    .Footer {
+        display: none;
+        max-width: 737px;
+        margin: auto;
+        height: 60px;
+        background-color: transparent;
+    }
+}
+
+/*
+The @media MAX-width query properties
+***** IPHONE
+/*If Device Width is <= to 440px Then...*/
+
+/*=========================================*/
+  @media only screen
+  and (max-width: 440px)
+{
+    html {
+        max-width: 414px;
+        margin: auto;
+    }          
+    body {
+        width: 100%;
+    }
+    .HeaderQuickNav {
+        display: none;
+        text-align: center;
+        height: 270px;
+    }
+    .QuickNav {
+        padding: 10px 100px 0px 0px;
+        height: 60px;
+        width: 500px;
+        letter-spacing: 6px;
+     }
+    .QuickNav a {
+        text-align: center;
+    }
+    .MidpointBreak {
+        display: block;
+    }
+    .TableSpacer {
+        height: 80px;
+        vertical-align: top;
+    }
+    .Section2 {
+        background-color: #E5E4E2; /*platinum*/
+        top: 0px;
+        height: 98%;
+        width: 100%;
+        overflow-y: auto;
+      }
+    .Section2Title {
+        color: blue;
+        font-size: 180%;
+        font-family: var(--GlobalFontFamily);
+        text-align: left;
+        padding: 0px 0px 0px 20px;
+    }
+    .Section2Title::first-letter {
+        font-size:130%;
+        font-family: var(--GlobalFontFamily);
+    }
+    .members-list {
+        margin: -10px 0px 0 5px;
+        scroll-behavior: auto;
+    }
+    .main-table {
+        margin: 20px 0 0 5px;
+        border-collapse: collapse;
+        width: 100%;
+        border: black 0px solid;
+    }
+    .head-row {
+        text-align: center;
+        padding: 0px 20px 0px 0px;
+    }
+    .head-name {
+    /*    padding: 0px 10px 0px 20px;*/
+        width: 25%;
+    }
+    .head-email {
+        padding: 0px 20px 0px 20px;
+        width: 10%;
+        text-align: left;
+    }
+    .head-phone1 {
+    /*    padding: 0px 10px 0px 20px;*/
+        width: 50%;
+    }
+    .head-phone2 {
+        display: none;
+    }
+    .name {
+        width: 40%;
+        padding: 0px 0px 0px 5px;
+        height: 40px;
+        font-size: 80%;
+        font-weight: 100;
+    }
+    .email {
+        width: 5%;
+        height: 40px;
+    }
+    .email-image  {
+        width: 70%;
+    }        
+    .phone1 {
+        width: 40%;
+        height: 40px;
+        font-size: 90%;
+    }    
+    .phone2 {
+        display: none;
+    }
+    .head-phone2 {
+        display: none;
+    }    
+    .last-row {
+        height: 80px;
+    }
+    .Footer {
+        display: none;
+    }
+}

@@ -1,0 +1,207 @@
+<html>
+  <head>
+    <title>formR Repositories</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+            width           = 1200  // width of page area
+            height          = 2100
+    </script>
+    <style>
+        root: {
+            --nav-bar_width : 600px;  // width of sidebar links
+            }
+        body {
+            font-family     : arial;
+            size            : 10px;
+            background-color: #EEEEEE;
+            }
+        td {
+            vertical-align  : top;
+            }
+        .title {
+            margin-top      : 8px;
+            }
+        a:visited, a:link {
+            color           : black;
+            text-decoration : none;
+            }
+        nav-bar {
+            width           : var(--nav-bar_width)
+        iframe {
+/*          display         : none; */
+            padding         : 4px;
+            background-color: blue; /* #A4A6F7; */
+            vertical-align  : top;
+            }
+        #url {
+            padding-bottom  :  6px;
+            }
+        input {
+            width           : 38px;
+            }
+        .size1 {
+            padding         :  0px;
+            margin-right    :-10px;
+            }
+        .newTab: {
+           width            : 12px !important;
+            }
+    </style>
+  </head>
+  <body>
+
+    <table>
+      <tr>
+        <td id="nav-bar">
+
+          <ol>
+
+            <li><a href="http://basec.sicomm.net/nfs/u04/help/blank.html">CLEAR</a>
+              &nbsp; &nbsp; Open in new tab: <input id="new-tab" style="margin-left:-0px;" type="checkbox">
+              <span id="size">
+                <input type="radio" class="size" name="size" value="small" >Small
+                <input type="radio" class="size" name="size" value="medium">Medium
+                <input type="radio" class="size" name="size" value="large" >Large
+              </span>
+            </li>
+
+            <!-- ------- --------------------------------------------------  ------------------ --------------- -->
+
+            <div  class="title"><u><b>Remote Sites</b></u></div>
+
+              <li><a href="http://formr.net"                                            >formR.Net</a></li>
+              <li><a href="https://iodd.com"                                            >IODD.com</a></li>
+              <li><a href="https://8020data.github.io/FRDocs_prod-master"               >FRDocs</a></li>
+
+            <!-- ------- --------------------------------------------------  ------------------ --------------- -->
+
+            <div class="title"><u><b>IODD Sites and Repositories</b></u></div>
+
+              <li><a href="http://127.0.0.1:5505/client1/home/index.html"               >client1/home</a></li>
+
+              <li><a href="http://127.0.0.1:5505/client1/c11a_home-wi-db-json/index.html"    >client1/c11a_home-wi-db-json</a></li>
+              <li><a href="http://127.0.0.1:5505/client1/c14_app02s-rm\index.html"           >client1/c14_app02-rm</a></li>
+              <li><a href="http://127.0.0.1:5505/client2/c23_home-wi-json-server/index.html" >client2/c23_iodd-wi-json-server</a></li>
+              <li><a href="http://127.0.0.1:5505/client3/c33_home-wi-mysql-api/index.html"   >client3/c33_iodd-wi-mysql-api</a></li>
+              <div style="height:10px;">&nbsp;</div>
+
+              <li><a href="https://github.com/brucetroutman-gmail/IODDCOM_prod-master"  >brucetroutman-gmail/IODDCOM_prod-master</a></li>
+              <li><a href="https://github.com/blueNSX/IODDCOM_prod-master"              >blueNSX/IODDCOM_prod-master</a></li>
+              <li><a href="https://github.com/robinmattern/IODDCOM_prod-master"         >robinmattern/IODDCOM_prod-master</a></li>
+              <li><a href="https://github.com/robinmattern/IODD_test2-robin"            >robinmattern/IODD_test2-robin</a></li>
+
+            <div class="title"><u><b>FRApps sites and Repositories</b></u></div>
+              <li><a href="http://127.0.0.1:5506/client1/c11_my-html-custom-app/index_final_custom.html" >client1/c11_my-html-custom-app</a></li>
+              <li><a href="http://127.0.0.1:5506/client2/c26_javascript-mysql-data-app/index.html"       >client2/c26_javascript-mysql-data-app</a></li>
+              <div style="height:10px;">&nbsp;</div>
+
+              <li><a href="https://github.com/8020data/FRApps_prod-master"              >8020data/FRApps_prod-master</a></li>
+              <li><a href="https://github.com/blueNSX/FRApps_prod-master"               >blueNSX/FRApps_prod-master</a></li>
+              <li><a href="https://github.com/robinmattern/FRApps_prod1-master"         >robinmattern/FRApps_prod1-master</a></li>
+              <li><a href="https://github.com/robinmattern/FRApps_test2-robin"          >robinmattern/FRApps_test2-robin</a></li>
+              <div style="height:10px;">&nbsp;</div>
+
+              <li><a href="https://github.com/8020data/FRDocs_prod-master"              >8020data/FRDocs_prod-master </a><li>
+          </ol>
+        </td>
+        <td>
+          <div id="URL" ></div>
+          <iframe src="">&nbsp;</iframe>
+        </td>
+      </tr>
+    </table>
+  </body>
+  <script>
+            $( "a"      ).click( Link_onClick )
+//          $( ".size1" ).click( Size_onClick )
+//          $( '#new_tab' ).prop( 'checked', true )
+            $( 'input[type=checkbox]' ).trigger('click');
+
+            console.log( $._data( $( 'a' )[3], "events").click[0].handler )
+            console.log( $( $( 'a' )[3] ).html )
+
+  function  Link_onClick1( e ) {
+        var aStyle = `display: block; width: ${width}px; height: ${height}px;`
+        var aDate  = (new Date).toUTCString(); aDate  = aDate.substr(8,4) + aDate.substr(5,3) + aDate.substr(17,8)
+
+        var pLink  = $( this )
+        var aLink1 =  pLink.attr( 'href' ),    aPort  =  pLink[0].childNodes[1] ? pLink[0].childNodes[1].value : ''
+            aLink1 =  aPort ? aLink1.replace( /{port}/, aPort ) : aLink1
+
+            alert( "Hello: " + aLink1 )
+            }
+
+  function  Link_onClick( ) {
+
+        var aStyle = `display: block; width: ${width}px; height: ${height}px;`
+        var aDate  = (new Date).toUTCString(); aDate  = aDate.substr(8,4) + aDate.substr(5,3) + aDate.substr(17,8)
+
+        var pLink  = $( this )
+//      var aLink1 =  pLink.attr( 'href' ),    aPort  =  pLink[0].childNodes[1].value                                   // .(21022.01.1 RAM fixed bug)
+        var aLink1 =  pLink.attr( 'href' ),    aPort  =  pLink[0].childNodes[1] ? pLink[0].childNodes[1].value : ''     // .(21022.01.1 RAM fixed bug)
+            aLink1 = (aPort) ? aLink1.replace( /{port}/, aPort ) : aLink1
+//          alert(`aLink1: ${aLink1}`)
+
+        var aURL   =  aDate + ": &nbsp; &nbsp;<b>" + aLink1.replace( /admin/, 'login') + "</b>"
+        var aTab   = (aLink1.match( /links|vendorlogin/ ) || $( '#new-tab' ).prop( 'checked' )) ? 'on'  : 'off'
+        var aTab   = (aLink1.match( /blank/             )                                     ) ? 'off' : aTab
+
+            aLink1 = chk_login( aLink1 )
+
+            $( '#URL'   ).html(  aURL + chk_size() )
+            $( ".size1" ).click( Size_onClick )
+
+            $( 'iframe' ).attr( 'style', aStyle )
+        if (aTab != 'on') {
+            $( 'iframe' ).attr( 'src',   aLink1 )
+        } else {
+        var pWin   =  window.open( aLink1, '_blank'); pWin.focus();
+            }
+     return false
+            }
+// -------- ------------------------------------------------------------------
+
+   function chk_login( aLink1 ) {
+        var aSite  =  aLink1.substr(7,5) + '-' + aLink1.substr(24,5)
+        var aLink2 = (aSite == "basec-login") ? '{URL}/loginhandler.html?{ANO}username={UID}&password={PWD}'   : aLink1
+            aLink2 = (aSite == "basec-admin") ? '{URL}/loginhandler.html?{ANO}username={UID}&password={PWD}'   : aLink2
+            aLink2 = (aSite == "basec-vendo") ? '{URL}/pe_system_login_handler.html?logonID={UID}&pswrd={PWD}' : aLink2
+            aLink2 = (aSite == "train-login") ? '{URL}/loginhandler.html?{ANO}username={UID}&password={PWD}'   : aLink2
+            aLink2 = (aSite == "train-admin") ? '{URL}/loginhandler.html?{ANO}username={UID}&password={PWD}'   : aLink2
+            aLink2 = (aSite == "train-vendo") ? '{URL}/pe_system_login_handler.html?logonID={UID}&pswrd={PWD}' : aLink2
+
+        var aLink3 = aLink1.replace( /admin/, 'login')
+        if (aLink1 != aLink2) {
+            mUser  =  $( "#" + aSite ).val().split( ':' )
+            aLink2 =  aLink2.replace( /{UID}/, mUser[0] )
+            aLink2 =  aLink2.replace( /{PWD}/, mUser[1] )
+            aLink2 =  aLink2.replace( /{ANO}/, ""       ) // agency_id=A00000000064&
+            aLink1 =  aLink2.replace( /{URL}/, aLink3   )
+            }
+     return aLink1
+            }
+// -------- ------------------------------------------------------------------
+
+   function chk_size( ) {
+        var aHTML = $( '#size' ).html();
+            $( '#size' ).hide()
+            aHTML = aHTML.replace( /class="size"/g, `class="size1"` )
+     return aHTML
+            }
+// -------- ------------------------------------------------------------------
+
+   function Size_onClick( ) {
+            var pSize   = $( this )
+            var aSize   =  pSize[0].value
+            var nWidth  = (aSize == 'small') ? 375 : ( aSize == 'medium' ? 900 : width  )
+            var nHeight = (aSize == 'small') ? 667 : ( aSize == 'medium' ? 750 : height )
+            var aStyle  = `display: block; width: ${nWidth}px; height: ${nHeight}px;`
+//          alert( `aSize: ${aSize}, aWidth: ${aWidth}, aStyle: ${aStyle}` )
+            $( 'iframe' ).attr( 'style',  aStyle )
+            }
+// -------- ------------------------------------------------------------------
+
+  </script>
+</html>
+
+

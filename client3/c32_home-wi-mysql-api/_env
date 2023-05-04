@@ -1,0 +1,14 @@
+
+ Host_Location  = 'local'
+
+ API_URL     = '/api13' # remote path:  http://https:/iodd.com/api2/
+#API_URL     =          # local  path:  http://localhost:3013/  or  http://localhost:3001/api2 ??
+
+ Remote_Host = 'https:/iodd.com'
+ Local_Host  = 'http://localhost'
+
+#Client_Port =  54532
+#Server_Port =  54031
+ Client_Port =   3532
+#Server_Port =   3031
+ Server_Port =   3013

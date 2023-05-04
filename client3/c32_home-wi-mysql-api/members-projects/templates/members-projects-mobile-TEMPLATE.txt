@@ -1,0 +1,60 @@
++` <div class="members-projects-mobile">\n`
++`    <table class="main-table-mobile">\n`
++`    <tbody>\n`
++`        <tr>\n`
++`        <td colspan="3" valign="top" align="center">\n`
++`            <table class="members-info-mobile" cellspacing="0" cellpadding="10" align="left">\n`
++`            <tbody>\n`
++`            <tr>\n`
++`                <!--NAME-->\n`
++`                <td class="members-name-mobile">${ aNameBR }</td>\n`
++`                <!--ADDRESS, PHONE, EMAIL-->\n`
++`                <td>\n`
++`                    <table class="members-address-mobile"cellspacing="0" cellpadding="0" align="center">\n`
++`                      <tbody>\n`
++`                      <tr><td>${ aStreet }</td></tr>\n`
++`                      <tr><td>${ aCity }, ${ aState } ${ aZip }</td></tr>\n`
++`                      <tr><td>${ aPhone }</td></tr>\n`
++`                      <tr><td><a href="http://mailto:${ aEmail }">& { aEmail}</a></td></tr>\n`
++`                    </tbody></table>\n`
++`                </td>\n`
++`            </tr>\n`
++`            <tr>\n`
++`                <!--BIO-->\n`
++`                <td class="members-resume-mobile" colspan="2" valign="top">${ aBio }</td>\n`
++`            </tr>\n`
++`            <tr><td>&nbsp;</td></tr>\n`
++`            <tr><td class="project-title-mobile" colspan="4">Project(s):&nbsp;<span class="project-title-line"><hr></span></td></tr>\n`
++`            </tbody>\n`
++`            </table>\n`
++`            <!--END TABLE STARTING ON LINE 86-->\n`
++`        </td>\n`
++`        </tr>\n`
++`        <tr>\n`
++`        <td valign="top">\n`
++`            <tr>\n`
++`            <td width="50%">\n`
++`                <table class="project-summary-mobile-left"  width="100%">\n`
++`                    <tr><td valign="top">Project: ${ aProjName }</td></tr>\n`
++`                    <tr><td valign="top">Owner: ${ aClient }</td></tr>\n`
++`                    <tr><td valign="top">Owner Web: <a href="http://${ aClientWeb }/">${ aClientWeb }</a></td></tr>\n`
++`                    <tr><td valign="top">Dates: 1994-2001</td></tr>\n`
++`                </table>\n`
++`            </td>\n`
++`            <td width="50%">\n`
++`                <table class="project-summary-mobile-right" width="100%">\n`
++`                    <tr><td valign="top">Location: ${ aLocation }</td></tr>\n`
++`                    <tr><td valign="top">Role: ${ aRole }</td></tr>\n`
++`                    <tr><td valign="top">Duration: ${ aDuration }</td></tr>\n`
++`                    <tr><td valign="top">Type: ${ aProjType }</td></tr>\n`
++`                </table>\n`
++`            </td>\n`
++`        </td>\n`
++`        </tr>\n`
++`        <tr class="project-details-row-mobile">\n`
++`            <td class="project-details-mobile" colspan="2">${ aDescription }</td>\n`
++`        </tr>\n`
++`        <tr><td colspan="4"><hr></td></tr>\n`
++`+`    </tbody>\n`
++`+`    </table>\n`
++`</div>\n`

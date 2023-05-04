@@ -1,0 +1,468 @@
+:root {
+    --DivisionLineWidth: 90%;
+    --BigScreenFontSize: 15px;
+    --BorderColor: #d3d3d3;
+    --BorderLine: solid;
+    --BorderThickness: 2px;
+}
+html {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+    overflow-x: hidden; 
+    overflow-y: auto;
+}
+body {
+    background-color: var(--HeaderFooterBGColor);
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+.container {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+
+.HeaderQuickNav {
+    display: none;
+    height: 0px;
+    top: 60px;
+    width: 1000px; /* var(--GlobalMaxWidth); */
+    position: fixed;
+    text-align: center;
+    color: blue;
+    font-weight: 800;
+    font-size: 20px;
+    padding-top: 10px;
+    z-index: 98;
+    /* opacity: 0.5; */
+}
+.QuickNav {
+    height: 25px;
+    width: 800px;
+    align-items: center; 
+    padding: 0px 0px 0px 100px;
+    background-color: whitesmoke; /*var(--HeaderFooterBGColor);*/
+    color: blue;
+    letter-spacing: 5px;
+} 
+.QuickNav a {
+    text-decoration: none;
+}
+.QuickNav a:hover,
+.QuickNav a:active {
+  color: red;
+  }  
+
+.MidpointBreak {
+    display: none;
+}
+.TableSpacer{
+    height: 80px;
+}
+.Section1 {
+    display: none;
+}
+.Section2 {
+    top: 0px; /*orig 65*/
+    height: 90%;
+    height: 100vh;
+    background-color: "#E5E4E2"; /*platinum*/
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+.Section2Title {
+    font-size: 180%;
+    font-style: var(--GlobalFontFamily);
+    padding: 0px 0px 0px 40px;
+    background-color: #F5F5F5; /* whitesmoke */
+}
+.Section2Title::first-letter {
+    font-size: 150%;
+    font-family: var(--GlobalFontFamily);
+}
+.Footer {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;    
+    height: 55px;
+}
+.FooterNavListItem a {
+    font-size: 15px;
+    font-family: var(--GlobalFontFamily);
+}
+.title {
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+}
+.members-list {
+    margin: -10px 0px 0px 40px;
+}
+.main-table {
+    margin: 20px 0 0 5px;
+    border-collapse: collapse;
+    width: 95%;
+    border: black 0px var(--BorderLine);
+}
+
+.head-row td {
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-align: left;
+    padding-left: 5px;
+    background-color: #C0C0C0;
+    color: black;
+    height: 25px;
+}
+.last-row {
+    text-align: center;
+    vertical-align: auto;
+    border: top var(--BorderLine) black;
+    height: 60px;
+}
+.row-odd {
+    background-color: #C0C0C0; /* whitesmoke */
+    background-color: #F5F5F5; /* whitesmoke */
+}
+.row-even {
+    background-color: #DCDCDC;
+    background-color: #F5F5F5; /* whitesmoke */
+}
+.head-name {
+    width: 30%;
+}
+.head-email {
+    width: 20%;
+}
+.head-phone1, 
+.head-phone2 {
+    width: 25%;
+}
+.name {
+    width: 50%;
+    padding: 5px 0px 0px 40px;
+    height: 40px;
+    font-size: var(--BigScreenFontSize);
+    font-weight: 600;
+    vertical-align: top;
+    border-top: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+    border-left: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+}
+.client {
+    margin-top: 20px;
+    width: 50%;
+    padding: 5px 0px 0px 40px;
+    height: 40px;
+    font-size: var(--BigScreenFontSize);
+    font-weight: 500;
+    vertical-align: top;
+    border-top: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+    border-right: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+}
+.type {
+    padding: 0px 0px 20px 40px;
+    font-size: var(--BigScreenFontSize);
+    font-weight: 500;
+    border-right: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+    border-left: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+
+}
+.desc {
+    padding: 0px 20px 20px 40px;
+    font-size: var(--BigScreenFontSize);
+    font-weight: 500;
+    border-left: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+    border-right: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+}
+.memberPrimary {
+    padding: 0px 20px 3px 40px;
+    font-size: var(--BigScreenFontSize);
+    font-weight: 500;
+    border-left: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+    border-right: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+}
+/* .memberSecondary {
+    padding: 0px 20px 10px 138px;
+    font-size: var(--BigScreenFontSize);
+    font-weight: 500;
+    border-bottom: var(--BorderThickness) black var(--BorderLine);
+} */
+.colaboratorTitle {
+    padding: 0px 0px 3px 40px;
+    border-left: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+    border-right: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+}
+
+.ProjectsLastRow {
+    height: 1px;
+    background-color: #F5F5F5; /* whitesmoke */
+    border-left: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+    border-right: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+    /* border-bottom: var(--BorderThickness) var(--BorderColor) var(--BorderLine); */
+}
+.Secondary {
+    display: none !important;
+}
+
+/*
+The @media MAX-width query properties
+***** IPHONE - Landscape
+If Device Width 
+  is >= 440px AND 
+  <= 736px Then...*/
+
+/*=========================================*/
+@media only screen
+and (min-width: 440px)
+and (max-width: 736px) 
+{
+    html {
+        max-width: 737px;
+        margin: auto;
+    }
+    body {
+        max-width: 737px;
+        margin: auto;
+        /*background-color: cornflowerblue;*/
+    }
+    .HeaderQuickNav {
+        display: none;
+        text-align: center;
+        z-index: 98;
+        /* opacity: 0.5; */
+    }
+    .QuickNav {
+        width: 737px;
+        letter-spacing: 4px;
+     }     
+    .MidpointBreak {
+        display: none;
+    }      
+    .TableSpacer{
+        height: 10px;
+    }
+    .Section2 {
+        display: block;
+        top: 50px; /*orig 70*/
+        height: 89%;
+        border: 0px black solid;
+        background-color: #EAEAEA; /*very light gray*/
+      }
+    .Section2Title {
+        color: blue;
+        font-size: 150%;
+        font-family: var(--GlobalFontFamily);
+        text-align: left;
+        padding: 0px 0px 10px 20px;
+    }
+    .Section2Title::first-letter {
+        font-size:180%;
+        font-family: var(--GlobalFontFamily);
+    }
+    .members-list {
+        margin: -20px 0px 0px 0px;
+    }
+    .main-table {
+        margin: 20px 0 0 5px;
+        padding: 0px 0px 0px -20px;
+        border-collapse: collapse;
+        width: 100%;
+        border: black 0px var(--BorderLine);
+    }
+    .head-row {
+        padding: 0px 20px 0px 0px;
+    }
+    .head-name {
+    /*    padding: 0px 10px 0px 20px;*/
+        width: 35%;
+    }
+    .head-client {
+        padding: 0px 20px 0px 20px;
+        width: 10%;
+        text-align: left;
+    }
+    .name {
+        width: 50%;
+        padding: 5px 0px 0px 10px;
+        height: 40px;
+        font-size: 18px;
+        font-weight: 600;
+        vertical-align: top;
+    }
+    .client {
+        width: 50%;
+        padding: 5px 0px 0px 10px;
+        height: 40px;
+        font-size: 18px;
+        font-weight: 500;
+        vertical-align: top;
+    }
+    .type {
+        padding: 0px 0px 20px 10px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .desc {
+        padding: 0px 20px 20px 10px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .colaboratorTitle {
+        padding: 0px 20px 3px 10px;
+        border-left: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+        border-right: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+    }
+    
+    .ProjectsLastRow {
+        height: 1px;
+        background-color: #F5F5F5; /* whitesmoke */
+        border-left: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+        border-right: var(--BorderThickness) var(--BorderColor) var(--BorderLine);
+        /* border-bottom: var(--BorderThickness) var(--BorderColor) var(--BorderLine); */
+    }
+    .memberPrimary {
+        padding: 0px 20px 0px 10px;
+        font-size: 14px;
+        font-weight: 500;
+        /* border-bottom: var(--BorderThickness) black var(--BorderLine); */
+    }
+    .memberSecondary {
+        padding: 0px 20px 10px 108px;
+        font-size: 14px;
+        font-weight: 500;
+        border-bottom: 1px black var(--BorderLine);
+    }    
+    .Footer {
+        display: none;
+        max-width: 737px;
+        margin: auto;
+        height: 60px;
+        background-color: transparent;
+    }
+}
+
+/*
+The @media MAX-width query properties
+***** IPHONE
+/*If Device Width is <= to 440px Then...*/
+
+/*=========================================*/
+  @media only screen
+  and (max-width: 440px)
+{
+    html {
+        max-width: 414px;
+        margin: auto;
+    }          
+    body {
+        width: 100%;
+    }
+    .Header {
+        width: 500px;
+    }
+    .HeaderQuickNav {
+        display: none;
+        text-align: center;
+        height: 270px;
+    }
+    .QuickNav {
+        padding: 10px 100px 0px 0px;
+        height: 60px;
+        width: 500px;
+        letter-spacing: 6px;
+     }
+    .QuickNav a {
+        text-align: center;
+    }
+    .MidpointBreak {
+        display: block;
+    }
+    .TableSpacer {
+        height: 100px;
+        vertical-align: top;
+    }
+    .Section2 {
+        background-color: var(--Section2BGColor);
+        top: 0px;
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+      }
+    .Section2Title {
+        color: blue;
+        font-size: 180%;
+        font-family: var(--GlobalFontFamily);
+        text-align: left;
+        padding: 0px 0px 0px 20px;
+    }
+    .Section2Title::first-letter {
+        font-size:130%;
+        font-family: var(--GlobalFontFamily);
+    }
+    .members-list {
+        margin: -10px 0px 0 5px;
+    }
+    .main-table {
+        margin: 20px 0 0 5px;
+        border-collapse: collapse;
+        width: 100%;
+        border: black 0px solid;
+    }
+    .head-row {
+        text-align: center;
+        padding: 0px 20px 0px 0px;
+    }
+    .head-name {
+    /*    padding: 0px 10px 0px 20px;*/
+        width: 25%;
+    }
+    .head-email {
+        padding: 0px 20px 0px 20px;
+        width: 10%;
+        text-align: left;
+    }
+    .name {
+        width: 50%;
+        padding: 5px 0px 0px 10px;
+        height: 40px;
+        font-size: 15px;
+        font-weight: 600;
+        vertical-align: top;
+    }
+    .client {
+        width: 50%;
+        padding: 5px 20px 0px 10px;
+        height: 40px;
+        font-size: 15px;
+        font-weight: 500;
+        vertical-align: top;
+    }
+    .type {
+        padding: 0px 0px 20px 10px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+    .desc {
+        padding: 0px 20px 20px 10px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+    .memberPrimary {
+        padding: 0px 20px 0px 10px;
+        font-size: 15px;
+        font-weight: 500;
+        /* border-bottom: 1px black var(--BorderLine); */
+    }
+    .memberSecondary {
+        padding: 0px 20px 10px 95px;
+        font-size: 15px;
+        font-weight: 500;
+        border-bottom: var(--BorderThickness) black var(--BorderLine);
+    }
+    .Footer {
+        display: none;
+        max-width: 737px;
+        margin: auto;
+        height: 60px;
+        background-color: transparent;
+    }
+}

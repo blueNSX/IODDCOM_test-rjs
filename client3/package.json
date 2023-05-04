@@ -1,0 +1,17 @@
+{
+  "name": "c33_iodd-wi-mysql-api",
+  "description": "Installs node-fetch to test MySQL Data API that returna JSON data",
+  "version": "0.1.5",
+  "author": "Robin Mattern",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "2.0"
+  },
+  "scripts": {
+    "start": "echo npm ERROR: * You must be in an app folder to start app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "which": "^3.0.0"
+  }
+}

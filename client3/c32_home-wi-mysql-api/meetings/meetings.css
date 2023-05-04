@@ -1,0 +1,399 @@
+:root {
+    --DivisionLineWidth: 90%;
+
+}
+html {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+    overflow-x: hidden; 
+    overflow-y: auto;
+}
+body {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+.container {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+
+.TableSpacer{
+    height: 0px;
+}
+.Section1 {
+    display: block;
+    height: 200px;
+}
+.Section1Title {
+    padding-top: 40px;
+}
+.Section1Paragraph {
+    display: none;
+}
+.Section2 {
+    top: 65px; /*orig 65*/
+    height: 90%;
+    height: 100vh;
+    background-color: "#E5E4E2"; /*platinum*/
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;
+}
+.Section2Title {
+    font-size: 180%;
+    font-family: var(--GlobalFontFamily);
+    padding: 20px 0px 0px 40px;
+}
+.Section2Title::first-letter {
+    font-size: 150%;
+    font-family: var(--GlobalFontFamily);
+}
+.Footer {
+    max-width: var(--GlobalMaxWidth);
+    margin: auto;    
+    height: 55px;
+}
+.FooterNavListItem a {
+    font-size: 15px;
+    font-family: var(--GlobalFontFamily);
+}
+.title {
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+}
+.members-list {
+    margin: -10px 0px 0px 40px;
+    scroll-behavior: auto;
+}
+.main-table {
+    margin: 20px 0 0 5px;
+    border-collapse: collapse;
+    width: 90%;
+    border: black 0px solid;
+}
+
+.head-row td {
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-align: left;
+    padding-left: 5px;
+    background-color: #C0C0C0;
+    color: black;
+    height: 25px;
+}
+.last-row {
+    height: 100px;
+    text-align: center;
+    vertical-align: top;
+}
+.xrow-odd {
+    background-color: #DCDCDC;
+}
+.row-even {
+    background-color: #DCDCDC;
+}
+.head-date,
+.head-location,
+.head-host,
+.head-email,
+.head-phone,
+.head-agenda {
+    padding-left: 20px;
+    font-size: 20px;
+    font-weight: 800;
+    width: 40%;
+    text-align: right;
+}
+.meeting-date,
+.location,
+.host,
+.email a,
+.phone,
+.agenda {
+    padding-left: 20px;
+    font-size: 20px;
+    font-weight: 500;
+    width: 60%;
+    text-align: left;
+}
+.desc-div {
+    padding: 60px 40px 0px 0px;
+    width: 50%;
+}
+.desc-table {
+    width: 40%;
+}
+td.desc {
+    /* border: solid 2px blue;
+    border-radius: 10%;
+    box-shadow: 5px 5px 5PX #888888; */
+}
+.desc {
+    font-size: 20px;
+    padding: 40px 60px 20px 60px;
+    text-align: justify;
+    width: 80%;
+    padding: 10px 10px 10px 15px;
+    border: solid 3px blue;
+    vertical-align: middle;
+    /* border-radius: 10%; */
+    box-shadow: 5px 5px 5PX #888888;
+}
+/*
+The @media MAX-width query properties
+***** IPHONE - Landscape
+If Device Width 
+  is >= 440px AND 
+  <= 736px Then...*/
+
+/*=========================================*/
+@media only screen
+and (min-width: 440px)
+and (max-width: 736px) 
+{
+    html {
+        max-width: 737px;
+        margin: auto;
+    }
+    body {
+        max-width: 737px;
+        margin: auto;
+        /*background-color: cornflowerblue;*/
+    }
+    .Section1 {
+        height: 250px;
+    }
+    .Section1Title {
+        font-size: 25px;
+        text-align: left;
+        padding: 20px 0px 0px 20px;
+    }
+    .Section2 {
+        display: block;
+        top: 70px; /*orig 70*/
+        max-width: 737px;
+        scroll-behavior: auto;
+        height: 65%;
+        border: 0px black solid;
+        background-color: #EAEAEA; /*very light gray*/
+      }
+    .Section2 div {
+        min-height: 10px;
+    }  
+    .Section2Title {
+        color: blue;
+        font-size: 150%;
+        font-family: var(--GlobalFontFamily);
+        text-align: left;
+        padding: 0px 0px 0px 20px;
+        margin-top: -20px;
+    }
+    .Section2Title::first-letter {
+        font-size:180%;
+    }
+    .members-list {
+        margin: -10px 0px 0 5px;
+        scroll-behavior: auto;
+    }
+    .main-table {
+        margin: 10px 0 0 20px;
+        padding: 0px 0px 0px 0px;
+        border-collapse: collapse;
+        width: 90%;
+        border: black 0px solid;
+    }
+    .head-row {
+        padding: 0px 20px 0px 0px;
+    }
+    .head-date,
+    .head-location,
+    .head-host,
+    .head-email,
+    .head-phone,
+    .head-agenda {
+        padding-left: 20px;
+        font-size: 16px;
+        font-weight: 800;
+        width: 30%;
+        text-align: right;
+        vertical-align: top;
+    }
+    .meeting-date,
+    .location,
+    .host,
+    .email a,
+    .phone,
+    .agenda {
+        padding-left: 20px;
+        font-size: 16px;
+        font-weight: 500;
+        width: 80%;
+        text-align: left;
+    }
+    .desc-div {
+        padding: 40px 0px 0px 0px;
+        max-width: 50%;
+        border-radius: 0%;
+    }
+    
+    .desc {
+        font-size: 18px;
+        font-weight: 600;
+        color: blue;
+        padding: 15px;
+        text-align: justify;
+        width: 40%;
+        border: solid 2px blue;
+        vertical-align: middle;
+        border-radius: 0%;
+        box-shadow: 8px 8px 2px 0px #888888;
+        background-color: gainsboro;
+    }
+    .desc-table {
+        width: 50%;
+    }
+    .Footer {
+        display: none;
+        max-width: 100%;
+        margin: auto;
+        height: 60px;
+        /* background-color: transparent; */
+        padding: 10px 0px 0px 0px;
+    }
+    .FooterNavListItem  {
+        text-align: center;
+    }    
+    .FooterNavListItem a {
+        text-align: center;
+        font-size: 12px;
+    }
+}
+
+/*
+The @media MAX-width query properties
+***** IPHONE
+/*If Device Width is <= to 440px Then...*/
+
+/*=========================================*/
+  @media only screen
+  and (max-width: 440px)
+{
+    html {
+        max-width: 414px;
+        margin: auto;
+    }          
+    body {
+        width: 100%;
+    }
+    .HeaderSpacer {
+        width: 30px;
+    }
+    .Section1 {
+        height: 180px;
+        top: 70px;
+    }
+    .Section1Title {
+        display: block;
+        font-size: 20px;
+        text-align: left;
+        padding: 30px 0px 0px 20px;
+    }
+    .Section2 {
+        display: block;
+        top: 0px; /*orig 70*/
+        max-width: 737px;
+        scroll-behavior: auto;
+        height: 65%;
+        border: 0px black solid;
+        background-color: #EAEAEA; /*very light gray*/
+      }
+    .Section2 div {
+        min-height: 0px;
+    }  
+    .Section2Title {
+        color: blue;
+        font-size: 150%;
+        font-family: var(--GlobalFontFamily);
+        text-align: left;
+        padding: 0px 0px 0px 20px;
+    }
+    .Section2Title::first-letter {
+        font-size:180%;
+    }
+    .members-list {
+        margin: -10px 0px 0 5px;
+        scroll-behavior: auto;
+    }
+    .main-table {
+        margin: 20px 0 0 20px;
+        padding: 0px 0px 0px 0px;
+        border-collapse: collapse;
+        width: 90%;
+        border: black 0px solid;
+    }
+    .head-row {
+        padding: 0px 20px 0px 0px;
+    }
+    .head-date,
+    .head-location,
+    .head-host,
+    .head-email,
+    .head-phone,
+    .head-agenda {
+        padding-left: 10px;
+        font-size: 17px;
+        font-weight: 800;
+        width: 30%;
+        text-align: right;
+        vertical-align: top;
+    }
+    .meeting-date,
+    .location,
+    .host,
+    .email a,
+    .phone,
+    .agenda {
+        padding-left: 10px;
+        font-size: 17px;
+        font-weight: 500;
+        width: 80%;
+        text-align: left;
+    }
+    .desc-div {
+        padding: 5px 50px 0px 0px;
+        max-width: 50%;
+    }
+    
+    .desc {
+        font-size: 16px;
+        font-weight: 600;
+        color: blue;
+        padding: 10px 10px 10px 10px;
+        text-align: left;
+        width: 45%;
+        border: solid 2px blue;
+        vertical-align: middle;
+        border-radius: 0%;
+        box-shadow: 8px 8px 2px 0px #888888;
+        background-color: gainsboro;
+    }
+    .desc-table {
+        width: 50%;
+    }
+    .Footer {
+        display: none;
+        max-width: 100%;
+        margin: auto;
+        height: 60px;
+        /* background-color: transparent; */
+        padding: 10px 0px 0px 0px;
+    }
+    .FooterNavListItem  {
+        text-align: center;
+    }    
+    .FooterNavListItem a {
+        text-align: center;
+        font-size: 12px;
+    }
+}

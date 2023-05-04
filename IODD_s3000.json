@@ -1,0 +1,12 @@
+{
+  "apps":
+
+   [ { "name"       :   'IODD_s3002'
+     , "script"     :   'server3/s32_mysql-data-api/server.js'
+     , "watch"      : [ 'server3/s32_mysql-data-api/'      ]
+     , "out_file"   :   "/webs/IODD/logs/IODD/IODD_s3002-out.log"
+     , "error_file" :   "/webs/IODD/logs/IODD/IODD_s3002-err.log"
+        }
+     ]
+  }
+
