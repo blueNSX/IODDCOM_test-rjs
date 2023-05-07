@@ -5,7 +5,10 @@
 ##FD formr_utility-fns_u1.04.mjs|   9077|  4/10/23  8:24|   121| u1-04.30410.0815
 ##FD formr_utility-fns_u1.06.mjs|  10088|  4/12/23 16:35|   145| u1-06.30412.1630
 ##FD formr_utility-fns_u1.07.mjs|  23008|  4/29/23 10:50|   317| u1-07.30429.1050
-##FD formr_utility-fns_u1.07.js |  23908|  4/29/23 16:07|   328| u1-07.30429.1607
+##FD formr_utility-fns_u1.07.mjs|  23908|  4/29/23 16:07|   328| u1-07.30429.1607
+##FD formr_utility-fns_u1.07.mjs|  24150|  5/02/23 18:08|   330| u1-07.30502.1808
+##FD formr_utility-fns_u1.07.mjs|  24210|  5/03/23 09:45|   332| u1-07.30503.0945
+##FD formr_utility-fns_u1.07.mjs|  24210|  5/05/23 15:33|   332| u1-07.30505.1533
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
@@ -41,7 +44,10 @@
 # .(30429.02  4/29/23 RAM 10:00a|  Add bQuiet
 # .(30429.03  4/29/23 RAM 10:15a|  Handle messages differently
 # .(30429.04  4/29/23 RAM 10:45a|  Handle pGlobal differently
-# .(30429.10  4/29/23 RAM  4:05p|  Display .env.location 
+# .(30429.10  4/29/23 RAM  4:05p|  Display .env.location
+# .(30502.03  5/02.23 RAM  5:30p|  Turn off client/s32 alerts  
+# .(30503.01  5/03/23 RAM  9:45a|  Only bQuiet for alerts in sayMsg
+# .(30505.01  5/05/23 RAM  3:33p|  Clean _env Local host trailing stuff
                                 |
 ##SRCE     +====================+===============================================+
 #*/
@@ -66,9 +72,9 @@
            var  __appDir        =  __dirname.replace( /\/assets\/mjs\/*/, "" );  // ${__dirname}/../../ */              // .(30416.03.1 RAM Create __appDir)
 //              }
 
-           var  bQuiet          =  false
-//                                 traceR(  __filename,   "Loaded", 1 )                                 //#.(30429.02.1)
-                                   traceR( "utility-fns[1] Loaded", 1 )                                 // .(30429.02.1)
+           var  bQuiet          =  true                                                                     // .(30502.04.1 RAM)
+//                                 traceR(  __filename,   "Loaded", 1 )                                     //#.(30429.02.1)
+                                   traceR( "utility-fns[1] Loaded", 1 )                                     // .(30429.02.1)
 
 // ------  ---- -----------------------------------------------------------------------------------------
 
@@ -84,10 +90,11 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
 //          if (pEnv.Host_Location) {                                                                       //#.(30417.05.1 RAM Check pEnv.Host_Location).(30429.10.2)
 //         var  aAPI_URL = `${pEnv.Local_Host}:${pEnv.Server_Port}`
 
+           var  aHost    = 'http://' + pEnv.Local_Host.replace( /https?:\/\//, "" ).replace( /[:?].*/, "" ) // .(30505.01.1 RAM Remove trailing stuff)
 //         var  aAPI_URL = `${pEnv.Host_Location.toLowerCase() == 'remote'
            var  aAPI_URL = `${mLoc[0].toLowerCase() == 'remote'
                          ?    pEnv.API_URL
-                         : `${pEnv.Local_Host}:${pEnv.Server_Port}` }`
+                         : `${aHost}:${pEnv.Server_Port}` }`                                                // .(30505.01.2)
 
 //          if (typeof(window)  != 'undefined') {                                                           //#.(30429.04.1 Beg)
 //              window.aAPI_URL  =  aAPI_URL
@@ -99,7 +106,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
 //              }                                                                                           //#.(30429.04.1)
                 }                                                                                           // .(30417.05.2)
 //              console.log( `module ${aNum} aAPI_URL: '${  typeof(aAPI_URL)  !='undefined' ? aAPI_URL : 'undefined' }'` )
-                console.log( `setAPI_URL[2]  aLocation: '${ mLoc[0] ? mLoc[0] : 'undefined' }'` )           // .(30429.10.3) 
+                console.log( `setAPI_URL[2]  aLocation: '${ mLoc[0] ? mLoc[0] : 'undefined' }'` )           // .(30429.10.3)
                 console.log( `setAPI_URL[3]  aAPI_URL: '${  typeof(aAPI_URL)  !='undefined' ? aAPI_URL : 'undefined' }'` )
            }; // eof setAPI_URL                                                                             // .(30410.03.1 RAM End)
 //--------  ------  =  -----------------------------------------------------
@@ -271,32 +278,32 @@ async function postFormDataAsJson( aURL, pFormData ) {
       }; // eof postFormDataAsJson
 //  --------------------------  =  --------------------------------- ------------------
 
-  function  sayMsg( nBoth, aMsg ) {                                                     // .(30428.04.1 Beg RAM Mov'em into this script)
-        if (bQuiet) { return }                                                          // .(30429.02.2)
-        if (nBoth == 1 || nBoth == 3) { console.log( aMsg ); }
-        if (nBoth == 2 || nBoth == 3) { alert( aMsg ); }
+  function  sayMsg( nBoth, aMsg ) {                                                               // .(30428.04.1 Beg RAM Mov'em into this script)
+        if (nBoth == 2 || nBoth == 3) { console.log( aMsg ); }                                    // .(30503.01.1)
+        if (bQuiet) { return }                                                                    // .(30429.02.2).(30503.01.2 RAM Only bQuiet for alerts)
+        if (nBoth == 1 || nBoth == 3) { alert( aMsg ); }                                          // .(30503.01.3)
             }
 //--------  ------  =  -----------------------------------------------------
 
-  function  fmtMsg( pJSON, pMsgs ) {                                                                // .(30429.03.3 RAM Add pMsgs)
+  function  fmtMsg( pJSON, pMsgs ) {                                                              // .(30429.03.3 RAM Add pMsgs)
        var  bErr     =  pJSON.error || pJSON.nodata || (pJSON.login && pJSON.login.length == 0)
-//     var  aMsg     =(!bErr) ? "Success" : ( pJSON.error ? pJSON.error : "User not found" )        //#.(30429.03.4)
-//          aMsg    +=(!bErr) ? `ful login for ${ pJSON.login[0].FullName }` : ''                   //#.(30429.03.4)
-       var  aMsg     =  bErr  ?  pMsgs.Failure : pMsgs.Success                                      // .(30429.03.4)
-//          sayMsg( 3, `handleFormSubmit[2]   ${ aMsg }` );                                         // .(30429.01.13)
+//     var  aMsg     =(!bErr) ? "Success" : ( pJSON.error ? pJSON.error : "User not found" )      //#.(30429.03.4)
+//          aMsg    +=(!bErr) ? `ful login for ${ pJSON.login[0].FullName }` : ''                 //#.(30429.03.4)
+       var  aMsg     =  bErr  ?  pMsgs.Failure : pMsgs.Success                                    // .(30429.03.4)
+//          sayMsg( 3, `handleFormSubmit[2]   ${ aMsg }` );                                       // .(30429.01.13)
        var  aMsg     =  bErr  ? `<span style="color: red;"    >${aMsg}</span>`
                               : `<span style="color: green;"  >${aMsg}</span>`
     return  aMsg
             }
 //--------  ------  =  -----------------------------------------------------
 
-  function  fmtErr( pError, aURL ) {                                                                // .(30429.03.5 RAM Add aURK)
-//     var  aServer  = document.getElementById( "example-form").action                              //#.(30429.03.6)
+  function  fmtErr( pError, aURL ) {                                                              // .(30429.03.5 RAM Add aURK)
+//     var  aServer  = document.getElementById( "example-form").action                            //#.(30429.03.6)
        var  aError   = String( pError ).replace( /TypeError: /, "" )
-            aError  += aError.match( /Failed to fetch/) ? `. Is server running at ${aURL}?` : ""    // .(30429.03.6)
-//          sayMsg( 3,`handleFormSubmit[3]   Error: ${ aError }` );                                 // .(30429.01.13)//#.(30429.03.4)
+            aError  += aError.match( /Failed to fetch/) ? `. Is server running at ${aURL}?` : ""  // .(30429.03.6)
+//          sayMsg( 3,`handleFormSubmit[3]   Error: ${ aError }` );                               // .(30429.01.13)//#.(30429.03.4)
     return  aError
-         }; // eof fmtErr                                                                           // .(30428.04.1 End)
+         }; // eof fmtErr                                                                         // .(30428.04.1 End)
 //--------  ------  =  -----------------------------------------------------
 
 function  sayErr( aMsg ) {                                                                                  // .(30417.03.1 RAM Move to here)
@@ -309,13 +316,13 @@ function  sayErr( aMsg ) {                                                      
 
 async function  traceR( aFLNo, aMsg, nSay, pObj ) {                                     // .(30416.02.1 RAM Beg Write traceR)
 //     var  inspect =  (await import( 'util' )).inspect                                 // .(30416.02.x RAM workie?)
-       if ((nSay ? nSay : aMsg) >= 1) { 
-            aMsg    =   typeof(aMsg) == 'number' ?  "" :  aMsg 
+       if ((nSay ? nSay : aMsg) >= 1) {
+            aMsg    =   typeof(aMsg) == 'number' ?  "" :  aMsg
             aMsg    =   typeof(aMsg) == 'object' ?        inspect( aMsg, { depth: 99 } ) : String( aMsg )
             aMsg   +=   typeof(pObj) == 'object' ? `:\n${ inspect( pObj, { depth: 99 } ) }` : ''
             aMsg   +=   typeof(pObj) == 'string' ? `:\n'${ pObj }'` : ( typeof(pObj) != 'object' ? ( pObj ? pObj : '' ) : '' )
-        var aSay    =  `${aFLNo.padEnd( 19 )}${aMsg.replace( /\n/g, "\n".padEnd( 20 ) ) }`  
-            console.log( aSay ) 
+        var aSay    =  `${aFLNo.padEnd( 19 )}${aMsg.replace( /\n/g, "\n".padEnd( 20 ) ) }`
+            console.log( aSay )
             }
          }; // eof traceR                                                                                   //#.(30416.02.1 RAM End)
 //--------  ------  =  -----------------------------------------------------

@@ -37,10 +37,18 @@
         <script src="../assets/js/header.js"></script>
 </head>
 <body>
-<script>
+<script type="module">
+
+        console.log( "members.html[1]  Loading module" )    
+//      debugger 
     var aName = "Members"
-    var aAPI  = `${document.location.href}`.match( /iodd.com/i ) ? '/api2' : ''             //  .(30214.03.1 RAM Set if not running in Windows)
-    var aAPI_URL = aAPI ? '/api13' : 'http://localhost:3013'                                 // .(30214.03.2)
+//  var aAPI  = `${document.location.href}`.match( /iodd.com/i ) ? '/api2' : ''             //#.(30214.03.1 RAM Set if not running in Windows).(30505.01.1)
+//  var aAPI_URL = aAPI ? '/api13' : 'http://localhost:3013'                                //#.(30214.03.2).(30505.01.1)
+//  import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'         // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)
+//     await setAPI_URL( )  
+    var aAPI_URL = "http://localhost:3012"    
+        window.aAPI_URL = aAPI_URL                                                          // .(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here)
+                                                                                            // .(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here)
 </script>
 
 <div class="container">
@@ -133,6 +141,11 @@
             <tbody id="Members">
             </tbody>
             <script>
+         $(document).ready( function() {
+
+                var aDB_Server = typeof(aAPI_URL) == 'undefined' ? 'undefined' : aAPI_URL
+           console.log( `members.html[2]  Fetching data from: '${aDB_Server}'` )    
+
                 var pMembers = document.getElementById( "Members" )
 //                  pMembers.innerHTML = fmtMembers( pJSON )
 
@@ -142,7 +155,9 @@
            .then( ( json ) => {  
                                 pMembers.innerHTML = fmtMembers( json ) } ) 
            .catch(( err  ) =>   pMembers.innerHTML = `*** ${err.message}` );                     
-            </script>
+
+           });                
+          </script>
             <tr class="last-row" id="bottom"><td colspan="4"><a href="#top" title="Go To The TOP"><img src="../assets/images/ArrowRedTopRedSmall.gif"></a></td></tr>
         </table>
     </div>
