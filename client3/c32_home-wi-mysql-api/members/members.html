@@ -39,17 +39,29 @@
 <body>
 <script type="module">
 
-        console.log( "members.html[1]  Loading module" )    
 //      debugger 
-    var aName = "Members"
+//      console.log( "members.html[1]       Loading module script" )                        // .(30505.03.3 RAM Causes import to fail)
+
+//  import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'         //#.(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here).(30507.01.1 RAM Remove import of utility-fns) 
+/*                                                                                          //#.(30507.02.31 Beg RAM Move to below)
+//      debugger 
+//      console.log( "members.html[1]       Loading 1st module script" )    
+
+//  var aName = "Members"
 //  var aAPI  = `${document.location.href}`.match( /iodd.com/i ) ? '/api2' : ''             //#.(30214.03.1 RAM Set if not running in Windows).(30505.01.1)
 //  var aAPI_URL = aAPI ? '/api13' : 'http://localhost:3013'                                //#.(30214.03.2).(30505.01.1)
 
-//  import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'         //#.(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)(30507.01.5)
-//     await setAPI_URL( )                                                                  //#.(30507.02.2 RAM Remove getAPI_URL for data fetches in members.html)(30507.01.6) 
-    var aAPI_URL = "http://localhost:3012"                                                  // .(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.1 RJS Use here).(30507.01.7)      
-        window.aAPI_URL = aAPI_URL                                                          // .(30412.03.2 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here).(30507.01.8)      
-                                                                                            
+//  import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'         //#.(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)(30507.01.5 RAM No Import).(30507.02.5 RAM Use Import)
+//                  await setAPI_URL( )                                                     //#.(30507.02.2 RAM Remove getAPI_URL for data fetches in members.html)(30507.01.6).(30507.02.6) 
+//  var aAPI_URL =  await getAPI_URL( )                                                     //#.(30507.02.2 RAM Remove getAPI_URL for data fetches in members.html)(30507.01.6).(30507.02.6) 
+//  var aAPI_URL = "http://localhost:3012"                                                  //#.(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.1 RJS Use here).(30507.01.7 RAM aAPI_URL hardcoded).(30507.02.7 RAM aAPI_URL fetched)      
+//  var aAPI_URL = "/api13"                                                                 //#.(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.1 RJS Use here).(30507.01.7 RAM aAPI_URL hardcoded).(30507.02.7 RAM aAPI_URL fetched)      
+//      window.aAPI_URL = aAPI_URL                                                          //#.(30412.03.2 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here).(30507.01.8).(30507.02.8)      
+
+//      console.log( "members.html[2]       aAPI_URL fetched" )                             //#.(30507.02.9)
+//      console.log( "members.html[3]       1st Module script loaded" )                     //#.(30507.01.9)
+*/                                                                                          //#.(30507.02.31 End)
+                                                                                           
 </script>
 
 <div class="container">
@@ -141,11 +153,31 @@
             <tr class="head-row"><td class="head-name">Name</td><td class="head-email">Email</td><td class="head-phone1">Phone</td><td class="head-phone2">Mobile</td></tr>
             <tbody id="Members">
             </tbody>
-            <script>
-         $(document).ready( function() {
+            <script type="module">
+//                                                                                      // .(30507.02.31 Beg RAM Move to here)            
+
+        import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs' // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)(30507.01.5 RAM No Import).(30507.02.5 RAM Use Import)
+
+                    debugger 
+                    console.log( "members.html[1]       Loading 1st module script" )    
+
+//  var aAPI_URL = "http://localhost:3012"                                              //#.(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.1 RJS Use here).(30507.01.6 RAM Local  aAPI_URL hardcoded).(30507.02.6 RAM aAPI_URL fetched)      
+//  var aAPI_URL = "/api13"                                                             //#.(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.1 RJS Use here).(30507.01.6 RAM Remote aAPI_URL hardcoded).(30507.02.6 RAM aAPI_URL fetched)      
+//  var aAPI_URL =  await getAPI_URL( )                                                 // .(30507.01.7 RAM Remove getAPI_URL for data fetches in members.html).(30507.02.7).(30507.02.41 RAM No workie) 
+                    await setAPI_URL( )                                                 // .(30507.01.7 RAM Remove getAPI_URL for data fetches in members.html).(30507.02.7) 
+//                  window.aAPI_URL = aAPI_URL                                          //#.(30412.03.2 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here).(30507.01.8).(30507.02.8 RAM Done by getAPI_URL)      
+
+                    console.log( "members.html[2]       aAPI_URL fetched" )                             // .(30507.02.x)
+//                  console.log( "members.html[3]       1st Module script loaded" )                         // .(30507.01.x)   
+            
+//                  console.log( `members.html[4]       Loading 2nd module script` )    
+//                                                                                      // .(30507.02.31 Beg RAM Move to here)            
+//            $(document).ready( function() {                                           //#.(30507.02.x RAM Get rid of onReady)
+
+//                  console.log( `members.html[5]       onReady complete` )    
 
                 var aDB_Server = typeof(aAPI_URL) == 'undefined' ? 'undefined' : aAPI_URL
-           console.log( `members.html[2]  Fetching data from: '${aDB_Server}'` )    
+                    console.log( `members.html[6]       Fetching data from: '${aDB_Server}'` )    
 
                 var pMembers = document.getElementById( "Members" )
 //                  pMembers.innerHTML = fmtMembers( pJSON )
@@ -154,10 +186,14 @@
                     fetch( `${aAPI_URL}/members` )                                      // .(30214.05.3)
            .then( ( res  ) => res.json( ) )
            .then( ( json ) => {  
-                                pMembers.innerHTML = fmtMembers( json ) } ) 
-           .catch(( err  ) =>   pMembers.innerHTML = `*** ${err.message}` );                     
-
-           });                
+                                 pMembers.innerHTML = fmtMembers( json )  
+                    console.log( `members.html[7]       Setting members table DIV` )    
+                    } )
+           .catch(( err  ) =>    pMembers.innerHTML = `*** ${err.message}` );                     
+           
+                    console.log( `members.html[8]       onReady completed` )    
+//          });   																		//#.(30507.02.x)              
+                    console.log( `members.html[9]       Module script loaded` )    
           </script>
             <tr class="last-row" id="bottom"><td colspan="4"><a href="#top" title="Go To The TOP"><img src="../assets/images/ArrowRedTopRedSmall.gif"></a></td></tr>
         </table>
