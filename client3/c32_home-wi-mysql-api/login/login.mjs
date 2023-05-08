@@ -8,6 +8,7 @@
 ##FD   login_v1.07c.mjs         |  27370|  4/29/23 14:30|   389| u1.07`30429.1430
 ##FD   login_v1.07c.mjs         |  28404|  4/30/23 10:08|   407| u1.07`30430.1008
 ##FD   login_v1.07c.mjs         |  29375|  5/03/23 09:36|   410| u1.07`30503.0936
+##FD   login_v1.07c.mjs         |  29592|  5/05/23 01:57|   412| u1.07`30505.0157
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This JavaScript file ...
 ##LIC      .--------------------+----------------------------------------------+
@@ -53,6 +54,7 @@
 # .(30429.09  4/29/23 RAM  2:30p|  Add try { ... } catch(e) { ... }
 # .(30428.03  4/30/23 RAM 10:05a|  Cors is needed even if set at server
 # .(30503.01  5/03/23 RAM  9:36a|  Use sayMsg for bQuiet
+# .(30505.01  5/05/23 RAM  1:57p|  Use aAction not aURL in fetchLoginData errmsg
 
 ##SRCE     +====================+===============================================+
 */
@@ -294,9 +296,9 @@ var id = 90
        var  pRes                =  await fetch( aAction, pFetchCfg );                   // .(30428.03.3 RAM This way)
 
         } catch( pErr ) {                                                               // .(30429.09.2 RAM Beg Catch Server not running)
-            sayMsg( 1,    `fetchL~Data[2] ** Server error: '${aURL}'\n ${pErr}` )    // .(30421.01.2 RAM Added).(30423.07.2 RAM Improved error msg).(30503.01.13)
-            sayMsg( 2, `fetchLoginData[2] ** Server error: '${aURL}'\n ${pErr}` )    // .(30421.01.2 RAM Added).(30423.07.2).(30503.01.14)
-            fmtErrMsg( `** Server error: '${aURL}`)                                  // .(30421.04.6 RAM Use fmtErrMsg here)
+            sayMsg( 1,    `fetchL~Data[2] ** Server error: '${aAction}'\n ${pErr}` )    // .(30421.01.2 RAM Added).(30423.07.2 RAM Improved error msg).(30503.01.13).(30505.01.1 RAM Opps)
+            sayMsg( 2, `fetchLoginData[2] ** Server error: '${aAction}'\n ${pErr}` )    // .(30421.01.2 RAM Added).(30423.07.2).(30503.01.14).(30505.01.2)
+            fmtErrMsg( `** Server error: '${aAction}`)                                  // .(30421.04.6 RAM Use fmtErrMsg here).(30505.01.3)
      return
             }                                                                           // .(30429.09.2 End)
 //     if (!pRes   ) {                                                                  //#.(30429.05.4
