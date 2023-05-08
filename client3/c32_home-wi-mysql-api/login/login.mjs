@@ -7,8 +7,7 @@
 ##FD   login_v1.07c.mjs         |  24938|  4-29-23 13:34|   383| u1.07`30429.1334
 ##FD   login_v1.07c.mjs         |  27370|  4/29/23 14:30|   389| u1.07`30429.1430
 ##FD   login_v1.07c.mjs         |  28404|  4/30/23 10:08|   407| u1.07`30430.1008
-##FD   login_v1.07c.mjs         |  29381|  5/03/23 09:36|   410| u1.07`30503.0936
-##FD   login_v1.07c.mjs         |  29579|  5/05/23 13:57|   412| u1.07`30505.1357
+##FD   login_v1.07c.mjs         |  29375|  5/03/23 09:36|   410| u1.07`30503.0936
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This JavaScript file ...
 ##LIC      .--------------------+----------------------------------------------+
@@ -54,7 +53,6 @@
 # .(30429.09  4/29/23 RAM  2:30p|  Add try { ... } catch(e) { ... }
 # .(30428.03  4/30/23 RAM 10:05a|  Cors is needed even if set at server
 # .(30503.01  5/03/23 RAM  9:36a|  Use sayMsg for bQuiet
-# .(30504.01  5/05/23 RAM  1:57p|  Use aAction not aURL in fetchLoginData errmsg
 
 ##SRCE     +====================+===============================================+
 */
@@ -296,9 +294,9 @@ var id = 90
        var  pRes                =  await fetch( aAction, pFetchCfg );                   // .(30428.03.3 RAM This way)
 
         } catch( pErr ) {                                                               // .(30429.09.2 RAM Beg Catch Server not running)
-            sayMsg( 1,    `fetchL~Data[2] ** Server error: '${aAction}'\n ${pErr}` )    // .(30421.01.2 RAM Added).(30423.07.2 RAM Improved error msg).(30503.01.13).(30504.01.1 RAM Opps)
-            sayMsg( 2, `fetchLoginData[2] ** Server error: '${aAction}'\n ${pErr}` )    // .(30421.01.2 RAM Added).(30423.07.2).(30503.01.14).(30504.01.2)
-            fmtErrMsg( `** Server error: '${aAction}`)                                  // .(30421.04.6 RAM Use fmtErrMsg here).(30504.01.3)
+            sayMsg( 1,    `fetchL~Data[2] ** Server error: '${aURL}'\n ${pErr}` )    // .(30421.01.2 RAM Added).(30423.07.2 RAM Improved error msg).(30503.01.13)
+            sayMsg( 2, `fetchLoginData[2] ** Server error: '${aURL}'\n ${pErr}` )    // .(30421.01.2 RAM Added).(30423.07.2).(30503.01.14)
+            fmtErrMsg( `** Server error: '${aURL}`)                                  // .(30421.04.6 RAM Use fmtErrMsg here)
      return
             }                                                                           // .(30429.09.2 End)
 //     if (!pRes   ) {                                                                  //#.(30429.05.4
@@ -314,8 +312,8 @@ var id = 90
          }; // eif Use Server aAPI_URL, ie. aAction.match(/.html$/)                     // .(30420.06.5 RAM)
 
         if (bSubmit) {                                                                  // .(30429.05.5 Beg RAM Submit HTML form action)
-//          sayMsg( 1, `onSubmit[2]    Form being submited to: '${aAction}'` )          // .(30503.01.15)
-//          sayMsg( 2, `onSubmit[2]    Form being submited to: '${aAction}'` )          // .(30503.01.16)
+//          sayMsg( 1, `onSubmit[2]    Form being submitted to: '${aAction}'` )         // .(30503.01.15)
+//          sayMsg( 2, `onSubmit[2]    Form being submitted to: '${aAction}'` )         // .(30503.01.16)
          }                                                                              // .(30429.05.5 End)
 //       }; // eif Use HTML 1.0 form submit)                                            // .(30420.06.5 RAM)
 //    ----  ------------------------------------------------
@@ -356,7 +354,7 @@ var id = 90
             sayMsg( 1,     `onLog~Succ[3]  Username and Password found:`)                         // .(30423.03.8).(30503.01.23)
             sayMsg( 2, `onLoginSuccess[3]  Username and Password found for ${pLogin.FullName}`)   // .(30428.03.5).(30503.01.24)
             sayMsg( 2,      pLogin )                                                              // .(30503.01.25)
-            setCookie(      pLogin.MemberNo )                                                     // .(30502.05.1 RAM Opps)
+            setCookie(      pLogin.MemberNo )                                                     // .(30502.05.1 RAM Oops)
 //          setLoginForm( pJSON )                                                                 // .(30429.06.2 RAM Use function againp for fetch API)
 
             location.href = "/"
