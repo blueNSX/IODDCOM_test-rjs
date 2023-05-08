@@ -13,7 +13,7 @@
             <!--  Section1 -->
             <div    class="Section1">
                 <div class="Section1Title">institute of database developers</div>
-                <div  class="Section1Paragraph">
+                <div class="Section1Paragraph">
 
                     IODD members have demonstrated expertise in one or more areas of database analysis, design, implementation, management and maintenance.
                     <br><br>
@@ -28,22 +28,26 @@
 //              console.log( "inc-section1.html[1]  Loading module script" )                   // .(30505.03.3 RAM Causes import to fail)
 //              debugger 
 
-       import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'         // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)
+//     import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'         //#.(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here).(30507.01.1 RAM Remove import of utility-fns) 
 
                 console.log( "inc-section1.html[1]  Loading module script" )                   // .(30505.03.4 RAM Must be after import)
                 debugger 
 
-          await setAPI_URL( )   
-//          var aAPI_URL = "http://localhost:3012"                                             // .(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here)
-//              window.aAPI_URL = aAPI_URL                                                     // .(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here)
+//        await setAPI_URL( )                                                                  //#.(30505.01.2 RJS Use here).(30507.01.2 RAM Remove it)
+            var aAPI_URL = "http://localhost:3012"                                             // .(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here).(30507.01.3 RAM hard-code it)
+                window.aAPI_URL = aAPI_URL                                                     // .(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here).(30507.01.4 RAM Make it global)
 
-                console.log( "inc-section1.html[2]  Module script loaded" )    
-            </script>
-            <script type="module">
+//              console.log( "inc-section1.html[2]  Module script loaded" )                    // .(30507.01.x)   
+                console.log( "inc-section1.html[2]  aAPI_URL set" )                            // .(30507.01.x)
 
-                console.log( "inc-section1.html[3]  Loading regular script" )    
+                //          </scr ipt>                                                         // .(30507.01.x RAM Keep it all in the same script module)
+//          <script type="module">                                                             // .(30507.01.x) -->
+/*                                                                                
+//              console.log( "inc-section1.html[3]  Loading regular script" )                  // .(30507.01.x) 
+//              console.log( "inc-section1.html[3]  Loading second module script" )            // .(30507.01.x RAM No workie) 
+                console.log( "inc-section1.html[3]  Continue loading module script" )          // .(30507.01.x) 
                 debugger 
-
+/*                                                                                             //#.(30507.01.x Beg RAM Don't set listener)
 //         $(document).ready( function() { ... }                               // jQuery method 1 
 //         $(document).ready( onReady )                                        // jQuery method 2 
              document.addEventListener( 'readystatechange', function(event) {  // Browser method
@@ -52,9 +56,9 @@
                  case 'interactive': console.log( "inc-section1.html[5]  ReadyState: Ready?"  );            break; 
                  case 'complete'   : console.log( "inc-section1.html[6]  ReadyState: Complete"); onReady(); break;  
                  }
-             }); 
+             });      */                                                                       //#.(30507.01.x End)
 
-       function onReady() {
+//     function onReady() {                                                                    //#.(30507.01.9 RAM Remove onReady in regular script)
              // alert ("Id = " + id)
 //              debugger 
 
@@ -93,9 +97,9 @@
                      return aHTML
                         } // eof fmtWelcome  
 
-                        console.log( "inc-section.html[9]  End of onReady"  )                              // .(30423.03.4)
-                } // eof onReady 
-                console.log( "inc-section1.html[10] Regular script loaded"  )                              // .(30423.03.4)
+//                      console.log( "inc-section1.html[9]  End of onReady"  )                              //#.(30423.03.4).(30507.01.x) 
+//              } // eof onReady                                                                            //#.(30507.01.x) 
+                console.log( "inc-section1.html[10] Regular script loaded"  )                               // .(30423.03.4)
 
              </script>
     </body>
