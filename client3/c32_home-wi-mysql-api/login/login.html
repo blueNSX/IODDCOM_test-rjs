@@ -12,6 +12,7 @@
 ##FD   login_v1.07c.html        |  15027|  4-29-23 18:16|   243| v1-07`30429.1816
 ##FD   login_v1.07c.html        |  15573|  4-30-23 10:14|   254| v1-07`30430.1014
 ##FD   login_v1.07c.html        |  15931|  5-01-23 10:07|   257| v1-07`30501.1007
+##FD   login_v1.07c.html        |  16462|  5-03-23 10:29|   261| v1-07`30503.1029
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This HTML file ...
 ##LIC      .--------------------+----------------------------------------------+
@@ -28,10 +29,11 @@
 # .(30421.09  4/21/23 RAM 10:10a|  Remove FiveServer option
 # .(30425.02  4/25/23 RAM  5:06p|  Add onLoginForm_Submit (not found in module)
 # .(30428.01  4/28/23 RAM  9:00a|  Define listener in module
-# .(30429.01  4/29/23 RAM  1:00p|  Make showPIN global 
+# .(30429.01  4/29/23 RAM  1:00p|  Make showPIN global
 # .(30429.08  4/29/23 RAM  1:52p|  Add <div id="errMsg">
 # .(30430.08  4/30/23 RAM 10:06a|  Can't load module script with .mjs
-# .(30502.01  5/02/23 RJS 10:07a|  Modify Submit, Cancel buttons  
+# .(30502.01  5/02/23 RJS 10:07a|  Modify Submit, Cancel buttons
+# .(30503.02  5/03/23 RAM 10:29a| "Fuck You Microsoft"
 
 ##SRCE     +====================+===============================================+
 #-->
@@ -211,7 +213,9 @@
             <!-- font awesome icon -->
             <i   class="fas fa-user"></i>
           </label>
-          <input type="text"         name="username" placeholder="eMail" id="username" value="" required>
+<!--      <input type="text"         name="username" placeholder="eMail" id="username" value="" required>                  --><!--#.(30503.02.1) -->
+          <input type="text"         name="username" placeholder="eMail" id="username" value="Fuck You Microsoft" required>   <!-- .(30503.02.1 RAM "Fuck You Microsoft") -->
+<!--      <input type="text"         name="username" placeholder="eMail" id="username" value=" " required>                 --><!--#.(30503.02.2 RAM Try a space. No workie) -->
 
           <label class="label-styles" for="password">
             <i   class="fas fa-lock"></i>
