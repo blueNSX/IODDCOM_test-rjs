@@ -4,7 +4,7 @@
  API_URL     = '/api12' # remote path:  http://https:/iodd.com/api12/
 #API_URL     =          # local  path:  http://localhost:3012/  or  http://localhost:3012/api12 ??
 
- Remote_Host = 'https:/iodd.com/test-rjs'
+ Remote_Host = 'https://iodd.com/test-rjs'
  Local_Host  = 'http://localhost:'
 
 #Client_Port =  54532
