@@ -45,7 +45,7 @@ The .Section1 properites
   background-position: center;
   border-bottom: 0px black solid;
   width: 100%;
-  height: 250px;
+  height: 260px;
   position: relative;
   top: 70px;
   overflow: auto;
@@ -80,16 +80,17 @@ The .Section1 properites
   align-items: center;
   /* width: 500px; */
   text-align: center;
-  padding: 5px 0px 0px 0px;
+  padding: 5px 20px 10px 20px;
   font-family: var(--GlobalFontFamily);
   font-weight: 600;
   font-size: 25px;
   color: 080808;
+  text-shadow: 2px 2px 3px white;
   /* text-underline-position: under; */
   /* text-decoration: underline 3px; */
   /* color: rgb(54, 26, 211); */
-  /* background-color: aliceblue; */
-  text-shadow: 2px 2px 3px white;
+  /* background-color: whitesmoke; */
+  /* opacity: .4; */
 }
 #WelcomeBanner::first-letter {
   font-size: 40px;
@@ -106,7 +107,7 @@ The .Section2 properites
 .Section2 {
     background: var(--Section2BGColor);
     width: 100%;
-    height: 75%;
+    height: 55%;
     position: relative;
     color: black;
     top: 70px; /*<---ADD to adjust the top position*/
@@ -129,7 +130,7 @@ The .Section2 properites
 }
 /*------------------------------------------*/
 .Section2Paragraph {
-    margin: 0px 20px 0px 25px;
+    margin: -20px 20px 0px 25px;
     font-size: 16px;
     font-weight: 600;
     scroll-behavior: auto;

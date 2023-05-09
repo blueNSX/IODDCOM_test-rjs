@@ -1,0 +1,718 @@
+* {
+  box-sizing: border-box;
+  font-family: var(--GlobalFontFamily);
+  font-size: 14px;
+}
+.logout-temp-div {
+  text-align: right;
+  margin: 0px 10px 0px 0px;
+}
+.logout-temp-span a {
+  text-decoration: none;
+  color: white;
+  font-family: monospace;
+  font-weight: 700;
+  background-color: blue;
+  padding: 2px 8px 2px 8px;
+  border: 1px solid blue;
+  border-radius: 8px;
+}
+.Section1 {
+  height: 700px; /*was 120px*/
+  width: var(--GlobalMaxWidth);
+  width: 100%;
+  top: 60px;
+  left: 0px;  
+  background: url( '../assets/images/monaco-blue-soft.jpg');
+  /*background-color: whitesmoke;*/
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.Section1Title {
+  padding: 30px 0px 0px 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: whitesmoke;
+  text-shadow: 1px 1px 3px #000000;
+}
+.Section2 {
+  height: 600px;
+  background-color: aliceblue;
+}
+
+.req-fields-notice {
+  color:blue;
+}
+
+.form-setting {
+  width: 650px;
+  background-color: whitesmoke;
+  box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+  margin: 20px auto;
+  border: solid blue 1px;
+}
+.form-setting h1 {
+  text-align: center;
+  color: #5b6574;
+  font-size: 24px;
+  padding: 20px 0px 20px 0px;
+  border-bottom: 1px solid #ECECEC;
+}
+.form-setting form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 20px;
+}
+.form-setting form label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  /* background-color: #3274d6; */
+  color: #ffffff;
+}
+.form-setting form input[type="password"], 
+.form-setting form input[type="text"] {
+  width: 130px;
+  height: 40px;
+  border: 1px solid #dee0e4;
+  margin-bottom: 20px;
+  padding: 0 15px;
+}
+.form-setting form input[type="submit"] {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  background-color: #3274d6;
+  border: 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+  transition: background-color 0.2s;
+}
+.form-setting form input[type="submit"]:hover {
+  background-color: #2868c7;
+  transition: background-color 0.2s;
+  /* border: solid blue 1px; */
+}
+
+
+/*Creates the EYE toggle*/
+#trigger {
+  opacity: 0;
+}
+label {
+  background-color: none;
+}
+.checker {
+  background-image: url('../assets/images/eyeball.gif');
+  background-position: left center;
+  background-size: auto 30%;
+  width: 25px;
+  height: 15px;
+  background-repeat: no-repeat;
+  position: absolute;
+  margin: 85px 0px 0px 470px;
+}
+#trigger:checked + .checker {
+  background-position: left center;
+}
+/*END Creates the EYE toggle*/
+
+
+::-webkit-input-placeholder {
+  color: #DCDCDC;
+}
+
+/*======================================*/
+.name-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 15px 0px;
+}
+.name-info {
+  display: flex;
+  list-style-type: none;
+  height: 50px;
+}
+#firstname,
+#lastname {
+  width: 180px;
+  text-transform: capitalize;
+}
+#middleinits {
+  width: 50px;
+  text-transform: uppercase;
+}
+#suffix {
+  width: 70px;
+  /* text-transform: uppercase; */
+}
+/*======================================*/
+
+.credentials-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 15px 0px;
+}
+.credentials-info {
+  display: flex;
+  list-style-type: none;
+  height: 50px;
+}
+#email {
+  width: 350px;
+}
+
+/*======================================*/
+
+.company-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.company-url-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.company-address1-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.company-address2-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.company-name,
+.company-url,
+.company-address1,
+.company-address2 {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  width: 600px;
+  height: 50px;
+}
+#co-name {
+  width: 480px;
+  margin-left:60px;
+}
+#co-url {
+  width: 480px;
+  margin-left:60px;
+}
+#co-addr1 {
+  width: 480px;
+  margin-left:60px;
+}
+#co-addr2 {
+  width: 480px;
+  margin-left:60px;
+}
+
+/*======================================*/
+
+.city-state-zip-country-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.city-state-zip-country {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  height: 50px;
+}
+#city {
+  width: 220px;
+  text-transform: capitalize;
+  /* margin-left: 60px; */
+}
+#state {
+  width: 100px;
+  text-transform: uppercase;
+}
+#zip,
+#country {
+  width: 80px
+}
+
+/*======================================*/
+
+.phone-info-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.phone-info {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  height: 50px;
+}
+#phone1,
+#phone2 {
+  width: 240px
+}
+
+/*======================================*/
+
+.bio-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 15px 0px;
+}
+.bio {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  width: 600px;
+  vertical-align: top;
+}
+
+#bio {
+  width: 480px;
+  margin-left: 60px;
+  height: 120px;
+}
+
+/*======================================*/
+
+#WelcomeMemberInfo {
+  font-size: 18px;
+}
+
+#member-form-error {
+  border-top: red 1px solid;
+  border-bottom: red 1px solid;
+  color: red;
+  font-size: 14px;
+  background-color: yellow;
+  padding: 10px 0px 10px 0px;
+  display: none;
+}
+#member-form-error a {
+  font-size: 14px;
+}
+.Footer {
+  display: block;
+  height: 60px;
+  /* width: 440px; */
+  /* opacity: 0.82; */
+  /* border-top: dotted 2px #696969; */
+
+} 
+.FooterNavList {
+  justify-content: center;
+  padding-left: 0px;
+  margin: 5px;
+  text-align: center;
+}
+.FooterNavListItem  {
+  padding: 10px 0px 10px 0px;
+}
+  .FooterNavListItem a {
+    color: #505050;
+}
+
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+/*-----------------------------------------
+The @media MAX-width query properties
+***** IPHONE - Landscape
+/*If Device Width 
+  is >= 441px AND 
+  <= 740px Then...*/
+
+/*=========================================*/
+@media only screen
+and (min-width: 441px)
+and (max-width: 700px) 
+{
+
+  .Section1 {
+    max-width: 700px;
+  }
+  .Section1Title {
+    font-size: 24px;
+  }
+  .form-setting {
+    width: 560px;
+    background-color: whitesmoke;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+    margin: 20px auto;
+  }
+  .form-setting h1 {
+    text-align: center;
+    color: #5b6574;
+    font-size: 18px;
+    padding: 20px 0px 20px 0px;
+    border-bottom: 1px solid #ECECEC;
+  }
+  .form-setting form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 10px;
+  }
+  .form-setting form label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    /* background-color: #3274d6; */
+    color: #ffffff;
+  }
+  .form-setting form input[type="password"], 
+  .form-setting form input[type="text"] {
+    width: 130px;
+    height: 40px;
+    border: 1px solid #dee0e4;
+    margin-bottom: 20px;
+    padding: 0 15px;
+  }
+  .form-setting form input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #3274d6;
+    border: 0;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    transition: background-color 0.2s;
+  }
+  .form-setting form input[type="submit"]:hover {
+    background-color: #2868c7;
+    transition: background-color 0.2s;
+  }
+ 
+  .checker {
+    margin: 85px 0px 0px 520px;
+  }
+
+
+  ::-webkit-input-placeholder {
+    color: #DCDCDC;
+  }
+
+  /*--------------------------------*/
+
+  .name-title {
+    height: 20px;
+    width: 95%;
+    padding: 0px 0px 15px 0px;
+  }
+  #firstname,
+  #lastname {
+    width: 210px;
+  }
+  #middleinits,
+  #suffix {
+    width: 60px;
+  }
+
+  /*--------------------------------*/
+
+  .credentials-title {
+    height: 20px;
+    width: 95%;
+    padding: 0px 0px 15px 0px;
+  }
+  #email{
+    width: 330px
+  }
+  #password {
+    width: 210px
+  }
+
+  /*--------------------------------*/
+
+  .company-title {
+    height: 30px;
+    width: 95%;
+    padding: 0px 0px 25px 0px;
+  }
+  .company-url-title,
+  .company-address1-title,
+  .company-address2-title {
+    height: 10px;
+    width: 95%;
+    padding: 0px 0px 0px 0px;
+  }
+  #co-name,
+  #co-url,
+  #co-addr1,
+  #co-addr2 {
+    width: 540px;
+    margin-left: 10px;
+  }
+
+  /*--------------------------------*/
+
+  .city-state-zip-country-title {
+    height: 20px;
+    width: 95%;
+    padding: 0px 0px 15px 0px;
+  }
+  #city {
+    width: 280px;
+  }
+  #state {
+    width: 80px;
+  }
+  #zip {
+    width: 80px;
+  }
+  #country {
+    width: 100px;
+  }
+
+  /*--------------------------------*/
+
+  .phone-info-title {
+    height: 20px;
+    width: 95%;
+    padding: 0px 0px 30px 0px;
+
+  }
+  #phone1,
+  #phone2 {
+    width: 270px
+  }
+
+  /*--------------------------------*/
+
+  .bio-title {
+    height: 20px;
+    width: 95%;
+    padding: 0px 0px 20px 0px;
+
+  }
+  #bio {
+    width: 540px;
+    margin-left: 10px;
+    height: 200px;
+    scroll-behavior: auto;
+  }
+  textarea #bio {
+    padding: 110px 10px 10px 110px;
+  }
+  /*--------------------------------*/
+
+  .Footer {
+    display: none;
+  }
+}
+
+
+  /*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+  /*-----------------------------------------
+  The @media MAX-width query properties
+  ***** IPHONE
+  /*If Device Width is <= to 440px Then...*/
+
+  /*=========================================*/
+  @media only screen
+  and (max-width: 440px)
+  {
+
+      .Section1 {
+        max-width: 100vw;
+      }
+      .Section1Title{
+        font-size: 20px;
+        padding: 20px 0px 0px 0px;
+      }
+      .member-title {
+        font-size: 14px;
+      }      
+      .form-setting {
+        width: 360px;
+        background-color: whitesmoke;
+        box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+        margin: 10px auto;
+      }
+      .form-setting h1 {
+        text-align: center;
+        color: #5b6574;
+        font-size: 20px;
+        padding: 20px 0px 20px 0px;
+        border-bottom: 1px solid #ECECEC;
+      }
+      .form-setting form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 10px;
+      }
+      .form-setting form label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        /* background-color: #3274d6; */
+        color: #ffffff;
+      }
+      .form-setting form input[type="password"], 
+      .form-setting form input[type="text"] {
+        width: 130px;
+        height: 40px;
+        border: 1px solid #dee0e4;
+        margin-bottom: 20px;
+        padding: 0 15px;
+      }
+      .form-setting form input[type="submit"] {
+        width: 100%;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #3274d6;
+        border: 0;
+        cursor: pointer;
+        font-weight: bold;
+        color: #ffffff;
+        transition: background-color 0.2s;
+      }
+      .form-setting form input[type="submit"]:hover {
+        background-color: #2868c7;
+        transition: background-color 0.2s;
+      }
+      .checker {
+        margin: 85px 0px 0px 335px;
+      }
+          
+      ::-webkit-input-placeholder {
+        color: #DCDCDC;
+      }
+
+      /*--------------------------------*/
+
+      .name-title {
+        height: 20px;
+        width: 95%;
+        padding: 0px 0px 15px 0px;
+      }
+      #firstname,
+      #lastname {
+        width: 140px;
+      }
+      #middleinits,
+      #suffix {
+        width: 30px;
+      }
+
+      /*--------------------------------*/
+
+      .credentials-title {
+        height: 20px;
+        width: 90%;
+        padding: 0px 0px 0px 0px;
+      }
+      #email{
+        width: 210px
+      }
+      #password {
+        width: 135px
+      }
+
+      /*--------------------------------*/
+
+      .company-title {
+        height: 30px;
+        width: 95%;
+        padding: 0px 0px 25px 0px;
+      }
+      .company-url-title,
+      .company-address1-title,
+      .company-address2-title {
+        height: 10px;
+        width: 95%;
+        padding: 0px 0px 0px 0px;
+      }
+      #co-name,
+      #co-url,
+      #co-addr1,
+      #co-addr2 {
+        width: 345px;
+        margin-left: 5px;
+      }
+
+      /*--------------------------------*/
+
+      .city-state-zip-country-title {
+        height: 20px;
+        width: 95%;
+        padding: 0px 0px 15px 0px;
+      }
+      #city {
+        width: 160px;
+      }
+      #state {
+        width: 55px;
+      }
+      #zip {
+        width: 70px;
+      }
+      #country {
+        width: 60px;
+      }
+
+      /*--------------------------------*/
+
+      .phone-info-title {
+        height: 20px;
+        width: 95%;
+        padding: 0px 0px 30px 0px;
+
+      }
+      #phone1,
+      #phone2 {
+        width: 170px
+      }
+
+      /*--------------------------------*/
+
+      .bio-title {
+        height: 20px;
+        width: 95%;
+        padding: 0px 0px 20px 0px;
+
+      }
+      #bio {
+        width: 345px;
+        margin-left: 5px;
+        height: 200px;
+        scroll-behavior: auto;
+      }
+
+      /*--------------------------------*/
+
+      .Footer {
+        display: none;
+      }
+  }
