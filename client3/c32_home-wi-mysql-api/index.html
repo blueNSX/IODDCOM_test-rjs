@@ -133,26 +133,3 @@
 </div> 
 <!--END Container DIV-->
 
-
-
-
-<script>
-		//alert ("Id = " + id)
-		var pWelcome = document.getElementById( "WelcomeBanner1" )
-
-//                  fetch( `${aAPI_URL}/members?id=${ id }` )                                      // .(30214.05.3)
-                    fetch( `http://localhost:3013/members?id=${ id }` )                                      // .(30214.05.3)
-           .then( ( res  ) => res.json( ) )
-           .then( ( json ) => {  
-			var aHTML = fmtWelcome (json)
-			pWelcome.innerHTML = aHTML 
-			} ) 
-           //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
-			function fmtWelcome ( pJSON ) {
-				var aHTML = pJSON.members[0].FullName
-				return aHTML
-			}
-	</script>
-
-</body>
-</html>

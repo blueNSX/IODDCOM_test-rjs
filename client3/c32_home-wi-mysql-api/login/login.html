@@ -11,6 +11,8 @@
 ##FD   login_v1.07a.html        |  11937|  4-28-23 18:12|   234| v1-07`30428.1812
 ##FD   login_v1.07c.html        |  15027|  4-29-23 18:16|   243| v1-07`30429.1816
 ##FD   login_v1.07c.html        |  15573|  4-30-23 10:14|   254| v1-07`30430.1014
+##FD   login_v1.07c.html        |  15931|  5-01-23 10:07|   257| v1-07`30501.1007
+##FD   login_v1.07c.html        |  16462|  5-03-23 10:29|   261| v1-07`30503.1029
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This HTML file ...
 ##LIC      .--------------------+----------------------------------------------+
@@ -27,9 +29,11 @@
 # .(30421.09  4/21/23 RAM 10:10a|  Remove FiveServer option
 # .(30425.02  4/25/23 RAM  5:06p|  Add onLoginForm_Submit (not found in module)
 # .(30428.01  4/28/23 RAM  9:00a|  Define listener in module
-# .(30429.01  4/29/23 RAM  1:00p|  Make showPIN global 
+# .(30429.01  4/29/23 RAM  1:00p|  Make showPIN global
 # .(30429.08  4/29/23 RAM  1:52p|  Add <div id="errMsg">
 # .(30430.08  4/30/23 RAM 10:06a|  Can't load module script with .mjs
+# .(30502.01  5/02/23 RJS 10:07a|  Modify Submit, Cancel buttons
+# .(30503.02  5/03/23 RAM 10:29a| "Fuck You Microsoft"
 
 ##SRCE     +====================+===============================================+
 #-->
@@ -41,7 +45,7 @@
 <!--    <script src="https://www.w3schools.com/lib/w3.js"></script>-->
         <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
-        <title>Login_u1.07c-ram</title>
+        <title>Login_u1.07c-rjs</title>
 
         <link rel="shortcut icon" href="../assets/icons/favicon.png"><!-- .(30423.01.1 RAM Moved) -->
         <link rel="stylesheet"    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
@@ -101,10 +105,10 @@
 // import { fmtMembers, fmtMember } from '../assets/mjs/header.mjs'                     //#.(30412.02.5 RAM Gotta doit all in one script)
 // import { setAPI_URL, setHTML   } from '../assets/mjs/formr_utility-fns_u1.06.mjs'    //#.(30412.03.1 RAM).(30415.02.1)
 // import { setAPI_URL, setHTML   } from           'mjs/formr_utility-fns_u1.06.mjs'    //#.(30415.02.1 RAM Avoid CORS error with "liveServer.settings.mount:" [ ["/", "/client3/c32_home-wi-mysql-api_v1.03-rjs-ram"] ], )
-   import { setAPI_URL, setHTML   } from '../assets/mjs/formr_utility-fns_u1.07.js'     // .(30415.02.1 RAM Avoid CORS error).(30423.02.1 RAM New version with fetchFile).(30430.03.1)
+   import { setAPI_URL, setHTML   } from '../assets/mjs/formr_utility-fns_u1.07.mjs'    // .(30415.02.1 RAM Avoid CORS error).(30423.02.1 RAM New version with fetchFile).(30430.03.1)
 // import { fmtLogin              } from '/login.mjs'                                   //#.(30421.03.1 RAM Don't need it yet)
-   import { getID, setCookie, clearListCookies }            from './login.js'           // .(30421.03.2 RAM Move to module here).(30430.03.2 RAM Must be .js on server)
-   import { onLoginForm_Submit, setLoginForm   }            from './login.js'           // .(30421.03.3).(30425.02.1 RAM Add onLoginForm_Submit).(30430.03.3)
+   import { getID, setCookie, clearListCookies }            from './login.mjs'          // .(30421.03.2 RAM Move to module here).(30430.03.2 RAM Must be .js on server)
+   import { onLoginForm_Submit, setLoginForm   }            from './login.mjs'          // .(30421.03.3).(30425.02.1 RAM Add onLoginForm_Submit).(30430.03.3)
 // import {   handleFormSubmit, sayMsg,  fmtMsg, fmtErr }   from '../assets/mjs/ES6_form_u1.07.mjs' //#.(30428.04.2 Import 'em)
 
 //          sayMsg( 3,   "login.html[2]  Begin module script" )
@@ -209,7 +213,9 @@
             <!-- font awesome icon -->
             <i   class="fas fa-user"></i>
           </label>
-          <input type="text"         name="username" placeholder="eMail" id="username" value="" required>
+<!--      <input type="text"         name="username" placeholder="eMail" id="username" value="" required>                  --><!--#.(30503.02.1) -->
+          <input type="text"         name="username" placeholder="eMail" id="username" value="Fuck You Microsoft" required>   <!-- .(30503.02.1 RAM "Fuck You Microsoft") -->
+<!--      <input type="text"         name="username" placeholder="eMail" id="username" value=" " required>                 --><!--#.(30503.02.2 RAM Try a space. No workie) -->
 
           <label class="label-styles" for="password">
             <i   class="fas fa-lock"></i>
@@ -222,9 +228,9 @@
 
             <!--<div class="pin-div"><input id="trigger" class="checkbox-image" type="checkbox" onclick="showPin()"></div>-->
           </div>
-          <div id="login-cancel"><a href="login.html">Cancel</a></div>
-          <!-- <input id="login-cancel" type="submit" value="Cancel"> -->
-          <input id="login-button" type="submit" value="Login">
+          <div   id="login-cancel"><a href="login.html">Cancel</a></div> <!-- .(30501.01.1 RJS Change Cancel btn to a link) -->
+     <!-- <input id="login-cancel" type="submit" value="Cancel"> -->     <!--#.(30501.01.1) -->
+          <input id="login-button" type="submit" value="Login">          <!-- .(30501.01.2 RJS Add Login btn) -->
         </form>
       </div>
     </div>
@@ -249,7 +255,7 @@
     </div>    <!-- eof Container .*30426.02.1 RAM) -->
 <!--</div> --><!-- eof Container --> <!-- // Mismatched close-tag, expected '</body>' but found '</div>'.' -->
   <script>
-    console.log( "login.html[4]  End of resular script"  )                              // .(30423.03.4)
+    console.log( "login.html[4]  End of regular script"  )                              // .(30423.03.4)
   </script>
   </body>
 </html>
