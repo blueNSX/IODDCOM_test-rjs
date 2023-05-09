@@ -25,7 +25,7 @@
 
 </head>
 <body>
-<script src="../assets/js/personal.js"></script>
+<!-- <script src="../assets/js/personal.js"></script> -->
 <script> var aName = "Personal" </script>	
 <!--  Header -->
   <style>
@@ -179,7 +179,7 @@
 		<!-- END inc-footer -->
   <!-- END  Footer -->
 
-  <script src="../assets/js/personal.js"></script>
+  <!--<script src="../assets/js/personal.js"></script>-->
 
   <script>
       function showPin() {
@@ -215,7 +215,7 @@
       //alert ("Id = " + id)
       var pWelcome = document.getElementById( "WelcomeMemberInfo" )
                   //fetch( `${aAPI_UTL}/members?id=${ id }` )
-                  fetch( `http://localhost:3013/members?id=${ id }` )
+                  fetch( `http://localhost:3012/members?id=${ id }` )
           .then( ( res  ) => res.json( ) )
           .then( ( json ) => {  
           var aHTML = fmtWelcome (json)
@@ -247,7 +247,7 @@
       
 
           //fetch( `${aAPI_UTL}/members?id=${ id }` )
-                  fetch( `http://localhost:3013/members?id=${ id }` )
+                  fetch( `http://localhost:3012/members?id=${ id }` )
           .then( ( res  ) => res.json( ) )
           .then( ( json ) => {  
           pFirstName.value = json.members[0].FirstName

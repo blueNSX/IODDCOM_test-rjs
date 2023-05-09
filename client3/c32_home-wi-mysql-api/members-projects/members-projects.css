@@ -390,8 +390,9 @@ and (max-width: 740px)
         border: none;
         height: 2px;
         width: var(--DivisionLineWidth);
+        width: 200px;
         background: blue;
-        margin: 20px 20px 20px 20px;
+        margin: 0px 0px 0px 0px;
     } 
 }
 /*
