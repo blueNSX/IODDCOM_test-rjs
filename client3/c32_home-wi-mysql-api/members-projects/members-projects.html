@@ -3,8 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <script src="https://www.w3schools.com/lib/w3.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
         <title>Members</title>
@@ -39,11 +40,6 @@
         <script src="../assets/js/header.js"></script>
 </head>
 <body>
-<script>
-    var aName = "MembersProjects"
-    var aAPI  = `${document.location.href}`.match( /iodd.com/i ) ? '/api2' : ''             //  .(30214.03.1 RAM Set if not running in Windows)
-    var aAPI_URL = aAPI ? '/api13' : 'http://localhost:3013'                                 // .(30214.03.2)
-</script>
 
 <div class="container">
 
@@ -72,9 +68,9 @@
 
 		<!-- inc-header-->
             <div id="inc-header"></div>
-            <script> 
+            <script type="module"> 
                     //$("#inc-header").load("../includes/inc-header.html");
-                setHTML( 'inc-header', '../includes/inc-header.html' );   
+                await setHTML( 'inc-header', '../includes/inc-header.html' );   
             </script> 
         <!-- END inc-header -->
 
@@ -83,9 +79,9 @@
     <!--  Section1 -->
   		<!-- inc-section1-->
           <div id="inc-section1"></div>
-          <script> 
+          <script type="module"> 
                   //$("#inc-section1").load("../includes/inc-section1.html");
-                setHTML( 'inc-section1', '../includes/inc-section1.html' );   
+                await setHTML( 'inc-section1', '../includes/inc-section1.html' );   
           </script> 
         <!-- END inc-section1 -->
     <!-- END  Section1 -->
@@ -129,37 +125,39 @@
 <!--  Section2 -->
 <div class="Section2">
     <table class="TableSpacer"><tr><td id="top">&nbsp;</td></tr><tbody></tbody></table>
-    <div class="Section2Title" id="top">members' Projects</div>
+    <div class="Section2Title" id="top">members' projects</div>
     <div class="members-list">
         <table class="main-table-laptop">
             <tbody id="Members-laptop">
             </tbody>    
-            <script>
-            if ($(".main-table-laptop").css("display") == "block") {    
+            <script type="module">  // add 
+
+//               import { setAPI_URL, setHTML } from '/client3/c32_home-wi-mysql-api/assets/mjs/formr_utility-fns_u1.07.mjs' // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)(30507.01.5 RAM No Import).(30507.02.5 RAM Use Import)
+               import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs' // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)(30507.01.5 RAM No Import).(30507.02.5 RAM Use Import)
+        
+                            //debugger 
+                            console.log( "members.html[1]       Loading 1st module script" )    
+        
+                            await setAPI_URL( )                                                 // .(30507.01.7 RAM Remove getAPI_URL for data fetches in members.html).(30507.02.7) 
+                    if ($(".main-table-laptop").css("display") == "block") {    
                 var pMembers = document.getElementById( "Members-laptop" )
 //                  pMembers.innerHTML = fmtMembersProjectsLaptop( pJSON )
 
 //                  fetch( 'http://localhost:3013/members-projects' )                   //#.(30214.03.3)
+//                  fetch(                '/api12/members-projects' )                   //#.(30214.03.3)
                     fetch( `${aAPI_URL}/members_projects` )                             // .(30214.05.3)
            .then( ( res  ) => res.json( ) )
            .then( ( json ) => {  
                                 pMembers.innerHTML = fmtMembersProjectsLaptop( json ) } ) 
            .catch(( err  ) =>   pMembers.innerHTML `** ${err.message}` );                     
             }
-            </script>
-            <tr class="last-row" id="bottom"><td colspan="2"><a href="#top" title="Go To The TOP"><img src="../assets/images/ArrowRedTopRedSmall.gif"></a></td></tr>
-        </table>
-       
-        <table class="main-table-mobile">
-            <tbody id="Members-mobile">
-            </tbody>    
-            <script>
+
             if ($(".main-table-mobile").css("display") == "block") {    
                 var pMembers = document.getElementById( "Members-mobile" )
 //                  pMembers.innerHTML = fmtMembersProjectsMobile( pJSON )
 
 //                  fetch( 'http://localhost:3013/members-projects' )                   //#.(30214.03.5)
-                    fetch( `${aAPI_URL}/members_projects` )                             // .(30214.05.5)
+                    await fetch( `${aAPI_URL}/members_projects` )                             // .(30214.05.5)
            .then( function( res  )  {
             return res.json( ) } )
            .then( function ( json )  {  
@@ -167,8 +165,14 @@
             } ) 
            .catch(( err  ) =>   pMembers.innerHTML `** ${err.message}` );   
             }                  
-            </script>
+        </script>
 
+            <tr class="last-row" id="bottom"><td colspan="2"><a href="#top" title="Go To The TOP"><img src="../assets/images/ArrowRedTopRedSmall.gif"></a></td></tr>
+        </table>
+       
+        <table class="main-table-mobile">
+            <tbody id="Members-mobile">
+            </tbody>    
             <tr class="last-row" id="bottom"><td colspan="2"><a href="#top" title="Go To The TOP"><img src="../assets/images/ArrowRedTopRedSmall.gif"></a></td></tr>
         </table>
 
@@ -179,9 +183,9 @@
 <!--  Footer -->
     <!-- inc-footer-->
         <div id="inc-footer"></div>
-        <script> 
+        <script type="module"> 
                 //$("#inc-footer").load("../includes/inc-footer.html");
-            setHTML( 'inc-footer', '../includes/inc-footer.html' );   
+            await setHTML( 'inc-footer', '../includes/inc-footer.html' );   
         </script> 
     <!-- END inc-footer -->
 <!-- END  Footer -->

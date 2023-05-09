@@ -36,11 +36,6 @@
         <script src="../assets/js/header.js"></script>
 </head>
 <body>
-<script>
-    var aName = "MembersBios"
-    var aAPI  = `${document.location.href}`.match( /iodd.com/i ) ? '/api2' : ''             //  .(30214.03.1 RAM Set if not running in Windows)
-    var aAPI_URL = aAPI ? '/api13' : 'http://localhost:3013'                                 // .(30214.03.2)
-</script>
 
 <div class="container">
 
@@ -94,8 +89,15 @@
                     <!--<tr><th class="title-name">Name</th><th class="title-bio">Bio</th></tr>-->
                     <tbody id="Members-laptop">
                     </tbody>    
-                    <script>
-                        var pMembers = document.getElementById( "Members-laptop" )
+                    <script type="module">  // add 
+
+                        import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs' // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)(30507.01.5 RAM No Import).(30507.02.5 RAM Use Import)
+                
+                                    //debugger 
+                                    console.log( "members.html[1]       Loading 1st module script" )    
+                
+                                    await setAPI_URL( )                                                 // .(30507.01.7 RAM Remove getAPI_URL for data fetches in members.html).(30507.02.7) 
+                                        var pMembers = document.getElementById( "Members-laptop" )
                             fetch( `${aAPI_URL}/members_bios` )                             // .(30214.05.3)
                 .then( ( res  ) => res.json( ) )
                 .then( ( json ) => {  
