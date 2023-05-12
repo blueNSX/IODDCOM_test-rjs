@@ -303,6 +303,7 @@ this.Table_getRoute = function( aGetRoute, pValidArgs ) {
 
                          await putData( pDB,  fmtSQL2( mRecs1[0] ), aRoute );        // delete login        // .(30403.05.4).(30403.02.3 RAM Delete prior Login records).(30407.03.x)
        var  mRecs3    =  await putData( pDB,  fmtSQL3( mRecs1[0] ), aRoute );        // insert login        // .(30403.05.5).(30403.02.4 RAM Change getData to putData)
+
        var  mRecs3    =    [ { Id: mRecs3[2].affectedId,  IPAddress4: mRecs1[0].IPAddress4                  // .(30406.01.4)
                              , LastPageVisited: mRecs1[0].LastPageVisited, Count: mRecs3[2].affectedRows }] // .(30406.03.3)
 

@@ -106,7 +106,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
            var  aVIR_DIR =    mLoc[0].toLowerCase() == 'remote'                                             // .(30508.01.2 RAM Set aVIR_DIR)
                          ?    aHost.match( /\// ) ? aHost.replace( /.*?\//, '/' ) : '/'                     // .(30508.01.3)
                          :   ''                                                                             // .(30508.01.4)
-
+                    // alert ("aVIR_DIR = " + aVIR_DIR)
 //          if (typeof(window)  != 'undefined') {                                                           //#.(30429.04.1 Beg)
 //              window.aAPI_URL  =  aAPI_URL
 //              window.setHTML   =  setHTML

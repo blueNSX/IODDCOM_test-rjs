@@ -60,7 +60,7 @@
 
         if (id > 0)  
         {  
-            //alert("id = " + id )
+           // alert("id = " + id )
             var aLogIn = iLogin;
             //let aLogIn = "<a href='#' title='Welcome' style='text-decoration:none;'>RS</a>";
             var pSpan = $("#log") 

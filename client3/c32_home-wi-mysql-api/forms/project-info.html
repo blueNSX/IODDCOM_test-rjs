@@ -49,16 +49,79 @@
       /*#log {display:none}*/
   </style>
 
+  <script type="module">
+    //--Header / Footer Includes--------------------------------------/  
+      setHTML( 'inc-header', '../includes/inc-header.html' );   
+			setHTML( 'inc-footer', '../includes/inc-footer.html' );   
+    
+    
+    //--Welcome function---------------------------------------/  
+    var pWelcome = document.getElementById( "WelcomeProjectInfo" )
+                  //fetch( `${aAPI_UTL}/members?id=${ id }` )
+                  fetch( `http://localhost:3012/members?id=${ id }` )
+          .then( ( res  ) => res.json( ) )
+          .then( ( json ) => {  
+          var aHTML = fmtWelcome (json)
+          pWelcome.innerHTML = aHTML 
+          } ) 
+          //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
+          function fmtWelcome ( pJSON ) {
+              var aHTML = "For: " + pJSON.members[0].FullName
+              return aHTML
+          }
+  
+          //----GET Function-----------------------------------/
+              onProjectsInfoForm_Get()
+    function  onProjectsInfoForm_Get() {
+      // var pFirstName = document.getElementById( "firstname" )
+      // var pMI = document.getElementById( "middleinits" )
+      // var pLastName = document.getElementById( "lastname" )
+      // var pSuffix = document.getElementById( "suffix" )
+      // var pEmail = document.getElementById( "email" )
+      // var pPassword = document.getElementById( "password" )
+      // var pCompany = document.getElementById( "co-name" )
+      // var pCompanyURL = document.getElementById( "co-url" )
+      // var pCoAddr1 = document.getElementById( "co-addr1" )
+      // var pCoAddr2 = document.getElementById( "co-addr2" )
+      // var pCity = document.getElementById( "city" )
+      // var pState = document.getElementById( "state" )
+      // var pZIP = document.getElementById( "zip" )
+      // var pCountry = document.getElementById( "country" )
+      // var pPhone1 = document.getElementById( "phone1" )
+      // var pPhone2 = document.getElementById( "phone2" )
+      // var pBio = document.getElementById( "bio" )
 
+      //fetch( `${aAPI_UTL}/members?id=${ id }` )
+                  fetch( `http://localhost:3012/projects?id=${ id }` )
+          .then( ( res  ) => res.json( ) )
+          .then( ( json ) => {  
+          pFirstName.value = json.members[0].FirstName
+          pMI.value = json.members[0].MiddleName
+          pLastName.value = json.members[0].LastName 
+          pSuffix.value = json.members[0].PostName 
+          pEmail.value = json.members[0].Email 
+          pPassword.value = json.members[0].PIN 
+          pCompany.value = json.members[0].Company 
+          pCompanyURL.value = json.members[0].WebSite 
+          pCoAddr1.value = json.members[0].Address1
+          pCoAddr2.value = json.members[0].Address2
+          pCity.value = json.members[0].City
+          pState.value = json.members[0].State
+          pZIP.value = json.members[0].Zip
+          pCountry.value = json.members[0].Country
+          pPhone1.value = json.members[0].Phone1
+          pPhone2.value = json.members[0].Phone2
+          pBio.value = json.members[0].Bio
+       
+        } ) 
+      }
+
+
+  </script>
 
   <!-- inc-header-->
 			<div id="inc-header"></div>
-			<script> 
-        //$("#inc-header").load("../includes/inc-header.html");
-			  setHTML( 'inc-header', '../includes/inc-header.html' );   
-			</script> 
 		<!-- END inc-header -->
-
   <!-- END  Header -->
 
   <!--  Section 1 -->
@@ -80,11 +143,11 @@
                   <!-- <a href="../index.html" title="Go Home"><i class="fa fa-home"></i>&nbsp;&nbsp;Home</a>
                 <hr style="border-top: 1px solid blue"> -->
                   <!--<a href="#" title="">123 Easy Card~93</a>-->
-                  <a href="#" title="">Automated Engineering System~150</a>
-                  <a href="#" title="">Automated Menu System~44</a>
+                  <a href="#" title="">PFEP (Plan For Every Part)</a>
+                  <a href="#" title="">Automated Menu System</a>
+                  <a href="#" title="">Automated Engineering System</a>
                   <!--<a href="#" title="">Financial Improvement Progress System~99</a>-->
                     <!--<a href="#" title="">Office Of Weights & Measures~51</a>-->
-                  <a href="#" title="">PFEP (Plan For Every Part)~149</a>
                   <!--<a href="#" title="">Web Time Cards~2</a>-->
                 <hr style="border-top: 1px solid blue">
               </div>
@@ -116,13 +179,10 @@
 
   <!--  Section 2 -->
   <!--  END Section 2 -->
+  
   <!--  Footer -->
   <!-- inc-footer-->
 			<div id="inc-footer"></div>
-			<script> 
-        			//$("#inc-footer").load("../includes/inc-footer.html");
-			  	setHTML( 'inc-footer', '../includes/inc-footer.html' );   
-			</script> 
 		<!-- END inc-footer -->
   <!-- END  Footer -->
 

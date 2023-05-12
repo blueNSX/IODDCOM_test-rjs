@@ -7,7 +7,24 @@
     <link rel="stylesheet"    href="css/02_header.css">  <!-- .(30329.01.1 RAM Fix the correct path )-->
 </head>
 <body>
+<script type="module">
+  //debugger
+  const url_dropdown = window.location.href;
+  // alert("url: " + url_dropdown);
+  var nPos = url_dropdown.indexOf("?");
+  //alert("nPos = " + nPos);
+  //alert ("id = " + id)
 
+    if (id > 0) {
+      $("#login-dropdown").css("display", "none");
+      $("#logout-dropdown").css("display", "block");
+      $("#contact-dropdown").css("display", "block");
+  } else {
+      $("#login-dropdown").css("display", "block");
+      $("#logout-dropdown").css("display", "none");
+      $("#contact-dropdown").css("display", "none");
+  }
+</script>
   <div class="dropdown">
     <button class="dropbtn" tabindex="-1">Menu</button>
     <div class="dropdown-content">
@@ -27,8 +44,9 @@
       <hr style="border-top: 3px solid blue">    
         <span id="member-info-dropdown"><a href="forms/member-info.html"><i class="fas fa-user-alt pe-2"></i>&nbsp;&nbsp;Member's Info Form</a></span>
         <span id="project-info-dropdown"><a href="forms/project-info.html"><i class="fa fa-address-card"></i>&nbsp;&nbsp;Projects Info Form</a></span>
+      <hr style="border-top: 3px solid blue">    
         <span id="login-dropdown"><a href="login/login.html"><i class="fa fa-address-book"></i></i>&nbsp;&nbsp;Login</a></span>
-        <span id="logout-dropdown"><a href="login/login.html"><i class="fas fa-user-alt pe-2"></i>&nbsp;&nbsp;Logout</a></span>
+        <span id="logout-dropdown"><a href="login/login.html?Id=0"><i class="fas fa-user-alt pe-2"></i>&nbsp;&nbsp;Logout</a></span>
       <hr style="border-top: 3px solid blue">    
 
       <hr style="border-top: 3px solid #C0C0C0">
@@ -38,22 +56,6 @@
 </body>
 
 <script>
-  //debugger
-  const url_dropdown = window.location.href;
-  // alert("url: " + url_dropdown);
-  var nPos = url_dropdown.indexOf("?");
-  //alert("nPos = " + nPos);
-  //alert ("id = " + id)
-
-  if (id > 0) {
-  $("#login-dropdown").css("display", "none");
-  $("#logout-dropdown").css("display", "block");
-  $("#contact-dropdown").css("display", "block");
-} else {
-  $("#login-dropdown").css("display", "block");
-  $("#logout-dropdown").css("display", "none");
-  $("#contact-dropdown").css("display", "none");
-}
 
 </script>
 
