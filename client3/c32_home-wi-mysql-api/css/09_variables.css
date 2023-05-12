@@ -8,7 +8,9 @@
 .logout-temp-div {
     /* display: none; */
 }
-
+.PencilImage {
+    display: none;
+}
 
 /***********************************/
 /*LOGIN - LOGOUT DISPLAY ATTRIBUTES*/
