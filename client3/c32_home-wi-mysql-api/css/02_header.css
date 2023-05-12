@@ -409,7 +409,7 @@ and (max-width: 740px)
 { 
             .Logo {
                 width: 250px;
-                padding: 1px 0px 0px 0px; 
+                padding: 1px 0px 0px 30px; 
                 text-align: left;
             }
             .DeviceText::after{
@@ -468,7 +468,7 @@ and (max-width: 740px)
                 display: none;
             }
             .MenuWrap {  /*hamburger*/
-                display: none;
+                display: block;
                 margin-top: 0px;
                 margin-left: 0px;
             }
