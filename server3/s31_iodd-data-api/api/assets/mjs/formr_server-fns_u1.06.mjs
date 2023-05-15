@@ -587,7 +587,19 @@
         } else {                                                                                            // .(30214.03.12 Beg)
             console.log( `\n    Server is running at: ${ aRemote_Host }${aAPI_Host} -> port:${nPort}` )     // .(30322.03.5)
             }                                                                                               // .(30214.03.12 End)
-            console.log(   `    Server is running in: ${ process.argv[1] }\n` )                             // .(30214.03.10 RAM Display root dir)
+//     var  __filepath =  process.argv[1]                                                                   //#.(30315.01.1)
+       var  __filepath =  new Error().stack.match( /IODD-Server_u.+\.mjs/ )[0]                              // .(30315.01.1 RAM get correct running server file)
+//     var  __filepath =  new Error().stack.match( /C:.+api\/IODD-Server_u.+\.mjs/ )[0]                     //#.(30315.01.2)  
+            __filepath = `${__dirname.replace( /assets\/mjs/, "" )}/${__filepath }`                         // .(30315.01.2)  
+            console.log(   `    Server is running in: ${__filepath}\n` )                                    // .(30214.03.10 RAM Display root dir).(30315.01.3)
+
+       var  bLocal     =  aAPI_Host == '', aLocation = ''                                                   // .(30315.02.1 RAM Beg Check if running locally)
+        if (aOS == 'windows' && !bLocal) {  aLocation = 'local'  }
+        if (aOS == 'linux'   &&  bLocal) {  aLocation = 'remote' } 
+        if (aLocation) {
+            console.log( `*** Server is running in ${aOS}. Should the .env.Host_Location be set to: ${aLocation}?\n`)
+//          process.exit() 
+            }                                                                                               // .(30315.02.1 End)
 
          }; // eof start
 //--------  ------------------  =   -------------------------------- ------------------ ------------------+
