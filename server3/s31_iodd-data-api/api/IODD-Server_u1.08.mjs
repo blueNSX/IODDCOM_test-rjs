@@ -218,13 +218,13 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
             <form ${ fmtForm1( 'robin.mattern@gmail.com', 'user', 40, 'login', 'login_form' ) }</form>    <!-- .(30511.01.1) -->
             <a href="${aAPI_Host}/meetings"                          >/meetings</a><br>
             <a href="${aAPI_Host}/members"                           >/members</a><br>
-            <form ${ fmtForm2( '', 'Update',                     120, 'member' ) }</form>                 <!-- .(30511.01.2).(30510.02.4 RAM Add POST member) -->
+            <form ${ fmtForm2( '', 90, 'Update',                 200, 'member' ) }</form>                 <!-- .(30511.01.2).(30510.02.4 RAM Add POST member).(30510.03.1 RAM Modified) -->
             <a href="${aAPI_Host}/members_bios"                      >/members_bios</a><br>
             <a href="${aAPI_Host}/members_projects"                  >/members_projects</a><br>
             <a href="${aAPI_Host}/projects"                          >/projects</a><br>
             <a href="${aAPI_Host}/projects_list?id=90"               >/projects_list?id=90</a><br>        <!-- .(30511.03.3 RAM Add GET projects_list) -->
             <a href="${aAPI_Host}/project_collaborators"             >/project_collaborators</a><br>
-            <form ${ fmtForm2( 'sam', 'Add',                      60, 'user'   ) }</form>                 <!-- .(30511.01.3).(30510.02.5 RAM Add POST User) -->
+            <form ${ fmtForm3( 'sam', 'Add',                      60, 'user'   ) }</form>                 <!-- .(30511.01.3).(30510.02.5 RAM Add POST User) -->
             <a href="${aAPI_Host}/users"                             >/users</a><br>                      <!-- .(30328.03.1 Add Users) -->
             <a href="${aAPI_Host}/user?id=7"                         >/user?id=7</a><br>                  <!-- .(30405.03.1 End) -->
             </div> `;
@@ -245,14 +245,25 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
             }; // eof fmtForm1                                                                              // .(30511.01.4 End)
 //     ---  ------------------  =   --------------------------------
 
-  function  fmtForm2( aValue, aAction, nWdt, aRoute ) {                                                     // .(30511.01.5 RAM Beg)
+  function  fmtForm2( aValue, nId, aAction, nWdt, aRoute ) {                                                // .(30511.01.5 RAM Beg).(30515.03.2 RAM Add nId)
+        var aHTML = ` method="POST" action="${aAPI_Host}/${aRoute}" style="margin-bottom:-5px;">
+              /${aRoute} email: <input type="text" name="username" value=" ${aValue}" style="padding:0px; width:${nWdt}px" />
+                            id: <input type="text" name="id"       value=" ${nId}"    style="padding:0px; width:30px">
+              <input type="hidden" name="password" value="iodd">
+              <input type="submit" value="${aAction}" style="padding:0px; width:53px" />
+            `   
+     return aHTML         
+            }; // eof fmtForm2                                                                              // .(30511.01.5 End)
+//     ---  ------------------  =   --------------------------------
+
+  function  fmtForm3( aValue, aAction, nWdt, aRoute ) {                                                     // .(30515.03.2 RAM Beg) 
         var aHTML = ` method="POST" action="${aAPI_Host}/${aRoute}" style="margin-bottom:-5px;">
               /${aRoute}: <input type="text" name="username" value=" ${aValue}" style="padding:0px; width:${nWdt}px" />
               <input type="hidden" name="password" value="iodd">
               <input type="submit" value="${aAction}" style="padding:0px; width:53px" />
             `   
      return aHTML         
-            }; // eof fmtForm2                                                                              // .(30511.01.5 End)
+            }; // eof fmtForm2                                                                              // .(30515.03.2 End)
 //     ---  ------------------  =   --------------------------------
          }; // eof Root_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
@@ -517,13 +528,13 @@ this.Member_postRoute = function( ) {                                           
                          ,  middleinits     : [ 'MiddleName',    /.+/, ]
                          ,  lastname        : [ 'LastName',      /.+/, ]
                          ,  suffix          : [ 'PostName',      /.+/, ]
-                         ,  RoleId          : [ 'RoleId',        /.+/, ]
-                         ,  email           : [ 'Email',         /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/, "", "must be a valid email address (xx@xx.xx)" ]
+//                       ,  role            : [ 'RoleId',        /.+/, ]
+                         ,  username        : [ 'Email',         /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/, "", "must be a valid email address (xx@xx.xx)" ]  // .(30515.03.1 RAM Was: email)
                          ,  password        : [ 'PIN',           /[a-zA-Z0-9]{4,}/,                         "", "must be at least 4 characters" ]
-                         ,  ipaddr          : [ 'IPv4Address',   /.+/, ]
-                         ,  logged_in       : [ 'IsLoggedIn',    /.+/, 'N']
-                         ,  logged_in_at    : [ 'LogInDateTime', /.+/,  aNow ]
-                         ,  active          : [ 'Active',        /.+/, 'Y' ]
+//                       ,  active          : [ 'Active',        /.+/, 'Y' ]                                // .(30515.03.2 RAM Set in SQL)
+//                       ,  login           : [ 'IsLoggedIn',    /.+/, 'N' ]                                // .(30515.03.3 RAM Set in SQL)
+//                       ,  login_at        : [ 'LogInDateTime', /.+/,  aNow ]                              // .(30515.03.4 RAM Not in form)   
+//                       ,  ipaddr          : [ 'IPv4Address',   /.+/, ]                                    // .(30515.03.5 RAM Not in form)   
                          , 'co-name'        : [ 'Company',       /.+/, ]
                          , 'co-addr1'       : [ 'Address1',      /.+/, ]
                          , 'co-addr2'       : [ 'Address2',      /.+/, ]
@@ -533,13 +544,13 @@ this.Member_postRoute = function( ) {                                           
                          ,  country         : [ 'Country',       /.+/, ]
                          ,  phone1          : [ 'Phone1',        /.+/, ]
                          ,  phone2          : [ 'Phone2',        /.+/, ]
-                         ,  fax             : [ 'Fax',           /.+/, ]
+//                       ,  fax             : [ 'Fax',           /.+/, ]
                          ,  webSite         : [ 'WebSite',       /.+/, ]
-                         ,  skills          : [ 'Skills',        /.+/, ]
+//                       ,  skills          : [ 'Skills',        /.+/, ]                                    // .(30515.03.6 RAM Not in form)   
                          ,  bio             : [ 'Bio',           /.+/, ]
-                         ,  created_at      : [ 'CreatedAt',     /.+/, ]
-                         ,  updated_at      : [ 'UpdatedAt',     /.+/, ]
-                         ,  last_updated    : [ 'LastUpdated',   /.+/, ]
+//                       ,  created_at      : [ 'CreatedAt',     /.+/, aNow ]                               // .(30515.03.7 RAM Set in DB)     
+//                       ,  updated_at      : [ 'UpdatedAt',     /.+/, aNow ]                               // .(30515.03.8 RAM Set in DB)   
+                         ,  last_updated    : [ 'LastUpdated',   /.+/, aNow ]                               // .(30515.03.9 RAM Set in SQL)
                             }
 
 //     var  pArgs = chkArgs( pReq, pValidArgs )
@@ -550,52 +561,65 @@ this.Member_postRoute = function( ) {                                           
 
                                sayMsg(  pReq, aMethod, aRoute )
 //     var  pArgs     =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
-       var  pArgs     =                 pReq.body.map( aFld => pValidArgs[ aFld ][0] )
+//     var  pArgs     =                 pReq.body.map( aFld => pValidArgs[ aFld ][0] )
+       var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
 
-       var  mRecs1    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );        
+       var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );        
 
-       var  mRecs2    =    [ { Id: mRecs1[2].affectedId, Count: mRecs2[2].affectedRows 
-                             , UserName: pArgs.username, Password: pArgs.password } 
+//     var  mRecs2    =    [ { MemberNo: mRecs1[2].affectedId, Count: mRecs1[2].affectedRows     // .(30515.04.1 RAM Why is affectedId = 0)
+       var  mRecs2    =    [ { MemberNo: pArgs.MemberNo,   Count: mRecs1[2].affectedRows 
+                             , UserName: pArgs.Email, Password: pArgs.PIN } 
                                ]
-//     var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );        
-                               sndJSON( pRes, JSON.stringify( { user: mRecs1 } ), aRoute )
+       var  mRecs2    =  await getData( pDB,  `SELECT * FROM members WHERE MemberNo = ${mRecs2[0].MemberNo}`, aRoute );        
+                               sndJSON( pRes, JSON.stringify( { member: mRecs2 } ), aRoute )
             }
 //     ---  ------------------  =   --------------------------------
 
-  function  fmtSQL1( pArgs ) {
+  function  fmtSQL1( pVars ) {
 
        var  aSQL = `UPDATE  members
-                       SET  MemberNo        =  ${ nMemberNo      }
-                         ,  TitleName       = '${ aTitleName     }
-                         ,  FirstName       = '${ aFirstName     }
-                         ,  MiddleName      = '${ aMiddleName    }
-                         ,  LastName        = '${ aLastName      }
-                         ,  PostName        = '${ aPostName      }
-                         ,  RoleId          = '${ aRoleId        }
-                         ,  Email           = '${ aEmail         }
-                         ,  PIN             = '${ aPassWord      }
-                         ,  IPv4Address     = '${ IPv4Address    }
-                         ,  IsLoggedIn      =     'N'
-                         ,  LogInDateTime   = '${ dLogInDateTime }
-                         ,  Active          = '${ aActive        }
-                         ,  Company         = '${ aCompany       }
-                         ,  Address1        = '${ aAddress1      }
-                         ,  Address2        = '${ aAddress2      }
-                         ,  City            = '${ aCity          }
-                         ,  State           = '${ aState         }
-                         ,  Zip             = '${ aZip           }
-                         ,  Country         = '${ aCountry       }
-                         ,  Phone1          = '${ aPhone1        }
-                         ,  Phone2          = '${ aPhone2        }
-                         ,  Fax             = '${ aFax           }
-                         ,  WebSite         = '${ aWebSite       }
-                         ,  Skills          = '${ aSkills        }
-                         ,  Bio             = '${ aBio           }
-                         ,  CreatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
-                         ,  UpdatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
+                       SET  Email           = '${ pVars.Email.trim()    }'
+                         ,  PIN             = '${ pVars.PIN             }'
                          ,  LastUpdated     =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
-                     WHERE  Id = ${ id }
-                            `
+                     WHERE  MemberNo        =  ${ pVars.MemberNo        }
+                   `
+    return  aSQL
+            }
+//     ---  ------------------  =   --------------------------------
+
+  function  fmtSQL1x( pArgs ) {
+
+       var  aSQL = `UPDATE  members
+//                     SET  TitleName       = '${ pVars.TitleName     }
+                       SET  FirstName       = '${ pVars.FirstName     }
+                         ,  MiddleName      = '${ pVars.MiddleName    }
+                         ,  LastName        = '${ pVars.LastName      }
+                         ,  PostName        = '${ pVars.PostName      }
+//                       ,  RoleId          = '${ pVars.RoleId        }
+                         ,  Email           = '${ pVars.Email         }
+                         ,  PIN             = '${ pVars.PassWord      }
+                         ,  Active          =          'Y' 
+//                       ,  IsLoggedIn      =          'N'
+//                       ,  LogInDateTime   = '${ pVars.LogInDateTime }
+//                       ,  IPv4Address     = '${ pVars.IPv4Address   }
+                         ,  Company         = '${ pVars.Company       }
+                         ,  Address1        = '${ pVars.Address1      }
+                         ,  Address2        = '${ pVars.Address2      }
+                         ,  City            = '${ pVars.City          }
+                         ,  State           = '${ pVars.State         }
+                         ,  Zip             = '${ pVars.Zip           }
+                         ,  Country         = '${ pVars.Country       }
+                         ,  Phone1          = '${ pVars.Phone1        }
+                         ,  Phone2          = '${ pVars.Phone2        }
+//                       ,  Fax             = '${ pVars.Fax           }
+                         ,  WebSite         = '${ pVars.WebSite       }
+//                       ,  Skills          = '${ pVars.Skills        }
+                         ,  Bio             = '${ pVars.Bio           }
+//                       ,  CreatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
+//                       ,  UpdatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
+                         ,  LastUpdated     =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
+                     WHERE  MemberNo        =  ${ pVars.MemberNo      }
+                   `
     return  aSQL
             }
 //     ---  ------------------  =   --------------------------------
