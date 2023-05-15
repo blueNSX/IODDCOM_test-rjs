@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <script src="https://www.w3schools.com/lib/w3.js"></script>
+<!--    <script src="https://www.w3schools.com/lib/w3.js"></script>--><!--#.(30502.02.3 RAM Not needed) -->
         <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
         <title>Members</title>
@@ -31,7 +31,6 @@
         <link rel="stylesheet"    href="css/07_resp_1100-1900-laptop.css">
         <link rel="stylesheet"    href="css/08_resp_950-1100-tabletLandscape.css">
 -->
-
 <!--    <script src="../assets/json/db.json.js" type="application/javascript" ></script> -->
         <script src="../assets/js/members.js"   type="application/javascript" ></script>
         <script src="../assets/js/header.js"></script>
@@ -61,7 +60,6 @@
 //      console.log( "members.html[2]       aAPI_URL fetched" )                             //#.(30507.02.9)
 //      console.log( "members.html[3]       1st Module script loaded" )                     //#.(30507.01.9)
 */                                                                                          //#.(30507.02.31 End)
-                                                                                           
 </script>
 
 <div class="container">
@@ -156,7 +154,8 @@
             <script type="module">
 //                                                                                      // .(30507.02.31 Beg RAM Move to here)            
 
-        import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs' // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)(30507.01.5 RAM No Import).(30507.02.5 RAM Use Import)
+        import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs' // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here).(30507.01.5 RAM No Import).(30507.02.5 RAM Use Import).(30507.02.31 RAM Up one level)
+//      import { setAPI_URL, setHTML } from  './assets/mjs/formr_utility-fns_u1.07.mjs' //#.(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here).(30507.01.1 RAM Remove import of utility-fns).(30507.02.31 RAM Don't import from root dir) 
 
                     debugger 
                     console.log( "members.html[1]       Loading 1st module script" )    
@@ -167,12 +166,12 @@
                     await setAPI_URL( )                                                 // .(30507.01.7 RAM Remove getAPI_URL for data fetches in members.html).(30507.02.7) 
 //                  window.aAPI_URL = aAPI_URL                                          //#.(30412.03.2 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here).(30507.01.8).(30507.02.8 RAM Done by getAPI_URL)      
 
-                    console.log( "members.html[2]       aAPI_URL fetched" )                             // .(30507.02.x)
-//                  console.log( "members.html[3]       1st Module script loaded" )                         // .(30507.01.x)   
+                    console.log( "members.html[2]       aAPI_URL fetched" )             // .(30507.02.21)
+//                  console.log( "members.html[3]       1st Module script loaded" )     // .(30507.01.9)   
             
 //                  console.log( `members.html[4]       Loading 2nd module script` )    
 //                                                                                      // .(30507.02.31 Beg RAM Move to here)            
-//            $(document).ready( function() {                                           //#.(30507.02.x RAM Get rid of onReady)
+//            $(document).ready( function() {                                           //#.(30507.02.22 Beg RAM Get rid of onReady)
 
 //                  console.log( `members.html[5]       onReady complete` )    
 
@@ -192,7 +191,7 @@
            .catch(( err  ) =>    pMembers.innerHTML = `*** ${err.message}` );                     
            
                     console.log( `members.html[8]       onReady completed` )    
-//          });   																		//#.(30507.02.x)              
+//          });   																		//#.(30507.02.22 End)              
                     console.log( `members.html[9]       Module script loaded` )    
           </script>
             <tr class="last-row" id="bottom"><td colspan="4"><a href="#top" title="Go To The TOP"><img src="../assets/images/ArrowRedTopRedSmall.gif"></a></td></tr>
@@ -213,7 +212,7 @@
 
 </div> <!--Container ending div-->
 <script>
-    w3.includeHTML();
+//    w3.includeHTML();   																// #.(30502.02.4)
 </script>
 
 
