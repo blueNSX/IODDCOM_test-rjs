@@ -42,7 +42,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<!--    <script src="https://www.w3schools.com/lib/w3.js"></script>-->
         <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
         <title>Login</title>
@@ -139,8 +138,7 @@
 //--------  ---------------------------------------------------------
 
             console.log( "login.html[3]  End module script" )                           // .(30423.03.3)
-
-  </script>
+</script>
 
   </head>
   <body data-server-no-reload>                                                        <!-- .(30421.09.1 RAM FiveServer option) -->
@@ -210,6 +208,14 @@
 
     </div>    <!-- eof Container .*30426.02.1 RAM) -->
   <script>
+    window.onload = function() {
+      if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+      }
+    }
+
+
     console.log( "login.html[4]  End of regular script"  )                              // .(30423.03.4)
   </script>
   </body>
