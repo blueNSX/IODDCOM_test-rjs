@@ -8,7 +8,8 @@
 ##FD formr_utility-fns_u1.07.mjs|  23908|  4/29/23 16:07|   328| u1-07.30429.1607
 ##FD formr_utility-fns_u1.07.mjs|  24150|  5/02/23 18:08|   330| u1-07.30502.1808
 ##FD formr_utility-fns_u1.07.mjs|  24210|  5/03/23 09:45|   332| u1-07.30503.0945
-##FD formr_utility-fns_u1.07.mjs|  24210|  5/05/23 15:33|   332| u1-07.30505.1533
+##FD formr_utility-fns_u1.07.mjs|  24408|  5/05/23 15:33|   335| u1-07.30505.1533
+##FD formr_utility-fns_u1.07.mjs|  26596|  5/08/23 17:15|   349| u1-07.30505.1715
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
@@ -45,9 +46,10 @@
 # .(30429.03  4/29/23 RAM 10:15a|  Handle messages differently
 # .(30429.04  4/29/23 RAM 10:45a|  Handle pGlobal differently
 # .(30429.10  4/29/23 RAM  4:05p|  Display .env.location
-# .(30502.03  5/02.23 RAM  5:30p|  Turn off client/s32 alerts  
+# .(30502.03  5/02.23 RAM  5:30p|  Turn off client/s32 alerts
 # .(30503.01  5/03/23 RAM  9:45a|  Only bQuiet for alerts in sayMsg
 # .(30505.01  5/05/23 RAM  3:33p|  Clean _env Local host trailing stuff
+# .(30508.01  5/08/23 RAM  5:15p|  Set aVIR_DIR from Remote_Host in _env
                                 |
 ##SRCE     +====================+===============================================+
 #*/
@@ -57,9 +59,10 @@
 
            var  inspect         =  function( pObj ) { return JSON.stringify( pObj ) }                       // .(30416.02.x )
 
-            if (typeof(process) != 'undefined') {
-           var  pFS             =  await import( 'fs' ) }                                                   // .(30412.01.7 RAM Get pFS here  so getEnv_sync   doesn't have to be a async function)
+            if (typeof(process)!= 'undefined') {
+           var  pFS             =  await import( 'fs' )                                                     // .(30412.01.7 RAM Get pFS here  so getEnv_sync   doesn't have to be a async function)
 //         var  pFS             =  await import( 'fs/promises' ) { .. }                                     //#.(30412.01.2 RAM Get pFS above so this function doesn't have to be a async function)
+                }                                                                                           // .(30507.03.1 RAM Clearer)
 
 //         var  pUtil           =  await import( 'util' ), inspect = pUtil.inspect                          // .(30416.02.x RAM no workie)
 //         var  inspect         = (await import( 'util' )).inspect                                          // .(30416.02.x RAM workie?)
@@ -68,13 +71,16 @@
            var  aURI            =  import.meta.url; // console.log( "aURI", aURI ); process.exit()
            var  aOS             = (typeof(process) != 'undefined' ) ? (`${process.argv[1]}`.match( /^[a-z]:/i ) ? 'windows' : 'linux' ) : 'browser'
            var  __filename      =  aURI.replace( /^.+\//, "" )
-           var  __dirname       =  aURI.replace( `/${__filename}`, '' ).replace( 'file:///', aOS == 'linux' ? '/' : '') // .(30322.05.1 RAM Put '/' back in)
-           var  __appDir        =  __dirname.replace( /\/assets\/mjs\/*/, "" );  // ${__dirname}/../../ */              // .(30416.03.1 RAM Create __appDir)
-//              }
+           var  __dirname       =  aURI.replace( `/${__filename}`, '' ).replace( 'file:///', aOS == 'linux' ? '/' : '')  // .(30322.05.1 RAM Put '/' back in)
+           var  __appDir        =  __dirname.replace( /\/assets\/mjs\/*/, "" );  // ${__dirname}/../../.*/               // .(30416.03.1 RAM Create __appDir).(30507.03.1 RAM Add /.*)
+           var  __thisDir       =  __dirname.replace( __appDir, "" );                                                    // .(30507.03.2 RAM What follows __appDir)
+           var  __appName       =  __appDir.replace( /^.+\//, "" );                                                      // .(30507.03.3)
+//              }                                                                                                        //#.(30507.03.4)
 
            var  bQuiet          =  true                                                                     // .(30502.04.1 RAM)
-//                                 traceR(  __filename,   "Loaded", 1 )                                     //#.(30429.02.1)
-                                   traceR( "utility-fns[1] Loaded", 1 )                                     // .(30429.02.1)
+//              traceR(  __filename,   "Loaded", 1 )                                                        //#.(30429.02.1)
+                traceR( `utility-fns[1]        Loaded: '${__thisDir}/${__filename}'`, 1 )                   // .(30429.02.1).(30507.03.4 RAM Show path/name of loaded module).(30507.03.5)
+                traceR( `utility-fns[2]        AppName: '${__appName}'`, 1 )                                // .(30429.02.1).(30507.03.4 RAM Show path/name of loaded module).(30507.03.6)
 
 // ------  ---- -----------------------------------------------------------------------------------------
 
@@ -90,24 +96,33 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
 //          if (pEnv.Host_Location) {                                                                       //#.(30417.05.1 RAM Check pEnv.Host_Location).(30429.10.2)
 //         var  aAPI_URL = `${pEnv.Local_Host}:${pEnv.Server_Port}`
 
-           var  aHost    = 'http://' + pEnv.Local_Host.replace( /https?:\/\//, "" ).replace( /[:?].*/, "" ) // .(30505.01.1 RAM Remove trailing stuff)
+           var  aHost    =   (pEnv.Local_Host.replace( /https?:\/\//, "" ) || '' ).replace( /[:?].*/,"")    // .(30505.01.1 RAM Remove trailing stuff)
 //         var  aAPI_URL = `${pEnv.Host_Location.toLowerCase() == 'remote'
-           var  aAPI_URL = `${mLoc[0].toLowerCase() == 'remote'
+           var  aAPI_URL =    mLoc[0].toLowerCase() == 'remote'
                          ?    pEnv.API_URL
-                         : `${aHost}:${pEnv.Server_Port}` }`                                                // .(30505.01.2)
+                         :   `http://${aHost}:${pEnv.Server_Port}`                                          // .(30505.01.2)
+
+           var  aHost    =   (pEnv.Remote_Host.replace( /https*:\/\//, "") || '' )                          // .(30508.01.1)
+           var  aVIR_DIR =    mLoc[0].toLowerCase() == 'remote'                                             // .(30508.01.2 RAM Set aVIR_DIR)
+                         ?    aHost.match( /\// ) ? aHost.replace( /.*?\//, '/' ) : '/'                     // .(30508.01.3)
+                         :   ''                                                                             // .(30508.01.4)
 
 //          if (typeof(window)  != 'undefined') {                                                           //#.(30429.04.1 Beg)
 //              window.aAPI_URL  =  aAPI_URL
 //              window.setHTML   =  setHTML
 //          } else {                                                                                        //#.(30429.04.1 End)
            var  pGlobal          = (typeof(window) != 'undefined') ? window : global                        // .(30429.04.1)
-                pGlobal.aAPI_URL =  aAPI_URL                                                                // .(30429.04.2 RAM was global.)
-                pGlobal.setHTML  =  setHTML                                                                 // .(30429.04.3 RAM was global.)
+                pGlobal.aAPI_URL =  aAPI_URL                                                                // .(30429.04.2 RAM Was global.)
+                pGlobal.setHTML  =  setHTML                                                                 // .(30429.04.3 RAM Was global.)
+                pGlobal.aVIR_DIR =  aVIR_DIR                                                                // .(30508.01.5 RAM Make it global)
+
 //              }                                                                                           //#.(30429.04.1)
                 }                                                                                           // .(30417.05.2)
 //              console.log( `module ${aNum} aAPI_URL: '${  typeof(aAPI_URL)  !='undefined' ? aAPI_URL : 'undefined' }'` )
                 console.log( `setAPI_URL[2]  aLocation: '${ mLoc[0] ? mLoc[0] : 'undefined' }'` )           // .(30429.10.3)
                 console.log( `setAPI_URL[3]  aAPI_URL: '${  typeof(aAPI_URL)  !='undefined' ? aAPI_URL : 'undefined' }'` )
+                console.log( `setAPI_URL[4]  aVIR_DIR: '${  typeof(aVIR_DIR)  !='undefined' ? aVIR_DIR : 'undefined' }'` )
+
            }; // eof setAPI_URL                                                                             // .(30410.03.1 RAM End)
 //--------  ------  =  -----------------------------------------------------
 
@@ -118,7 +133,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
         if (typeof(window) != 'undefined') {
 //     var  aPath   =  window.location.href.replace( /[^/]+$/, '')  // has trailing /
        var  aFile   = `${ aPath }_env`
-            console.log( `getEnv[1]      Fetching remote file, '${aFile}'` )
+            console.log( `getEnv[1]             Fetching remote file, '${aFile}'` )
 //     var  aFile   = '../_env'    // ``${ aPath }_env`
        try {
        var  pRes    =  await fetch(  aFile );                                                               // .(30222.01.4 This await causes Page Reload error when error occurs in another fetch)
@@ -129,7 +144,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
 //     var  pFS     =  await import( 'fs' )                                                                 //#.(30412.01.2)
        var  pFS     =  await import( 'fs/promises' )                                                        // .(30412.01.2 RAM Should work, but use getEnv_sync instead)
        var  aFile   = `${ aPath }.env`
-//          console.log( `getEnv[2]      Reading local file, '${aFile}'` )
+//          console.log( `getEnv[2]             Reading local file, '${aFile}'` )
        if (!pFS.existsSync( aFile )) { sayEnvErr( aFile );
     return  process.env }                                                                                   // .(30319.01.1 RAM Do nothing if .env not found).(30322.03.6 RAM Display error)
        var  pEnv    =  fmtEnv(  pFS.readFileSync( aFile, 'ASCII' ) )
@@ -148,7 +163,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
 //     var  pFS     =  await import( 'fs' )                                                                 //#.(30412.01.4)
        var  aFile   = `${ aPath }.env`
 //     var  pFS     =  await import( 'fs/promises' )                                                       // .(30412.01.2 RAM Get pFS above so this function doesn't have to be a async function)
-//          console.log( `getEnv[2]      Reading local file, '${aFile}'` )
+//          console.log( `getEnv[2]             Reading local file, '${aFile}'` )
        if (!pFS.existsSync( aFile )) { sayEnvErr( aFile );
     return  process.env }                                     // .(30319.01.1 RAM Do nothing if .env not found).(30322.03.6 RAM Display error)
        var  pEnv    =  fmtEnv(  pFS.readFileSync( aFile, 'ASCII' ) )
@@ -181,11 +196,10 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
             sayErr( aMsg )
         if (typeof( process ) != 'undefined') {                                                             // .(30411.01.1 RAM )
                     process.exit()
-
         } else {    // in browser
                     alert( aMsg.replace( new RegExp(aFill, 'g'), "\n    " ) ) // window.stop( )             // .(30417.04.6)
             }
-            }  // eof sayEnvErr                                                                             // .(30328.01.1 End)
+          } // eof sayEnvErr                                                                                // .(30328.01.1 End)
 //     ---  ------  =  ---------------------------------------------
 //       }; // eof getEnv                                                                                   //#.(30222.01.3 RAM End).(30412.01.5)
 //--------  ------  =  -----------------------------------------------------

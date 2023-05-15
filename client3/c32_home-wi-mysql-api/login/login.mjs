@@ -9,6 +9,7 @@
 ##FD   login_v1.07c.mjs         |  28404|  4/30/23 10:08|   407| u1.07`30430.1008
 ##FD   login_v1.07c.mjs         |  29375|  5/03/23 09:36|   410| u1.07`30503.0936
 ##FD   login_v1.07c.mjs         |  29592|  5/05/23 01:57|   412| u1.07`30505.0157
+##FD   login_v1.07c.mjs         |  29850|  5/08/23 17:20|   415| u1.07`30508.1715
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This JavaScript file ...
 ##LIC      .--------------------+----------------------------------------------+
@@ -55,6 +56,7 @@
 # .(30428.03  4/30/23 RAM 10:05a|  Cors is needed even if set at server
 # .(30503.01  5/03/23 RAM  9:36a|  Use sayMsg for bQuiet
 # .(30505.01  5/05/23 RAM  1:57p|  Use aAction not aURL in fetchLoginData errmsg
+# .(30508.01  5/08/23 RAM  5:20p|  Redirect to home: `${aVIR_DIR}/`
 
 ##SRCE     +====================+===============================================+
 */
@@ -359,7 +361,8 @@ var id = 90
             setCookie(      pLogin.MemberNo )                                                     // .(30502.05.1 RAM Oops)
 //          setLoginForm( pJSON )                                                                 // .(30429.06.2 RAM Use function againp for fetch API)
 
-            location.href = "/"
+            location.href = `${aVIR_DIR}/`                                                        // .(30508.01.5 RAM Go Home. Was:"/")
+
             } // eof onLoginSuccess
 //    ----  ------------------------------------------------
          }; // eof onLoginForm_Submit
