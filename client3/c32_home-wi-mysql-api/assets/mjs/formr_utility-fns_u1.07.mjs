@@ -101,6 +101,14 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
            var  aAPI_URL =    mLoc[0].toLowerCase() == 'remote'
                          ?    pEnv.API_URL
                          :   `http://${aHost}:${pEnv.Server_Port}`                                          // .(30505.01.2)
+<<<<<<< HEAD
+
+           var  aHost    =   (pEnv.Remote_Host.replace( /https*:\/\//, "") || '' )                          // .(30508.01.1)
+           var  aVIR_DIR =    mLoc[0].toLowerCase() == 'remote'                                             // .(30508.01.2 RAM Set aVIR_DIR)
+                         ?    aHost.match( /\// ) ? aHost.replace( /.*?\//, '/' ) : '/'                     // .(30508.01.3)
+                         :   ''                                                                             // .(30508.01.4)
+=======
+>>>>>>> 8b653022a12a2f4f99664c63d1e9f0358246cc04
 
            var  aHost    =   (pEnv.Remote_Host.replace( /https*:\/\//, "") || '' )                          // .(30508.01.1)
            var  aVIR_DIR =    mLoc[0].toLowerCase() == 'remote'                                             // .(30508.01.2 RAM Set aVIR_DIR)
