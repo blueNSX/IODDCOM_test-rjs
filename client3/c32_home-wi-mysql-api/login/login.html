@@ -45,7 +45,7 @@
 <!--    <script src="https://www.w3schools.com/lib/w3.js"></script>-->
         <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
-        <title>Login_u1.07c-rjs</title>
+        <title>Login</title>
 
         <link rel="shortcut icon" href="../assets/icons/favicon.png"><!-- .(30423.01.1 RAM Moved) -->
         <link rel="stylesheet"    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
@@ -66,11 +66,6 @@
 
     <!--BEGINNING OF LOCAL STYLE SHEETS (CSS)-->
         <link rel="stylesheet"    href="login.css">
-
-<!--<script src="../assets/js/header_v1.04.js"></script>--><!-- .(30412.02.6) -->
-
-<!--<script src="../assets/js/login_v1.04.js" ></script>-->
-<!--<script              src="login_v1.06d.js"></script>--><!--#.(30421.03.1 RAM Move to module below) -->
 
     <style>
       #MenuBlank                { display: block; }
@@ -95,56 +90,35 @@
     </style>
 
 <script>
-            console.log( "login.html[1]  Hello from regular script"  )                  // .(30423.03.2 RAM Add FName[LNo])
 </script>
 
 <!-- <script src="/client3/c32_home-wi-mysql-api_v1.03-rjs-ram/assets/mjs/formr_utility-fns_u1.06.mjs" type="module"></script> -->
 
 <script type="module">                                                                  // .(30412.02.7 RAM Use type="module")
+   console.log( "login.html[1]  Hello from regular script"  )                  // .(30423.03.2 RAM Add FName[LNo])
 
-// import { fmtMembers, fmtMember } from '../assets/mjs/header.mjs'                     //#.(30412.02.5 RAM Gotta doit all in one script)
-// import { setAPI_URL, setHTML   } from '../assets/mjs/formr_utility-fns_u1.06.mjs'    //#.(30412.03.1 RAM).(30415.02.1)
-// import { setAPI_URL, setHTML   } from           'mjs/formr_utility-fns_u1.06.mjs'    //#.(30415.02.1 RAM Avoid CORS error with "liveServer.settings.mount:" [ ["/", "/client3/c32_home-wi-mysql-api_v1.03-rjs-ram"] ], )
-   import { setAPI_URL, setHTML   } from '../assets/mjs/formr_utility-fns_u1.07.mjs'    // .(30415.02.1 RAM Avoid CORS error).(30423.02.1 RAM New version with fetchFile).(30430.03.1)
-// import { fmtLogin              } from '/login.mjs'                                   //#.(30421.03.1 RAM Don't need it yet)
-   import { getID, setCookie, clearListCookies }            from './login.mjs'          // .(30421.03.2 RAM Move to module here).(30430.03.2 RAM Must be .js on server)
-   import { onLoginForm_Submit, setLoginForm   }            from './login.mjs'          // .(30421.03.3).(30425.02.1 RAM Add onLoginForm_Submit).(30430.03.3)
-// import {   handleFormSubmit, sayMsg,  fmtMsg, fmtErr }   from '../assets/mjs/ES6_form_u1.07.mjs' //#.(30428.04.2 Import 'em)
+      setHTML( 'inc-header',   '../includes/inc-header.html'   );                 // .(30412.03.2).(30423.01.2 RAM Maybe Later)
+      setHTML( 'inc-section1', '../includes/inc-section1.html' );                 // .(30412.03.2).(30423.01.3)
+      setHTML( 'inc-footer',   '../includes/inc-footer.html'   );                 // .(30412.03.2).(30423.01.4)
 
-//          sayMsg( 3,   "login.html[2]  Begin module script" )
+
+        import { setAPI_URL, setHTML   } from '../assets/mjs/formr_utility-fns_u1.07.mjs'    // .(30415.02.1 RAM Avoid CORS error).(30423.02.1 RAM New version with fetchFile).(30430.03.1)
+        import { getID, setCookie, clearListCookies }            from './login.mjs'          // .(30421.03.2 RAM Move to module here).(30430.03.2 RAM Must be .js on server)
+        import { onLoginForm_Submit, setLoginForm   }            from './login.mjs'          // .(30421.03.3).(30425.02.1 RAM Add onLoginForm_Submit).(30430.03.3)
             console.log( "login.html[2]  Begin module script" )                         // .(30423.03.2 RAM Add FName[LNo])
-
-            setHTML( 'inc-header',   '../includes/inc-header.html'   );                 // .(30412.03.2).(30423.01.2 RAM Maybe Later)
-            setHTML( 'inc-section1', '../includes/inc-section1.html' );                 // .(30412.03.2).(30423.01.3)
-            setHTML( 'inc-footer',   '../includes/inc-footer.html'   );                 // .(30412.03.2).(30423.01.4)
-
             await setAPI_URL( )                                                         // .(30412.03.1 RAM Set window.aAPI_URL )
-//          window.aAPI_URL = ""                                                        // .(30416.06.1 RAM For now)
-
-//</scr ipt>                                                                            // .(30421.02.1 RAM Keep it all in the same module)
-//<script>                                                                              // .(30421.02.2) -->
-
-       var  nID = getID()                                                               // .(30415.03.1)
-
+        var  nID = getID()                                                               // .(30415.03.1)
             clearListCookies( )                                                         // .(30415.03.2)
             setCookie( nID )                                                            // .(30415.03.3)
 
-//       $( document ).ready( ( ) => {                                                  // .(30414.01.1 RAM Wait for document.forms to be rendered)
-//          setPIN()
-//          setLoginForm( nID )                                                         // .(30329.06.1 RAM Use it).(30425.08.4)
-//          } )                                                                         // .(30414.01.2)
-
          $( document ).ready( onReady )                                                 // .(30414.01.1 RAM Wait for document.forms to be rendered)
 
-//   async  function onReady( ) { ... }                                                 //#.(30421.08.1)
             function onReady( ) {                                                       // .(30421.08.1)
             setPIN()
-//   await  setLoginForm( nID )                                                         // .(30329.06.1 RAM Use it).(30421.08.2 RAM Get rid of await).(30425.08.5)
             setLoginForm( nID )                                                         // .(30329.06.1 RAM Use it).(30425.08.6 RAM Was setUserForm)
 
        var  pLoginForm = document.getElementById(  "LoginForm" );                       // .(30428.01.1)
             pLoginForm.addEventListener("submit", onLoginForm_Submit );                 //#.(30428.01.2 RAM Have to define listener in module).(30428.04.2)
-//          pLoginForm.addEventListener("submit",   handleFormSubmit );                 // .(30428.01.2 RAM Have to define listener in module).(30428.04.2)
             }
 //--------  ---------------------------------------------------------
 
@@ -177,16 +151,13 @@
   <!-- BEG Header -->
        <!-- inc-header-->
             <div id="inc-header"></div>
-  <!--      <script>                                                                    //#.(30412.03.3 Beg)
-            // $("#inc-header").load( "../includes/inc-header.html");
-               setHTML( 'inc-header', '../includes/inc-header.html' );
-            </script> -->                                                             <!--#.(30412.03.3 End) -->
        <!-- END inc-header -->
   <!-- END  Header -->
 
   <!-- BEG Section 1 -->
 
     <div class="Section1">
+<!--
       <div class="logout-temp-div"><br>
         <span class="logout-temp-span"><a href="login.html?id=500">??</a></span>
         <span class="logout-temp-span"><a href="login.html?id=15" >BT</a></span>
@@ -195,27 +166,19 @@
         <span class="logout-temp-span"><a href="login.html?id=90" >RS</a></span>
         <span class="logout-temp-span"><a href="login.html"   >Logout</a></span>
       </div>
+-->
       <div class="Section1Title">institute of database developers</div>
       <div class="login">
         <h1>
           Login<br>
-<!--      <div id="login-error">sMcduck@gmail.com is not in IODD's database<br>Contact <a href="#">System Administrator</a> for Help</div>--><!--#.(30429.08.1 RAM)-->
           <div id="login-error"><div id="errMsg"></div>Contact <a href="#">System Administrator</a> for Help</div>   <!-- .(30429.08.1 RAM)-->
-        </h1>
-<!--    <form action="/login"            method="post">                              -->
-<!--    <form action="login_v1.06a.html" method="post">                              --><!--#.(30415.08.2 RAM) -->
-<!--    <form action="login"             method="post" onsubmit="return onSubmit()"> --><!--#.(30415.02.1 RAM Add onSubmit).(30415.02.x RAM don't submit if false) -->
-<!--    <form                            method="post" onsubmit="return onSubmit()"> --><!--#.(30415.02.1 RAM Add onSubmit).(30415.02.1 RAM don't submit if false and action is not set) -->
-<!--    <form id="LoginForm"                 onsubmit="return onLoginForm_Submit()"> --><!-- .(30425.02.2).(30425.08.7) -->
         <form id="LoginForm"             >                                              <!-- .(30429.01.6 RAM Not defined globally. Set listener above) -->
 
           <label class="label-styles" for="username">
             <!-- font awesome icon -->
             <i   class="fas fa-user"></i>
           </label>
-<!--      <input type="text"         name="username" placeholder="eMail" id="username" value="" required>                  --><!--#.(30503.02.1) -->
-          <input type="text"         name="username" placeholder="eMail" id="username" value="Fuck You Microsoft" required>   <!-- .(30503.02.1 RAM "Fuck You Microsoft") -->
-<!--      <input type="text"         name="username" placeholder="eMail" id="username" value=" " required>                 --><!--#.(30503.02.2 RAM Try a space. No workie) -->
+          <input type="text"         name="username" placeholder="eMail" id="username" value="eMail" required>   <!-- .(30503.02.1 RAM "Fuck You Microsoft") -->
 
           <label class="label-styles" for="password">
             <i   class="fas fa-lock"></i>
@@ -226,10 +189,8 @@
             <input   id="trigger"    type="checkbox" onclick="showPin()">               <!-- .(30429.01.7 RAM Not defined globally if defined in module) -->
             <label  for="trigger"   class="checker"></label>
 
-            <!--<div class="pin-div"><input id="trigger" class="checkbox-image" type="checkbox" onclick="showPin()"></div>-->
           </div>
           <div   id="login-cancel"><a href="login.html">Cancel</a></div> <!-- .(30501.01.1 RJS Change Cancel btn to a link) -->
-     <!-- <input id="login-cancel" type="submit" value="Cancel"> -->     <!--#.(30501.01.1) -->
           <input id="login-button" type="submit" value="Login">          <!-- .(30501.01.2 RJS Add Login btn) -->
         </form>
       </div>
@@ -243,17 +204,11 @@
   <!-- BEG Footer -->
        <!-- inc-footer-->
             <div id="inc-footer"></div>
-  <!--      <script>                                                                    //#.(30412.03.5 Beg)
-            // $("#inc-footer").load( "../includes/inc-footer.html");
-               setHTML( 'inc-footer', '../includes/inc-footer.html');
-            </script> -->                                                             <!--#.(30412.03.5 End) -->
        <!-- END inc-footer -->
   <!-- END Footer -->
 
-    <!--<script src="../assets/js/login_v1.04.js"></script>-->
 
     </div>    <!-- eof Container .*30426.02.1 RAM) -->
-<!--</div> --><!-- eof Container --> <!-- // Mismatched close-tag, expected '</body>' but found '</div>'.' -->
   <script>
     console.log( "login.html[4]  End of regular script"  )                              // .(30423.03.4)
   </script>

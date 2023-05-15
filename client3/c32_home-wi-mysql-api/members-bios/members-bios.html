@@ -27,19 +27,29 @@
     <!--BEGINNING OF LOCAL STYLE SHEETS (CSS)-->
         <link rel="stylesheet"    href="members-bios.css">
     
-        <!--
-        <link rel="stylesheet"    href="css/06_resp_1900-3000-desktop.css">
-        <link rel="stylesheet"    href="css/07_resp_1100-1900-laptop.css">
-        <link rel="stylesheet"    href="css/08_resp_950-1100-tabletLandscape.css">
-    -->
         <script src="../assets/js/members-bios.js"  type="application/javascript" ></script>
         <script src="../assets/js/header.js"></script>
 </head>
 <body>
-<script>
-    var aName = "MembersBios"
-    var aAPI  = `${document.location.href}`.match( /iodd.com/i ) ? '/api2' : ''             //  .(30214.03.1 RAM Set if not running in Windows)
-    var aAPI_URL = aAPI ? '/api13' : 'http://localhost:3013'                                 // .(30214.03.2)
+
+<script type="module">
+    setHTML( 'inc-header', '../includes/inc-header.html' );   
+    setHTML( 'inc-section1', '../includes/inc-section1.html' );   
+    setHTML( 'inc-footer', '../includes/inc-footer.html' );   
+
+    //--- fetch members bio data -------------------------------/
+    import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs' // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)(30507.01.5 RAM No Import).(30507.02.5 RAM Use Import)
+                
+                //debugger 
+                console.log( "members.html[1]       Loading 1st module script" )    
+
+                await setAPI_URL( )                                                 // .(30507.01.7 RAM Remove getAPI_URL for data fetches in members.html).(30507.02.7) 
+                    var pMembers = document.getElementById( "Members-laptop" )
+        fetch( `${aAPI_URL}/members_bios` )                             // .(30214.05.3)
+        .then( ( res  ) => res.json( ) )
+        .then( ( json ) => {  
+                            pMembers.innerHTML = fmtMembersProjectsLaptop( json ) } ) 
+        .catch(( err  ) =>   pMembers.innerHTML `** ${err.message}` );                     
 </script>
 
 <div class="container">
@@ -68,20 +78,12 @@
 
 		<!-- inc-header-->
         <div id="inc-header"></div>
-        <script> 
-                //$("#inc-header").load("../includes/inc-header.html");
-              setHTML( 'inc-header', '../includes/inc-header.html' );   
-        </script> 
         <!-- END inc-header -->
     <!-- END  Header -->
 
     <!--  Section1 -->
  		<!-- inc-section1-->
             <div id="inc-section1"></div>
-            <script> 
-                    //$("#inc-section1").load("../includes/inc-section1.html");
-                setHTML( 'inc-section1', '../includes/inc-section1.html' );   
-            </script> 
          <!-- END inc-section1 -->
     <!-- END  Section1 -->
 
@@ -94,14 +96,6 @@
                     <!--<tr><th class="title-name">Name</th><th class="title-bio">Bio</th></tr>-->
                     <tbody id="Members-laptop">
                     </tbody>    
-                    <script>
-                        var pMembers = document.getElementById( "Members-laptop" )
-                            fetch( `${aAPI_URL}/members_bios` )                             // .(30214.05.3)
-                .then( ( res  ) => res.json( ) )
-                .then( ( json ) => {  
-                                        pMembers.innerHTML = fmtMembersProjectsLaptop( json ) } ) 
-                .catch(( err  ) =>   pMembers.innerHTML `** ${err.message}` );                     
-                    </script>
                     <tr class="last-row" id="bottom"><td colspan="2"><a href="#top" title="Go To The TOP"><img src="../assets/images/ArrowRedTopRedSmall.gif"></a></td></tr>
                 </table>
             </div>
@@ -111,10 +105,6 @@
     <!--  Footer -->
   		<!-- inc-footer-->
           <div id="inc-footer"></div>
-          <script> 
-                  //$("#inc-footer").load("../includes/inc-footer.html");
-                setHTML( 'inc-footer', '../includes/inc-footer.html' );   
-          </script> 
       <!-- END inc-footer -->
     <!-- END  Footer -->
 

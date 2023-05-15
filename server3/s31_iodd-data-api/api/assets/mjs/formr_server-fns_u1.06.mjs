@@ -47,48 +47,49 @@
 #           start
 #                               |
 ##CHGS     .--------------------+----------------------------------------------+
-# .(30213.01  2/13/23 RAM  1:45p| Created
-# .(30213.02  2/13/23 RAM  2:12p| Change port from 3000 to 3002
-# .(30214.03  2/14/23 RAM  8:00p| Display root dir
-# .(30312.02  3/12/23 RAM  9:10a| Set nPort for FRApps/server3/s36_mysql-data-api )
-# .(30318.01  3/18/23 RAM  8:22a| Should `return pReq.query` be `{}`??
-# .(30319.01  3/19/23 RAM  3:32p| Do nothing if .env not found
-# .(30322.03  3/22/23 RAM  1:28p| Play with aRemoteHost, bQuiet & aNeeds to be global to the IODD object
-# .(30322.05  3/22/23 RAM  2:20p| Put '/' back into replace( 'file:///', '/' ) if aOS = 'linux'
-# .(30322.06  3/22/23 RAM  3:02p| Add null and undefined
-# .(30323.05  3/23/23 RAM  2:54p| pDB_Config, set in code, takes precedence)
-# .(30328.02  3/28/23 RAM  9:20p| Write chkSQLargs
-# .(30328.03  3/28/23 RAM  9:18p| Move setRoute to server-fns.mjs
-# .(30328.04  3/28/23 RAM 10:00p| Write saySQL
-# .(30328.05  3/28/23 RAM 10:34p| Write chkSQLargs
-# .(30322.03  3/31/23 RAM  3:24p| aRemote_Host and aAPI_Host is needed by setRoute
-# .(30328.05  3/31/23 RAM  3:34p| Add Node's inspect
-# .(30328.05  3/31/23 RAM  7:53p| Return object in chkSQLargs
-# .(30331.01  3/31/23 RAM  8:00p| Display onRoute name
-# .(30401.02  4/01/23 RAM  4:00p| Add getHTML
-# .(30402.01  4/02/23 RAM  2:53p| Add fetchFile
-# .(30402.02  4/02/23 RAM  2:53p| Add getStyle, getJSON and modify getHTML
-# .(30402.03  4/02/23 RAM  3:18p| Add indexObj
-# .(30402.05  4/02/23 RAM  5:24p| Reuse sayMsg. Plus lots of changes for 'n Records found'
-# .(30403.04  4/03/23 RAM  1:09p| Write sndFile
-# .(30403.05  4/03/23 RAM  3:40p| Write putData
-# .(30403.06  4/03/23 RAM  7:07p| Add chkSQL and default pValidArgs: { id : /[0-9]+/ }
-# .(30403.07  4/03/23 RAM  7:45p| Trim mArg in chkArgs
-# .(30406.01  4/06/23 RAM  9:10a| Return InsertId
-# .(30407.03  4/07/23 RAM  9:15a| Change getData and putData to sndErr if needed
-# .(30408.01  4/08/23 RAM 10:15a| In chkSQL, Check if WHERE exists)
-# .(30410.02  4/10/23 RAM  8:15a| Breakout formr_utility-fns_u1.06.mjs
-# .(30410.03  4/12/23 RAM  1:30p| Use setAPI_URL and move aRemote
-# .(30412.01  4/12/23 RAM  2:30p| Use getEnv_sync
-# .(30412.02  4/12/23 RAM  3:20p| Move aAPI override to init()
-# .(30413.01  4/13/23 RAM  5:00p| Parse SQL with SQLn:
-# .(30415.02  4/15/23 RAM  9:00p| Use typeof instead of if (MT) {}
-# .(30415.03  4/15/23 RAM  8:00p| Add ${aAPI_Host} to sayMsg
-# .(30415.04  4/15/23 RAM 10:00p| Check if cssjson is present
-# .(30416.01  4/16/23 RAM 10:30a| Preserve \n in sayMsg 
-# .(30416.02  4/16/23 RAM 11:20a| Use tracrR
-# .(30416.03  4/16/23 RAM  1:55p| Use __appDir
-# .(30417.03  4/17/23 RAM  1:15p| Move sayErr to formr_utility-fns.mjs
+# .(30213.01  2/13/23 RAM  1:45p|  Created
+# .(30213.02  2/13/23 RAM  2:12p|  Change port from 3000 to 3002
+# .(30214.03  2/14/23 RAM  8:00p|  Display root dir
+# .(30312.02  3/12/23 RAM  9:10a|  Set nPort for FRApps/server3/s36_mysql-data-api )
+# .(30318.01  3/18/23 RAM  8:22a|  Should `return pReq.query` be `{}`??
+# .(30319.01  3/19/23 RAM  3:32p|  Do nothing if .env not found
+# .(30322.03  3/22/23 RAM  1:28p|  Play with aRemoteHost, bQuiet & aNeeds to be global to the IODD object
+# .(30322.05  3/22/23 RAM  2:20p|  Put '/' back into replace( 'file:///', '/' ) if aOS = 'linux'
+# .(30322.06  3/22/23 RAM  3:02p|  Add null and undefined
+# .(30323.05  3/23/23 RAM  2:54p|  pDB_Config, set in code, takes precedence)
+# .(30328.02  3/28/23 RAM  9:20p|  Write chkSQLargs
+# .(30328.03  3/28/23 RAM  9:18p|  Move setRoute to server-fns.mjs
+# .(30328.04  3/28/23 RAM 10:00p|  Write saySQL
+# .(30328.05  3/28/23 RAM 10:34p|  Write chkSQLargs
+# .(30322.03  3/31/23 RAM  3:24p|  aRemote_Host and aAPI_Host is needed by setRoute
+# .(30328.05  3/31/23 RAM  3:34p|  Add Node's inspect
+# .(30328.05  3/31/23 RAM  7:53p|  Return object in chkSQLargs
+# .(30331.01  3/31/23 RAM  8:00p|  Display onRoute name
+# .(30401.02  4/01/23 RAM  4:00p|  Add getHTML
+# .(30402.01  4/02/23 RAM  2:53p|  Add fetchFile
+# .(30402.02  4/02/23 RAM  2:53p|  Add getStyle, getJSON and modify getHTML
+# .(30402.03  4/02/23 RAM  3:18p|  Add indexObj
+# .(30402.05  4/02/23 RAM  5:24p|  Reuse sayMsg. Plus lots of changes for 'n Records found'
+# .(30403.04  4/03/23 RAM  1:09p|  Write sndFile
+# .(30403.05  4/03/23 RAM  3:40p|  Write putData
+# .(30403.06  4/03/23 RAM  7:07p|  Add chkSQL and default pValidArgs: { id : /[0-9]+/ }
+# .(30403.07  4/03/23 RAM  7:45p|  Trim mArg in chkArgs
+# .(30406.01  4/06/23 RAM  9:10a|  Return InsertId
+# .(30407.03  4/07/23 RAM  9:15a|  Change getData and putData to sndErr if needed
+# .(30408.01  4/08/23 RAM 10:15a|  In chkSQL, Check if WHERE exists)
+# .(30410.02  4/10/23 RAM  8:15a|  Breakout formr_utility-fns_u1.06.mjs
+# .(30410.03  4/12/23 RAM  1:30p|  Use setAPI_URL and move aRemote
+# .(30412.01  4/12/23 RAM  2:30p|  Use getEnv_sync
+# .(30412.02  4/12/23 RAM  3:20p|  Move aAPI override to init()
+# .(30413.01  4/13/23 RAM  5:00p|  Parse SQL with SQLn:
+# .(30415.02  4/15/23 RAM  9:00p|  Use typeof instead of if (MT) {}
+# .(30415.03  4/15/23 RAM  8:00p|  Add ${aAPI_Host} to sayMsg
+# .(30415.04  4/15/23 RAM 10:00p|  Check if cssjson is present
+# .(30416.01  4/16/23 RAM 10:30a|  Preserve \n in sayMsg 
+# .(30416.02  4/16/23 RAM 11:20a|  Use tracrR
+# .(30416.03  4/16/23 RAM  1:55p|  Use __appDir
+# .(30417.03  4/17/23 RAM  1:15p|  Move sayErr to formr_utility-fns.mjs
+# .(30511.02  5/11/23 RAM  3:45p|  Prevent crash if SELECT nothing if no args
 
 ##SRCE     +====================+===============================================+
 #*/
@@ -148,9 +149,9 @@
        var  mRecs         =  await getData_( pDB, aSQL, aDatasetName );
         if (mRecs[0] == 'error') {
         if (pRes) { sndErr( pRes, mRecs[1] );
-            process.exit() }                                                                                                                        // .30407.03.x RAM I'd rather continue, but we've already sent an error)
-//          return mRecs
-//          }                                                                                                                                       //#.(30410.03.2  RAM ?? )
+//          process.exit()                                                                                                                          //#.(30511.02.1 RAM Don't abort).30407.03.x RAM I'd rather continue, but we've already sent an error)       
+            return null                                                                                                                             // .(30511.02.2 RAM Return !mRecs)                                                               
+            }                                                                                                                                       //#.(30410.03.2 RAM ?? )
          } else {
     return (mRecs[0] == 'nodata') ? [] : mRecs                                                                                                      // .(30407.03.4 RAM Return [] if no data)
             }
@@ -310,8 +311,10 @@
 //  ------  ------------------  =   -------------------------------- ------------------ ------------------+
 
   function chkSQL( fmtSQL, pArgs ) {                                                                        // .(30403.06.4 RAM Beg Write chkSQL )
+     try {                                                                                                  // .(30511.02.3 RAM If fmtSQL bombs)
        var aSQL      =  typeof( fmtSQL ) == 'string'  ? fmtSQL : fmtSQL( pArgs )
-       if (pArgs.id) {
+     } catch( pErr ) {  sayMsg( "*** fmtSQL: Error"); return '' }                                            // .(30511.02.4 RAM Return ""?)
+       if (pArgs.id) {                                                                                      // .(30511.02.5 RAM Add to id = pArgs.id, if ...)
            aSQL      =  aSQL.match( /id *=/i ) ? aSQL                                                       // .(30403.06.2 RAM Kludge: Don't add if present)
                      : `${aSQL} ${ aSQL.match( /WHERE/i ) ? 'AND' : 'WHERE' } id = ${pArgs.id}` }           // .(30408.01.1 RAM Check if WHERE exists)
     return aSQL
@@ -367,7 +370,7 @@
 
   function  sndJSON( pRes, aJSON, aDatasetName ) {
             pRes.setHeader( 'Content-Type', 'application/json' );
-        if (typeof(aJSON) == 'object') { aJSON = JSON.stringify( aJSON ) }                                          // .(30424.09.x)                                      
+        if (typeof(aJSON) == 'object') { aJSON = JSON.stringify( aJSON ) }                                  // .(30424.09.x)                                      
             pRes.send(  aJSON )
             pRes.end();
         if (aJSON.match( /{ "error": /)) { return }
@@ -377,12 +380,12 @@
 //  ------  ------------------  =   -------------------------------- ------------------ ------------------+
 
   function  chkArgs( pReq, pRes, pValidArgs ) {
-         if (Object.keys( pReq.body).length == 0 && pReq.method != 'GET') {                                     // .(30424.09.x RAM Beg)                      
+         if (Object.keys( pReq.body).length == 0 && pReq.method != 'GET') {                                 // .(30424.09.x RAM Beg)                      
                           sndErr( pRes, '** Request Body/Query is empty' )
-                          sayErr(       '** Request Body/Query is empty\n' )                                                                     // .(30402.05.7)
+                          sayErr(       '** Request Body/Query is empty\n' )                                // .(30402.05.7)
     return  null       
             }                                                                                               // .(30429.09.x End)                       
-var  pArgs_ = { ...pReq.body, ...pReq.query }, mErrArgs = []                                         // .(30403.02.3 RAM pReq.query overrides pReq.body)
+       var  pArgs_ = { ...pReq.body, ...pReq.query }, mErrArgs = []                                         // .(30403.02.3 RAM pReq.query overrides pReq.body)
        if (!pValidArgs) {
     return  pArgs // pReq.query                                                                             // .(30318.01.1 RAM S.It.B {} ??).(30403.02.4)
        } else {
@@ -393,10 +396,10 @@ var  pArgs_ = { ...pReq.body, ...pReq.query }, mErrArgs = []                    
         if (mArgs.length > 0) {
             mErrArgs   =  mArgs.filter( chkArg )
         } else {
-            mErrArgs   =  pValidArgs.required ? [ [ 'Required', 'yes' ] ] : [ ]
+            mErrArgs   =  pValidArgs.required ? [ [ 'Required', 'yes' ] ] : [ ]                             // .(30403.02.5 RAM Are any args required? What if not. fmtSQL must handle it) 
          }  }
         if (mErrArgs.length == 0) {
-    return  pArgs // pReq.query  // all or nothing                                                          // .(30403.02.6)
+    return  pArgs                   // pReq.query; all? or nothing; could be {} if no args given                     // .(30403.02.6)
             }
                           sndErr( pRes, `** Invalid Arguments`,    mErrArgs.map( mArg => fmtArg( mArg ) ) )          // .(30425.01.1 RAM Add fmtArg)
        var  aMsg       =                `** Invalid Arguments: '${ mErrArgs.map( mArg => fmtArg( mArg ) ).join() }'` // .(30402.05.6).(30425.01.2)
@@ -452,11 +455,11 @@ var  pArgs_ = { ...pReq.body, ...pReq.query }, mErrArgs = []                    
   function  sndErr( pRes, aMsg, mItems ) {
 //          pRes.setHeader( 'Content-Type', 'text/html' );                                                  // .(30424.09.x RAM ??? Should it be json?)
 //     var  aItems     =  mItems ? ( mItems.length > 0 ? `, '${ mItems.join(    ) }'` : "") : ""
-       var  aItems     =  mItems ? ( mItems.length > 0 ? `, ${ mItems.join( ', ') }`  : "") : ""
+       var  aItems     =  mItems ? ( mItems.length > 0 ? `, ${ mItems.join( ', ') }`  : "") : ""; aMsg = aMsg.replace( /[: ]$/, "" )  // .(30511.02.6 RAM ?? Trailing :)
         if (pRes.req.headers['accept'] == 'application/json') {                                             // .(30424.09.x)      
                           sndJSON( pRes, { error: `${aMsg}: ${aItems.substring(2)}` } )                 // .(30424.09.x)      
        } else {                                                                                             // .(30424.09.x)      
-                          pRes.send(   `<h3>${aMsg}: ${aItems.substring(2).replace( /""/g, '"' ) }</h3>` )
+                          pRes.send(     `<h3>${aMsg}: ${ aItems.substring(2).replace( /""/g, '"' ) }</h3>` )
 //                        sayErr( `${aMsg}\n` )                                                             //#.(30402.05.9 RAM Remove)
             }                                                                                               // .(30424.09.x)      
          }; // eof sndErr

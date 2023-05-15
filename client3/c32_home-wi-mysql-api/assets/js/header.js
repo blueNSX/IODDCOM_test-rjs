@@ -60,7 +60,7 @@
 
         if (id > 0)  
         {  
-            //alert("id = " + id )
+           // alert("id = " + id )
             var aLogIn = iLogin;
             //let aLogIn = "<a href='#' title='Welcome' style='text-decoration:none;'>RS</a>";
             var pSpan = $("#log") 
@@ -70,8 +70,8 @@
             $("#ContactLink").css("display", "block");
             $("#contact-dropdown").css("display", "block");
             $("#login-inits").css("width", "35px")
-            $("#pencil-image1").css("display", "inline-block")
-            $("#pencil-image2").css("display", "inline-block")
+            $("#pencil-image-members").css("display", "inline-block")
+            $("#pencil-image-projects").css("display", "inline-block")
             $("#pencil-image-inits").css("display", "inline-block")
             pSpan.css("text-decoration", "none");
             pSpan.css("color", "white");
@@ -97,8 +97,8 @@
             $("#ContactAll").css("display", "none");
             $("#ContactLink").css("display", "none");
             $("#contact-dropdown").css("display", "none");
-            $("#pencil-image1").css("display", "none")
-            $("#pencil-image2").css("display", "none")
+            $("#pencil-image-members").css("display", "none")
+            $("#pencil-image-projects").css("display", "none")
             $("#pencil-image-inits").css("display", "none")
             pSpan.css("color", "white");
             pSpan.css("padding", "5px");

@@ -1,0 +1,500 @@
+* {
+  box-sizing: border-box;
+  font-family: var(--GlobalFontFamily);
+  font-size: 14px;
+}
+.logout-temp-div {
+  text-align: right;
+  margin: 0px 10px 0px 0px;
+}
+.logout-temp-span a {
+  text-decoration: none;
+  color: white;
+  font-family: monospace;
+  font-weight: 700;
+  background-color: blue;
+  padding: 2px 8px 2px 8px;
+  border: 1px solid blue;
+  border-radius: 8px;
+}
+.Section1 {
+  height: 700px; /*was 120px*/
+  width: var(--GlobalMaxWidth);
+  width: 100%;
+  top: 60px;
+  left: 0px;  
+  background: url( '../assets/images/monaco-blue-soft.jpg');
+  /*background-color: whitesmoke;*/
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.Section1Title {
+  padding: 30px 0px 0px 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: whitesmoke;
+  text-shadow: 1px 1px 3px #000000;
+}
+.Section2 {
+  height: 600px;
+  background-color: aliceblue;
+}
+
+.req-fields-notice {
+  display: none;
+  color:blue;
+}
+.form-div {
+  display: none;
+}
+.form-setting {
+  width: 650px;
+  background-color: whitesmoke;
+  box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+  margin: 20px auto;
+  border: solid blue 1px;
+}
+.form-setting h1 {
+  text-align: center;
+  color: #5b6574;
+  font-size: 24px;
+  padding: 20px 0px 20px 0px;
+  border-bottom: 1px solid #ECECEC;
+}
+.form-setting form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 20px;
+}
+.form-setting form label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: #3274d6;
+  color: #ffffff;
+}
+.form-setting form input[type="password"], 
+.form-setting form input[type="text"] {
+  width: 130px;
+  height: 40px;
+  border: 1px solid #dee0e4;
+  margin-bottom: 20px;
+  padding: 0 15px;
+}
+.form-setting form input[type="submit"] {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  background-color: #3274d6;
+  border: 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+  transition: background-color 0.2s;
+}
+.form-setting form input[type="submit"]:hover {
+  background-color: #2868c7;
+  transition: background-color 0.2s;
+  /* border: solid blue 1px; */
+}
+
+::-webkit-input-placeholder {
+  color: #DCDCDC;
+}
+
+/* ======================================*/
+/* .name-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 15px 0px;
+}
+.name-info {
+  display: flex;
+  list-style-type: none;
+  height: 50px;
+}
+#firstname,
+#lastname {
+  width: 180px
+}
+#middleinits,
+#suffix {
+  width: 60px
+} */
+/*======================================*/
+
+/* .credentials-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 15px 0px;
+}
+.credentials-info {
+  display: flex;
+  list-style-type: none;
+  height: 50px;
+}
+#email {
+  width: 350px;
+} */
+
+/*======================================*/
+
+/* .company-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.company-url-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.company-address1-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.company-address2-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.company-name,
+.company-url,
+.company-address1,
+.company-address2 {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  width: 600px;
+  height: 50px;
+}
+#co-name {
+  width: 480px;
+  margin-left:60px;
+}
+#co-url {
+  width: 480px;
+  margin-left:60px;
+}
+#co-addr1 {
+  width: 480px;
+  margin-left:60px;
+}
+#co-addr2 {
+  width: 480px;
+  margin-left:60px;
+} */
+
+/*======================================*/
+
+/* .city-state-zip-country-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.city-state-zip-country {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  height: 50px;
+}
+#city {
+  width: 220px;
+}
+#state {
+  width: 100px
+}
+#zip,
+#country {
+  width: 80px
+} */
+
+/*======================================*/
+
+/* .phone-info-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 25px 0px;
+}
+.phone-info {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  height: 50px;
+}
+#phone1,
+#phone2 {
+  width: 240px
+} */
+
+/*======================================*/
+
+/* .bio-title {
+  display: inline-block;
+  list-style-type: none;
+  height: 20px;
+  width: 70%;
+  padding: 0px 0px 15px 0px;
+}
+.bio {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  width: 600px;
+  vertical-align: top;
+}
+
+#bio {
+  width: 480px;
+  margin-left: 60px;
+  height: 120px;
+} */
+
+/*====================================== */
+
+#WelcomeProjectInfo {
+  font-size: 18px;
+}
+
+#projects-form-error {
+  border-top: red 1px solid;
+  border-bottom: red 1px solid;
+  color: red;
+  font-size: 14px;
+  background-color: yellow;
+  padding: 10px 0px 10px 0px;
+  display: none;
+}
+#form-error a {
+  font-size: 14px;
+}
+.Footer {
+  display: block;
+  height: 60px;
+  /* width: 440px; */
+  /* opacity: 0.82; */
+  /* border-top: dotted 2px #696969; */
+
+} 
+.FooterNavList {
+  justify-content: center;
+  padding-left: 0px;
+  margin: 5px;
+  text-align: center;
+}
+.FooterNavListItem  {
+  padding: 10px 0px 10px 0px;
+}
+  .FooterNavListItem a {
+    color: #505050;
+}
+
+
+/*========================================*/
+/* New Project + sign Styles */
+
+.new-project a {
+  text-decoration: none;
+  font-size: 25px;
+  color: blue;
+}
+
+/*========================================*/
+/* Project Dropdown Menu Styles */
+
+div.ProjectDropdownMenu {
+  width: 120px;
+  text-align: center;
+  display: inline-block;
+}
+
+
+
+.project-dropbtn {
+  background-color: #3274d6;
+  color: white;
+  border-radius: 0px;
+  font-size: var(--MenuCTAFontSize);
+  padding: 8px;
+  font-family: var(--GlobalFontFamily);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  top: 25px;
+}
+
+.project-dropdown {
+  margin-top: 12px;
+  position: relative;
+  display: flex;
+}
+div.project-dropdown-content {
+  top: 28px;
+  /* ^^ to move the menu Up and Down */
+  left: -20px;
+  /* ^^ to move the menu left:0 or right:0 */
+  width: 400px;
+}  
+.project-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: aliceblue;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.project-dropdown-content a {
+  color: black;
+  padding: 10px 16px;
+  text-decoration: none;
+  text-align: left;
+  display: block;
+  font-size: 16px;
+  font-family: var(--GlobalFontFamily);
+  font-weight: 500;
+}
+
+.project-dropdown-content a:hover {
+  background-color: rgb(66, 66, 245);
+  color: white;
+}  
+.project-dropdown:hover .project-dropdown-content {
+  display: block;
+} 
+.project-dropdown:hover .project-dropbtn {
+  /* background-color: blue; */
+  /* color: #C0C0C0; */
+}
+
+
+
+
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+/*-----------------------------------------
+The @media MAX-width query properties
+***** IPHONE - Landscape
+/*If Device Width 
+  is >= 441px AND 
+  <= 740px Then...*/
+
+/*=========================================*/
+@media only screen
+and (min-width: 441px)
+and (max-width: 700px) 
+{
+
+  .Section1 {
+    max-width: 700px;
+  }
+  .Section1Title {
+    font-size: 24px;
+    padding: 10px 0px 0px 25px;
+  }
+  /*-----------------------------------*/
+  .form-setting {
+    background-color: whitesmoke;
+    margin: 0px auto;
+  }
+  /*-----------------------------------*/
+  .Footer {
+    display: none;
+  }
+}
+
+
+  /*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+  /*-----------------------------------------
+  The @media MAX-width query properties
+  ***** IPHONE
+  /*If Device Width is <= to 440px Then...*/
+
+  /*=========================================*/
+  @media only screen
+  and (max-width: 440px)
+  {
+
+      .Section1 {
+        max-width: 100vw;
+      }
+
+      /*--------------------------------*/
+
+      .form-setting {
+        width: 370px;
+        background-color: #ECECEC;
+        margin: 0px auto;
+      }
+      .form-setting h1 {
+        font-size: 20px;
+      }
+      .form-setting form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 20px;
+      }
+      .form-setting form label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        background-color: #3274d6;
+        color: #ffffff;
+      }
+      .form-setting form input[type="password"], 
+      .form-setting form input[type="text"] {
+        width: 130px;
+        height: 40px;
+        border: 1px solid #dee0e4;
+        margin-bottom: 20px;
+        padding: 0 15px;
+      }
+      .form-setting form input[type="submit"] {
+        width: 100%;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #3274d6;
+        border: 0;
+        cursor: pointer;
+        font-weight: bold;
+        color: #ffffff;
+        transition: background-color 0.2s;
+      }
+      .form-setting form input[type="submit"]:hover {
+        background-color: #2868c7;
+        transition: background-color 0.2s;
+        /* border: solid blue 1px; */
+      }
+      .member-title {
+        font-size: 16px;
+      }      
+
+      /*--------------------------------*/
+
+      .Footer {
+        display: none;
+      }
+  }

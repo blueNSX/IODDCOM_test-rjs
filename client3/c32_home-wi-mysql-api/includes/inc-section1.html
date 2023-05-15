@@ -10,6 +10,56 @@
         <link rel="stylesheet"    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
     </head>
     <body>
+
+<script type="module">
+
+    import { setAPI_URL, setHTML } from './assets/mjs/formr_utility-fns_u1.07.mjs'          // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here).(30507.01.1 RAM Remove import of utility-fns).(30507.02.31 RAM Import from root dir) 
+
+            //debugger 
+            console.log( "inc-section1.html[1]  Loading 1st module script" )               // .(30505.03.4 RAM Must be after import)
+
+        await setAPI_URL( )                                                                  // .(30505.01.2 RJS Use here).(30507.01.2 RAM Remove it).(30507.02.2 RAM Fetch aAPI_URL)
+            console.log( "inc-section1.html[3]  aAPI_URL fetched" )                        // .(30507.02.10)
+            console.log( "inc-section1.html[4]  Continue loading 1st module script" )      // .(30507.01.23) 
+
+        var c  = document.cookie;  // Get cookie again, since it is not globally defined 
+        var n  = c.indexOf("=")
+        var id = (n > 0) ? parseInt(c.substring(n + 1)) : 0 
+
+        var aDB_Server = typeof(aAPI_URL) == 'undefined' ? 'undefined' : aAPI_URL
+            console.log( `inc-section1.html[8]  Fetching data from: '${aDB_Server}?id=${ id }'` )    
+
+            var pWelcome = document.getElementById( "WelcomeBanner" )
+
+            fetch( `${aAPI_URL}/members?id=${ id }` )
+                .then( ( res  ) => {            // return required in {} block  
+                    return res.json( ) 
+                        } )
+                .then( ( json ) => {  
+                    var aHTML  = fmtWelcome( json )
+                        pWelcome.innerHTML = aHTML 
+                        console.log( "inc-section1.html[9]  Loaded Welcome DIV" )          // .(30507.01.12) 
+                        }) 
+                .catch(( err  ) => alert ( `inc-section1.html[8]  *** ${err.message}` ));                     
+
+                function fmtWelcome ( pJSON ) {
+                    if (pJSON.warning) { 
+                    //var aHTML =  pJSON.warning
+                    var aHTML =  ""
+                    } else { 
+                    if (pJSON.members.length == 0) { 
+                    //var aHTML = ` ** No member found for id = ${ id }`
+                    } else {    
+                    var aHTML = "welcome "      + pJSON.members[0].FullName
+                        aHTML =  aHTML + "<h3>" + pJSON.members[0].Company + "</h3>"
+                        } } 
+                    return aHTML
+                    } // eof fmtWelcome  
+
+    console.log( "inc-section1.html[10] 1st Module script loaded"  )               // .(30423.03.4).(30507.01.27)
+</script>
+
+
             <!--  Section1 -->
             <div    class="Section1">
                 <div class="Section1Title">institute of database developers</div>
@@ -22,89 +72,5 @@
                 </div>
             </div>
             <!-- END  Section1 -->
-
-            <script type="module">
-
-//              debugger 
-//              console.log( "inc-section1.html[1]  Loading 1st module script" )               // .(30505.03.3 RAM Causes import to fail)
-
-//     import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'         //#.(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here).(30507.01.1 RAM Remove import of utility-fns).(30507.02.1 RAM Use import)
-       import { setAPI_URL, setHTML } from './assets/mjs/formr_utility-fns_u1.07.mjs'          // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here).(30507.01.1 RAM Remove import of utility-fns).(30507.02.31 RAM Import from root dir) 
-
-                debugger 
-                console.log( "inc-section1.html[1]  Loading 1st module script" )               // .(30505.03.4 RAM Must be after import)
-
-          await setAPI_URL( )                                                                  // .(30505.01.2 RJS Use here).(30507.01.2 RAM Remove it).(30507.02.2 RAM Fetch aAPI_URL)
-//          var aAPI_URL = "http://localhost:3012"                                             //#.(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here).(30507.01.3 RAM hard-code it).(30507.02.3)
-//              window.aAPI_URL = aAPI_URL                                                     //#.(30412.03.1 RAM Set window.aAPI_URL ).(30505.01.2 RJS Use here).(30507.01.4 RAM Make it global).(30507.02.4)
-
-//              console.log( "inc-section1.html[2]  1st Module script loaded" )                //#.(30507.01.21)   
-                console.log( "inc-section1.html[3]  aAPI_URL fetched" )                        // .(30507.02.10)
-
-//          </scr ipt>                                                                         //#.(30507.01.22 RAM Keep it all in the same script module)
-//          <script type="module">                                                             //#.(30507.01.22) -->
-                                                                                 
-//              debugger 
-//              console.log( "inc-section1.html[4]  Loading 2nd regular script" )              //#.(30507.01.22) 
-//              console.log( "inc-section1.html[4]  Loading 2nd module script" )               //#.(30507.01.22 RAM try module script).(30507.01.23) RAM No workie)
-                console.log( "inc-section1.html[4]  Continue loading 1st module script" )      // .(30507.01.23) 
-/*                                                                                             //#.(30507.01.24 Beg RAM Don't set listener)
-//         $(document).ready( function() { ... }                               // jQuery method 1 
-//         $(document).ready( onReady )                                        // jQuery method 2 
-             document.addEventListener( 'readystatechange', function(event) {  // Browser method
-               switch(event.target.readyState) {
-                 case 'loading'    : console.log( "inc-section1.html[5]  ReadyState: Loading" );            break; 
-                 case 'interactive': console.log( "inc-section1.html[6]  ReadyState: Ready?"  );            break; 
-                 case 'complete'   : console.log( "inc-section1.html[7]  ReadyState: Complete"); onReady(); break;  
-                 }
-             });      */                                                                       //#.(30507.01.24 End)
-
-//     function onReady() {                                                                    //#.(30507.01.25 RAM Remove onReady in regular script)
-             // alert ("Id = " + id)
-//              debugger 
-
-            var c  = document.cookie;  // Get cookie again, since it is not globally defined 
-            var n  = c.indexOf("=")
-            var id = (n > 0) ? parseInt(c.substring(n + 1)) : 0 
-
-            var aDB_Server = typeof(aAPI_URL) == 'undefined' ? 'undefined' : aAPI_URL
-                console.log( `inc-section1.html[8]  Fetching data from: '${aDB_Server}?id=${ id }'` )    
-
-                var pWelcome = document.getElementById( "WelcomeBanner" )
-
-                fetch( `${aAPI_URL}/members?id=${ id }` )
-        //      fetch( `http://localhost:3013/members?id=${ id }` )
-
- //                .then( ( res  ) => res.json() ) // return not needed 
-                   .then( ( res  ) => {            // return required in {} block  
-                     return res.json( ) 
-                            } )
-                   .then( ( json ) => {  
-                        var aHTML  = fmtWelcome( json )
-                            pWelcome.innerHTML = aHTML 
-                            console.log( "inc-section1.html[9]  Loaded Welcome DIV" )          // .(30507.01.12) 
-                            }) 
-                   .catch(( err  ) => alert ( `inc-section1.html[8]  *** ${err.message}` ));                     
-
-                   function fmtWelcome ( pJSON ) {
-                        if (pJSON.warning) { 
-                        var aHTML =  pJSON.warning
-                        } else { 
-                        if (pJSON.members.length == 0) { 
-                        var aHTML = ` ** No member found for id = ${ id }`
-                        } else {    
-                        var aHTML = "welcome "      + pJSON.members[0].FullName
-                            aHTML =  aHTML + "<h3>" + pJSON.members[0].Company + "</h3>"
-                          } } 
-                     return aHTML
-                        } // eof fmtWelcome  
-
-//                      console.log( "inc-section1.html[9]  End of onReady"  )                 //#.(30423.03.4).(30507.01.25 End) 
-//              } // eof onReady                                                               //#.(30507.01.11) 
-//              console.log( "inc-section1.html[10] 2nd Regular script loaded"  )              //#.(30423.03.4).(30507.01.26)
-//              console.log( "inc-section1.html[10] 2nd Module script loaded"  )               //#.(30423.03.4).(30507.01.26).(30507.01.27)
-                console.log( "inc-section1.html[10] 1st Module script loaded"  )               // .(30423.03.4).(30507.01.27)
-
-             </script>
     </body>
 </html>
