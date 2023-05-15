@@ -222,6 +222,7 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
             <a href="${aAPI_Host}/members_bios"                      >/members_bios</a><br>
             <a href="${aAPI_Host}/members_projects"                  >/members_projects</a><br>
             <a href="${aAPI_Host}/projects"                          >/projects</a><br>
+            <a href="${aAPI_Host}/project?ProjectId=149"             >/project?ProjectId=149</a><br>
             <a href="${aAPI_Host}/projects_list?id=90"               >/projects_list?id=90</a><br>        <!-- .(30511.03.3 RAM Add GET projects_list) -->
             <a href="${aAPI_Host}/project_collaborators"             >/project_collaborators</a><br>
             <form ${ fmtForm2( 'sam', 'Add',                      60, 'user'   ) }</form>                 <!-- .(30511.01.3).(30510.02.5 RAM Add POST User) -->
@@ -650,6 +651,33 @@ this.ProjectsList_getRoute = function( ) {                                      
          }; // eof ProjectsList_getRoute                                                            // .(30511.03.4 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
+
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+//= project Primary (singular) ====================================================
+//-(Project Primary Details)-------------------------------------------------------
+
+//=project Primary================================================================
+//-(Project Primary Details)-------------------------------------------------------
+
+this.Projects_getRoute = function( ) {
+
+  setRoute( pApp, 'get', '/project?ProjectId=149',         JSON_getRoute_Handler, `SELECT * FROM form_project_info WHERE ProjectStyle='Primary' AND ProjectId=149` )
+
+}; // eof Projects_getRoute
+//--------  ------------------  =   -------------------------------- ------------------
+//=====================================================================================
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
 
 //= project_collaborators ===================================================
 //-(getProjectCollaborators)-------------------------------------------------

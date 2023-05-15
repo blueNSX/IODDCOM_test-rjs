@@ -22,10 +22,131 @@
   <link rel="stylesheet"    href="project-info.css">
 
   <script src="../assets/js/header.js"></script>
+
 </head>
 <body>
-<script src="../assets/js/personal.js"></script>
-<script> var aName = "Personal" </script>	
+<script type="module">
+  //--Header / Footer Includes--------------------------------------/  
+	  setHTML( 'inc-header', '../includes/inc-header.html' );   
+    setHTML( 'inc-footer', '../includes/inc-footer.html' );   
+
+  //----showPin Function-----------------------------------/
+    function showPin() {
+        var x = document.getElementById("password");
+        if (x.type === "password") {
+          x.type = "text";
+        } else {
+          x.type = "password";
+        }
+      }
+    window.showPin = showPin
+
+  //----showPin if id >= 0 -----------------------------------/
+    const url = window.location.href;
+    //alert("url: " + url);
+    var nPos = url.indexOf("?");
+    //alert("nPos = " + nPos);
+
+      if ( nPos >= 0 ) {
+        $("#show-pin").css("display", "block");
+        //alert("true")    
+        //console.log('The query parameter is set');
+      } else {
+        $("#show-pin").css("display", "none");
+        //alert("false")
+        //console.log('The query parameter is not set');
+      }
+
+  //----submit Function-----------------------------------/  
+  var  pMembersInfoForm = document.getElementById(  "MembersInfoForm" );                       // .(30428.01.1)
+       pMembersInfoForm.addEventListener("submit", onMemberInfoForm_Submit );                 //#.(30428.01.2 RAM Have to define listener in module).(30428.04.2)
+
+
+      //alert ("Id = " + id)
+      var pWelcome = document.getElementById( "WelcomeMemberInfo" )
+                  //fetch( `${aAPI_UTL}/members?id=${ id }` )
+                  fetch( `http://localhost:3012/members?id=${ id }` )
+          .then( ( res  ) => res.json( ) )
+          .then( ( json ) => {  
+          var aHTML = fmtWelcome (json)
+          pWelcome.innerHTML = aHTML 
+          } ) 
+          //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
+          function fmtWelcome ( pJSON ) {
+              var aHTML = "For: " + pJSON.members[0].FullName
+              return aHTML
+          }
+
+    function onMemberInfoForm_Submit() {
+
+      var pFirstName = document.getElementById( "firstname" )
+      var pMI = document.getElementById( "middleinits" )
+      var pLastName = document.getElementById( "lastname" )
+      var pSuffix = document.getElementById( "suffix" )
+      var pEmail = document.getElementById( "email" )
+      var pPassword = document.getElementById( "password" )
+      var pCompany = document.getElementById( "co-name" )
+      var pCompanyURL = document.getElementById( "co-url" )
+      var pCoAddr1 = document.getElementById( "co-addr1" )
+      var pCoAddr2 = document.getElementById( "co-addr2" )
+      var pCity = document.getElementById( "city" )
+      var pState = document.getElementById( "state" )
+      var pZIP = document.getElementById( "zip" )
+      var pCountry = document.getElementById( "country" )
+      var pPhone1 = document.getElementById( "phone1" )
+      var pPhone2 = document.getElementById( "phone2" )
+      var pBio = document.getElementById( "bio" )
+      alert ("About to submit " + pFirstName.value)
+    }
+  
+  //----GET Function-----------------------------------/
+              onMemberInfoForm_Get()
+    function  onMemberInfoForm_Get() {
+      var pFirstName = document.getElementById( "firstname" )
+      var pMI = document.getElementById( "middleinits" )
+      var pLastName = document.getElementById( "lastname" )
+      var pSuffix = document.getElementById( "suffix" )
+      var pEmail = document.getElementById( "email" )
+      var pPassword = document.getElementById( "password" )
+      var pCompany = document.getElementById( "co-name" )
+      var pCompanyURL = document.getElementById( "co-url" )
+      var pCoAddr1 = document.getElementById( "co-addr1" )
+      var pCoAddr2 = document.getElementById( "co-addr2" )
+      var pCity = document.getElementById( "city" )
+      var pState = document.getElementById( "state" )
+      var pZIP = document.getElementById( "zip" )
+      var pCountry = document.getElementById( "country" )
+      var pPhone1 = document.getElementById( "phone1" )
+      var pPhone2 = document.getElementById( "phone2" )
+      var pBio = document.getElementById( "bio" )
+
+      //fetch( `${aAPI_UTL}/members?id=${ id }` )
+                  fetch( `http://localhost:3012/members?id=${ id }` )
+          .then( ( res  ) => res.json( ) )
+          .then( ( json ) => {  
+          pFirstName.value = json.members[0].FirstName
+          pMI.value = json.members[0].MiddleName
+          pLastName.value = json.members[0].LastName 
+          pSuffix.value = json.members[0].PostName 
+          pEmail.value = json.members[0].Email 
+          pPassword.value = json.members[0].PIN 
+          pCompany.value = json.members[0].Company 
+          pCompanyURL.value = json.members[0].WebSite 
+          pCoAddr1.value = json.members[0].Address1
+          pCoAddr2.value = json.members[0].Address2
+          pCity.value = json.members[0].City
+          pState.value = json.members[0].State
+          pZIP.value = json.members[0].Zip
+          pCountry.value = json.members[0].Country
+          pPhone1.value = json.members[0].Phone1
+          pPhone2.value = json.members[0].Phone2
+          pBio.value = json.members[0].Bio
+       
+        } ) 
+      }
+          //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
+</script>	
+
 <!--  Header -->
   <style>
       #MenuBlank {display:block;}
@@ -49,79 +170,12 @@
       /*#log {display:none}*/
   </style>
 
-  <script type="module">
-    //--Header / Footer Includes--------------------------------------/  
-      setHTML( 'inc-header', '../includes/inc-header.html' );   
-			setHTML( 'inc-footer', '../includes/inc-footer.html' );   
-    
-    
-    //--Welcome function---------------------------------------/  
-    var pWelcome = document.getElementById( "WelcomeProjectInfo" )
-                  //fetch( `${aAPI_UTL}/members?id=${ id }` )
-                  fetch( `http://localhost:3012/members?id=${ id }` )
-          .then( ( res  ) => res.json( ) )
-          .then( ( json ) => {  
-          var aHTML = fmtWelcome (json)
-          pWelcome.innerHTML = aHTML 
-          } ) 
-          //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
-          function fmtWelcome ( pJSON ) {
-              var aHTML = "For: " + pJSON.members[0].FullName
-              return aHTML
-          }
-  
-          //----GET Function-----------------------------------/
-              onProjectsInfoForm_Get()
-    function  onProjectsInfoForm_Get() {
-      // var pFirstName = document.getElementById( "firstname" )
-      // var pMI = document.getElementById( "middleinits" )
-      // var pLastName = document.getElementById( "lastname" )
-      // var pSuffix = document.getElementById( "suffix" )
-      // var pEmail = document.getElementById( "email" )
-      // var pPassword = document.getElementById( "password" )
-      // var pCompany = document.getElementById( "co-name" )
-      // var pCompanyURL = document.getElementById( "co-url" )
-      // var pCoAddr1 = document.getElementById( "co-addr1" )
-      // var pCoAddr2 = document.getElementById( "co-addr2" )
-      // var pCity = document.getElementById( "city" )
-      // var pState = document.getElementById( "state" )
-      // var pZIP = document.getElementById( "zip" )
-      // var pCountry = document.getElementById( "country" )
-      // var pPhone1 = document.getElementById( "phone1" )
-      // var pPhone2 = document.getElementById( "phone2" )
-      // var pBio = document.getElementById( "bio" )
 
-      //fetch( `${aAPI_UTL}/members?id=${ id }` )
-                  fetch( `http://localhost:3012/projects?id=${ id }` )
-          .then( ( res  ) => res.json( ) )
-          .then( ( json ) => {  
-          pFirstName.value = json.members[0].FirstName
-          pMI.value = json.members[0].MiddleName
-          pLastName.value = json.members[0].LastName 
-          pSuffix.value = json.members[0].PostName 
-          pEmail.value = json.members[0].Email 
-          pPassword.value = json.members[0].PIN 
-          pCompany.value = json.members[0].Company 
-          pCompanyURL.value = json.members[0].WebSite 
-          pCoAddr1.value = json.members[0].Address1
-          pCoAddr2.value = json.members[0].Address2
-          pCity.value = json.members[0].City
-          pState.value = json.members[0].State
-          pZIP.value = json.members[0].Zip
-          pCountry.value = json.members[0].Country
-          pPhone1.value = json.members[0].Phone1
-          pPhone2.value = json.members[0].Phone2
-          pBio.value = json.members[0].Bio
-       
-        } ) 
-      }
-
-
-  </script>
 
   <!-- inc-header-->
 			<div id="inc-header"></div>
 		<!-- END inc-header -->
+
   <!-- END  Header -->
 
   <!--  Section 1 -->
@@ -130,46 +184,82 @@
 
       <div class="form-setting">
         <h1>
-          Project(s) Information<br>
-          <div id="WelcomeProjectInfo"></div>
+          Project Information<br>  
+          <div id="member-form-error">ERROR!</div>
+          <div id="WelcomeMemberInfo"></div>
+          <div id="ProjectNameBanner">PFEP (Plan For Every Part)</div>
           <div class="req-fields-notice">* required fields</div>  
-          <div id="projects-form-error">ERROR!</div>
+          <div id="member-form-error">ERROR!</div>
+      </h1>
+        <form id="MembersInfoForm">
+          <table class="name-title"><tr>
+            <td width="35%"><font color="blue"><b>Project Name *</b></font></td>
+          </tr></table>
+          <ul class="name-info">
+              <li><input type="text" name="project-name" placeholder="Project Name" id="projectname" required></li>
+              <script>//debugger</script>
+          </ul>
+
+          <table class="project-url-title"><tr>
+            <td width="35%"><font color="blue"><b>Project Website (URL)</b></font></td>
+          </tr></table>
+          <ul class="project-url">
+              <li><input type="text" name="project-url" placeholder="Project Website" id="project-url" required></li>
+              <script>//debugger</script>
+          </ul>
+
+          <table class="client-title"><tr>
+            <td width="45%"><font color="blue"><b>Client's Name</b></font></td>
+          </tr></table>
+          <ul class="client-name">
+            <li><input type="text" name="company" placeholder="Client Name" id="client-name"></li>
+          </ul><br><br>
+
+          <table class="client-url-title"><tr>
+            <td width="45%"><font color="blue"><b>Client's Website (URL)</b></font></td>
+          </tr></table>
+          <ul class="client-url">
+            <li><input type="text" name="client-url" placeholder="Client Website" id="client-url"></li>
+          </ul><br><br>
+
+          <table class="ind-loc-info-title"><tr>
+            <td width="80%"><font color="blue"><b>Industry</b></font></td>
+            <td width="0%"><font color="blue"><b>Location</b></font></td>
+          </tr></table>          
+          <ul class="ind-loc-info">
+            <li><input type="text" name="industry" placeholder="Industry" id="industry"></li>
+            <li><input type="text" name="location" placeholder="Location" id="location"></li>
+          </ul><br><br>
+
+          <table class="members-title"><tr>
+            <td width="12%"><font color="blue"><b>Member's Role</b></font></td>
+            <td width="15%"><font color="blue"><b>Duration</b></font></td>
+            <td width="12%"><font color="blue"><b>Dates</b></font>&nbsp;</td>
+          </tr></table>
+          <ul class="members-info">
+            <li><input type="text" name="role" placeholder="Member Role" id="role"></li>
+            <li><input type="text" name="duration" placeholder="Duration" id="duration"></li>
+            <li><input type="text" name="dates" placeholder="Dates" id="dates"></li>
+          </ul><br><br>
+
+
+          <table class="description-title"><tr>
+            <td width="45%"><font color="blue"><b>Project Description</b></font></td>
+          </tr></table>
+          <ul class="description-info">
+            <li><textarea name="description" placeholder="Project Description" id="description" title="Please enter the project description here" rows="14" cols="10" wrap="soft" style="padding: 10px 10px 10px 15px;"></textarea></li>
+          </ul><br><br><br><br>
+
           
-          <div class="ProjectDropdownMenu">
-            <div class="project-dropdown">
-              <button class="project-dropbtn" tabindex="-1">Select Project</button>
-              <div class="project-dropdown-content">
-                <hr style="border-top: 3px solid #C0C0C0">
-                  <!-- <a href="../index.html" title="Go Home"><i class="fa fa-home"></i>&nbsp;&nbsp;Home</a>
-                <hr style="border-top: 1px solid blue"> -->
-                  <!--<a href="#" title="">123 Easy Card~93</a>-->
-                  <a href="#" title="">PFEP (Plan For Every Part)</a>
-                  <a href="#" title="">Automated Menu System</a>
-                  <a href="#" title="">Automated Engineering System</a>
-                  <!--<a href="#" title="">Financial Improvement Progress System~99</a>-->
-                    <!--<a href="#" title="">Office Of Weights & Measures~51</a>-->
-                  <!--<a href="#" title="">Web Time Cards~2</a>-->
-                <hr style="border-top: 1px solid blue">
-              </div>
-            </div>
-          </div><span class="new-project"><a href="#" title="Add a new project">+</a></span>
-          
-        </h1>
-        <form action="/project-info" method="post">
-          <br><br>
-          <div class="form-div">
+          <table class="collaborators-title">
+            <tr><td colspan="1"><font color="blue"><b>Collaborator(s)</b></font></td><td><font color="blue"><b title="Add a Collaborator">+</b></font></td></tr>
+            <tr><td align="right"><font color="red"><b title="Remove Collaborator">-</b></font>&nbsp;</td><td><font color="black"><b>Ken Fussell</b></font></td></tr>
+            <tr><td align="right"><font color="red"><b>-</b></font>&nbsp;</td><td><font color="black"><b>Robin Mattern</b></font></td></tr>        
+            <tr><td align="right"><font color="red"><b>-</b></font>&nbsp;</td><td><font color="black"><b>Bruce Troutman</b></font></td></tr>
+          </table>
+          <br><br><br><br><br><br>
 
-
-            <table class="company-address2-title"><tr>
-              <td width="45%"><font color="blue"><b>Company Address 2</b></font></td>
-            </tr></table>
-            <ul class="company-address2">
-              <li><input type="text" name="company-address2" placeholder="Company Address 2" id="co-addr2"></li>
-            </ul><br><br>
-
-            <input id="login-button" type="submit" value="Submit">
-          </div>
-
+          <input id="submit-button" type="submit" value="Submit">
         </form>
       </div>
       <br><br><br><br>
@@ -179,60 +269,11 @@
 
   <!--  Section 2 -->
   <!--  END Section 2 -->
-  
   <!--  Footer -->
   <!-- inc-footer-->
 			<div id="inc-footer"></div>
 		<!-- END inc-footer -->
   <!-- END  Footer -->
 
-      
-  <script>
-      function showPin() {
-        var x = document.getElementById("password");
-        if (x.type === "password") {
-          x.type = "text";
-        } else {
-          x.type = "password";
-        }
-      }
-  </script>
-
-  <script>
-
-    const url = window.location.href;
-//    alert("url: " + url);
-    var nPos = url.indexOf("?");
-//    alert("nPos = " + nPos);
-
-  if ( nPos >= 0 ) {
-    $("#show-pin").css("display", "block");
-    //alert("true")    
-    //console.log('The query parameter is set');
-  } else {
-    $("#show-pin").css("display", "none");
-    //alert("false")
-    //console.log('The query parameter is not set');
-  }
-  </script>
-
-  <script>
-      //alert ("Id = " + id)
-      var pWelcome = document.getElementById( "WelcomeProjectInfo" )
-                  //fetch( `${aAPI_UTL}/members?id=${ id }` )
-                  fetch( `http://localhost:3013/members?id=${ id }` )
-          .then( ( res  ) => res.json( ) )
-          .then( ( json ) => {  
-          var aHTML = fmtWelcome (json)
-          pWelcome.innerHTML = aHTML 
-          } ) 
-          //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
-          function fmtWelcome ( pJSON ) {
-              var aHTML = "For: " + pJSON.members[0].FullName
-              return aHTML
-          }
-  </script>
-
-
-  </body>
+</body>
 </html>

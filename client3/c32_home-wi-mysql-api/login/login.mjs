@@ -156,7 +156,8 @@ var id = 90
                          , name : "", email:""  }
         if (nID == 0) {                                                                 // .(30421.04.7 RAM Beg Return blanks if nID = 0)
 //          fmtErrMsg()                                                                 //#.(30421.04.6 RAM Use setLog)
-    return  pLoginData
+
+     return  pLoginData
             } // eif nID == 0, else fetch it                                            // .(30421.04.8 End)                                                                           // .(30421.04.8 End)
 //    ----  ------------------------------------------
 
