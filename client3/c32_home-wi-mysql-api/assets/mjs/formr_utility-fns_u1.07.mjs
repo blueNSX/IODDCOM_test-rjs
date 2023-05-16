@@ -10,6 +10,7 @@
 ##FD formr_utility-fns_u1.07.mjs|  24210|  5/03/23 09:45|   332| u1-07.30503.0945
 ##FD formr_utility-fns_u1.07.mjs|  24408|  5/05/23 15:33|   335| u1-07.30505.1533
 ##FD formr_utility-fns_u1.07.mjs|  26596|  5/08/23 17:15|   349| u1-07.30505.1715
+##FD formr_utility-fns_u1.07.mjs|  27716|  5/08/23 11:52|   356| u1-07.30515.1152
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
@@ -49,7 +50,9 @@
 # .(30502.03  5/02.23 RAM  5:30p|  Turn off client/s32 alerts
 # .(30503.01  5/03/23 RAM  9:45a|  Only bQuiet for alerts in sayMsg
 # .(30505.01  5/05/23 RAM  3:33p|  Clean _env Local host trailing stuff
+# .(30507.03  5/07/23 RAM  8:00a|  Create and display __appName
 # .(30508.01  5/08/23 RAM  5:15p|  Set aVIR_DIR from Remote_Host in _env
+# .(30515.01  5/15/23 RAM 11:52a|  Remove conflict & align comments
                                 |
 ##SRCE     +====================+===============================================+
 #*/
@@ -107,10 +110,10 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
                          ?    aHost.match( /\// ) ? aHost.replace( /.*?\//, '/' ) : '/'                     // .(30508.01.3)
                          :   ''                                                                             // .(30508.01.4)
 
-           var  aHost    =   (pEnv.Remote_Host.replace( /https*:\/\//, "") || '' )                          // .(30508.01.1)
-           var  aVIR_DIR =    mLoc[0].toLowerCase() == 'remote'                                             // .(30508.01.2 RAM Set aVIR_DIR)
-                         ?    aHost.match( /\// ) ? aHost.replace( /.*?\//, '/' ) : '/'                     // .(30508.01.3)
-                         :   ''                                                                             // .(30508.01.4)
+           var  aHost    =   (pEnv.Remote_Host.replace( /https*:\/\//, "") || '' )                          // .(30508.01.5)
+           var  aVIR_DIR =    mLoc[0].toLowerCase() == 'remote'                                             // .(30508.01.6 RAM Set aVIR_DIR)
+                         ?    aHost.match( /\// ) ? aHost.replace( /.*?\//, '/' ) : '/'                     // .(30508.01.7)
+                         :   ''                                                                             // .(30508.01.8)
                     // alert ("aVIR_DIR = " + aVIR_DIR)
 //          if (typeof(window)  != 'undefined') {                                                           //#.(30429.04.1 Beg)
 //              window.aAPI_URL  =  aAPI_URL
@@ -119,8 +122,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
            var  pGlobal          = (typeof(window) != 'undefined') ? window : global                        // .(30429.04.1)
                 pGlobal.aAPI_URL =  aAPI_URL                                                                // .(30429.04.2 RAM Was global.)
                 pGlobal.setHTML  =  setHTML                                                                 // .(30429.04.3 RAM Was global.)
-                pGlobal.aVIR_DIR =  aVIR_DIR                                                                // .(30508.01.5 RAM Make it global)
-
+                pGlobal.aVIR_DIR =  aVIR_DIR                                                                // .(30508.01.9 RAM Make it global)
 //              }                                                                                           //#.(30429.04.1)
                 }                                                                                           // .(30417.05.2)
 //              console.log( `module ${aNum} aAPI_URL: '${  typeof(aAPI_URL)  !='undefined' ? aAPI_URL : 'undefined' }'` )
@@ -326,12 +328,11 @@ async function postFormDataAsJson( aURL, pFormData ) {
          }; // eof fmtErr                                                                         // .(30428.04.1 End)
 //--------  ------  =  -----------------------------------------------------
 
-function  sayErr( aMsg ) {                                                                                  // .(30417.03.1 RAM Move to here)
+  function  sayErr( aMsg ) {                                                                      // .(30417.03.1 RAM Move to here)
         var aTS       =  (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' ).substring(2)
-        var aCR        =  aMsg.match( /^[ \n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )          // .(30416.01.1)
-// $$$ rjs-051523 
-          console.log( `${aCR}${aTS}  ${aMsg}` )
-//          console.trace()                                                                         // .(30416.01.2)
+        var aCR        =  aMsg.match( /^[ \n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "") // .(30416.01.1)
+            console.log( `${aCR}${aTS}  ${aMsg}` )
+//          console.trace()                                                                       // .(30416.01.2)
          }; // eof sayErr
 //--------  ------  =  -----------------------------------------------------
 
