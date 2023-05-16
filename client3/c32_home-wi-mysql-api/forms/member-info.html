@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
   <link rel="shortcut icon" href="favicon.png">
   <link rel="stylesheet"    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
 
@@ -26,12 +26,18 @@
 </head>
 <body>
 <script type="module">
-  //--Header / Footer Includes--------------------------------------/  
-	  setHTML( 'inc-header', '../includes/inc-header.html' );   
-    setHTML( 'inc-footer', '../includes/inc-footer.html' );   
+
+   import { onMemberForm_Submit, setMemberForm } from './member-info_form.mjs'          // .(30515.07.1 RAM Add setMemberForm)
+   import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'      // .(30515.06.1 RAM Get setAPI_URL)
+
+  //--Header / Footer Includes--------------------------------------/ 
+
+	  setHTML( 'inc-header', '../includes/inc-header.html' );                           // .(30515.06.2 RAM Don't need fmtHTM in header.js) 
+      setHTML( 'inc-footer', '../includes/inc-footer.html' );   
 
   //----showPin Function-----------------------------------/
-    function showPin() {
+
+    function showPin() {                                                                // .(30515.06.2 RAM Put this code into setAPI_URL)
         var x = document.getElementById("password");
         if (x.type === "password") {
           x.type = "text";
@@ -42,109 +48,53 @@
     window.showPin = showPin
 
   //----showPin if id >= 0 -----------------------------------/
-    const url = window.location.href;
-    //alert("url: " + url);
+
+  const url  = window.location.href;
+     // alert("url: " + url);
     var nPos = url.indexOf("?");
-    //alert("nPos = " + nPos);
+     // alert("nPos = " + nPos);
 
       if ( nPos >= 0 ) {
         $("#show-pin").css("display", "block");
-        //alert("true")    
-        //console.log('The query parameter is set');
+     // alert("true")    
+     // console.log('The query parameter is set');
       } else {
         $("#show-pin").css("display", "none");
-        //alert("false")
-        //console.log('The query parameter is not set');
-      }
+     // alert("false")
+     // console.log('The query parameter is not set');
+        }
 
-  //----submit Function-----------------------------------/  
-  var  pMembersInfoForm = document.getElementById(  "MembersInfoForm" );                       // .(30428.01.1)
-       pMembersInfoForm.addEventListener("submit", onMemberInfoForm_Submit );                 //#.(30428.01.2 RAM Have to define listener in module).(30428.04.2)
+     // alert ("Id = " + id)
 
+// ---- Interact with DB Server -----------------------------------/
 
-      //alert ("Id = " + id)
-      var pWelcome = document.getElementById( "WelcomeMemberInfo" )
-                  //fetch( `${aAPI_UTL}/members?id=${ id }` )
-                  fetch( `http://localhost:3012/members?id=${ id }` )
-          .then( ( res  ) => res.json( ) )
-          .then( ( json ) => {  
-          var aHTML = fmtWelcome (json)
-          pWelcome.innerHTML = aHTML 
-          } ) 
-          //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
-          function fmtWelcome ( pJSON ) {
-              var aHTML = "For: " + pJSON.members[0].FullName
-              return aHTML
-          }
+     await  setAPI_URL()                                                      // .(30515.06.3 RAM Set aAPI_URL) 
 
-    function onMemberInfoForm_Submit() {
+            fetch( `${aAPI_URL}/members?id=${ id }` )                         // .(30515.06.4 RAM Use aAPI_URL)
+//          fetch( `http://localhost:3012/members?id=${ id }` )               //#.(30515.06.4 RAM Don't hard-code aAPI_URL)
+              .then( (  pRes  ) =>  pRes.json( ) )
+              .then( (  pJSON ) => {  
 
-      var pFirstName = document.getElementById( "firstname" )
-      var pMI = document.getElementById( "middleinits" )
-      var pLastName = document.getElementById( "lastname" )
-      var pSuffix = document.getElementById( "suffix" )
-      var pEmail = document.getElementById( "email" )
-      var pPassword = document.getElementById( "password" )
-      var pCompany = document.getElementById( "co-name" )
-      var pCompanyURL = document.getElementById( "co-url" )
-      var pCoAddr1 = document.getElementById( "co-addr1" )
-      var pCoAddr2 = document.getElementById( "co-addr2" )
-      var pCity = document.getElementById( "city" )
-      var pState = document.getElementById( "state" )
-      var pZIP = document.getElementById( "zip" )
-      var pCountry = document.getElementById( "country" )
-      var pPhone1 = document.getElementById( "phone1" )
-      var pPhone2 = document.getElementById( "phone2" )
-      var pBio = document.getElementById( "bio" )
-      alert ("About to submit " + pFirstName.value)
-    }
-  
-  //----GET Function-----------------------------------/
-              onMemberInfoForm_Get()
-    function  onMemberInfoForm_Get() {
-      var pFirstName = document.getElementById( "firstname" )
-      var pMI = document.getElementById( "middleinits" )
-      var pLastName = document.getElementById( "lastname" )
-      var pSuffix = document.getElementById( "suffix" )
-      var pEmail = document.getElementById( "email" )
-      var pPassword = document.getElementById( "password" )
-      var pCompany = document.getElementById( "co-name" )
-      var pCompanyURL = document.getElementById( "co-url" )
-      var pCoAddr1 = document.getElementById( "co-addr1" )
-      var pCoAddr2 = document.getElementById( "co-addr2" )
-      var pCity = document.getElementById( "city" )
-      var pState = document.getElementById( "state" )
-      var pZIP = document.getElementById( "zip" )
-      var pCountry = document.getElementById( "country" )
-      var pPhone1 = document.getElementById( "phone1" )
-      var pPhone2 = document.getElementById( "phone2" )
-      var pBio = document.getElementById( "bio" )
+       var  pWelcome =  document.getElementById( "WelcomeMemberInfo" )
+            pWelcome.innerHTML = "For: " + pJSON.members[0].FullName          // .(30515.06.2 RAM No need for fmtWelcome)                 
 
-      //fetch( `${aAPI_UTL}/members?id=${ id }` )
-                  fetch( `http://localhost:3012/members?id=${ id }` )
-          .then( ( res  ) => res.json( ) )
-          .then( ( json ) => {  
-          pFirstName.value = json.members[0].FirstName
-          pMI.value = json.members[0].MiddleName
-          pLastName.value = json.members[0].LastName 
-          pSuffix.value = json.members[0].PostName 
-          pEmail.value = json.members[0].Email 
-          pPassword.value = json.members[0].PIN 
-          pCompany.value = json.members[0].Company 
-          pCompanyURL.value = json.members[0].WebSite 
-          pCoAddr1.value = json.members[0].Address1
-          pCoAddr2.value = json.members[0].Address2
-          pCity.value = json.members[0].City
-          pState.value = json.members[0].State
-          pZIP.value = json.members[0].Zip
-          pCountry.value = json.members[0].Country
-          pPhone1.value = json.members[0].Phone1
-          pPhone2.value = json.members[0].Phone2
-          pBio.value = json.members[0].Bio
-       
-        } ) 
-      }
-          //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
+       var  pForm    =  document.getElementById( "MembersInfoForm" );         // .(30515.07.2 RAM Same as below )                 
+
+                        setMemberForm( pJSON.members[0], pForm )              // .(30515.07.3 RAM Defined in member-info_form.mjs)
+            } ) 
+              .catch(( pErr ) => alert( `*** ${pErr.message}.\n`              // .(30515.07.9 RAM Uncommented to catch server not running)                     
+                                    + `      Is the server at '${aAPI_URL}' running?` ) )     
+/*  function  fmtWelcome( pJSON ) {                                           //#.(30515.06.2 Beg)
+       var  aHTML    = "For: " + pJSON.members[0].FullName 
+    return  aHTML
+            }
+*/                                                                            //#.(30515.06.2 End)
+// -submit Function-----------------------------------/  
+
+//          pForm.addEventListener( "submit",  onMemberForm_Submit );         //#.(30515.07.2 RAM Wrong! Since it changed it has to be redefined again) 
+       var  pMembersInfoForm = document.getElementById( "MembersInfoForm" );  // .(30515.07.3)                 
+            pMembersInfoForm.addEventListener( "submit", onMemberForm_Submit) // .(30515.07.3) 
+
 </script>	
 
 <!--  Header -->
@@ -191,28 +141,31 @@
           <div id="member-form-error">ERROR!</div>
       </h1>
         <form id="MembersInfoForm">
+
+                <input type="hidden" name="memberno"  value="" id="memberno" ></li>  <!-- Need this for SQL update)-->
+
           <table class="name-title"><tr>
             <td width="35%"><font color="blue"><b>First Name *</b></font></td>
             <td width="12%"><font color="blue"><b>MI</b></font></td>
             <td width="35%"><font color="blue"><b>Last Name *</b></font></td>
-            <td width="5%"><font color="blue"><b>Suffix</b></font></td>
+            <td width="5%" ><font color="blue"><b>Suffix</b></font></td>
           </tr></table>
           <ul class="name-info">
-              <li><input type="text" name="first-name" placeholder="First Name" id="firstname" required></li>
-              <script>//debugger</script>
-              <li><input type="text" name="middle-inits" placeholder="MI" id="middleinits"></li>
-              <li><input type="text" name="last-name" placeholder="Last Name" id="lastname" required></li>
-              <li><input type="text" name="suffix" placeholder="Suf" id="suffix"></li>
+            <li><input type="text" name="first-name"   placeholder="First Name" id="firstname" required></li>
+            <script>//debugger</script>
+            <li><input type="text" name="middle-inits" placeholder="MI"         id="middleinits"></li>
+            <li><input type="text" name="last-name"    placeholder="Last Name"  id="lastname" required></li>
+            <li><input type="text" name="suffix"       placeholder="Suf"        id="suffix"></li>
           </ul>
 
           <table class="credentials-title"><tr>
             <td width="35%"><font color="blue"><b>Email *</b></font></td>
             <td width="12%"><font color="blue"><b>Password *</b></font>&nbsp;<input id="trigger" type="checkbox" onclick="showPin()"></td>
             <!--<td width="12%"><font color="blue"><b>Password *</b></font>&nbsp;<input id="trigger" type="checkbox" "></td>-->
-            <label for="trigger" class="checker"></label>
+            <label for="trigger"  class="checker"></label>
           </tr></table>
           <ul class="credentials-info">
-            <li><input type="text" name="email" placeholder="Email" id="email" required></li>
+            <li><input type="text"     name="email"    placeholder="Email"    id="email"    required></li>
             <li><input type="password" name="password" placeholder="Password" id="password" required></li>
 
           </ul><br><br>
@@ -221,14 +174,14 @@
             <td width="45%"><font color="blue"><b>Company Name</b></font></td>
           </tr></table>
           <ul class="company-name">
-            <li><input type="text" name="company" placeholder="Company Name" id="co-name"></li>
+            <li><input type="text"     name="company"  placeholder="Company Name" id="co-name"></li>
           </ul><br><br>
 
           <table class="company-url-title"><tr>
             <td width="45%"><font color="blue"><b>Company Website</b></font></td>
           </tr></table>
           <ul class="company-url">
-            <li><input type="text" name="company-url" placeholder="Company Website" id="co-url"></li>
+            <li><input type="text"  name="company-url" placeholder="Company Website" id="co-url"></li>
           </ul><br><br>
 
           <table class="company-address1-title"><tr>
@@ -249,21 +202,21 @@
             <td width="57%"><font color="blue"><b>City</b></font></td>
             <td width="23%"><font color="blue"><b>State</b></font></td>
             <td width="35%"><font color="blue"><b>ZIP</b></font></td>
-            <td width="5%"><font color="blue"><b>Country</b></font></td>
+            <td width="5%" ><font color="blue"><b>Country</b></font></td>
           </tr></table>
           <ul class="city-state-zip-country">
-              <li><input type="text" name="city" placeholder="City" id="city"></li>
-              <li><input type="text" name="state" placeholder="State" id="state"></li>
-              <li><input type="text" name="zip" placeholder="ZIP" id="zip"></li>
+              <li><input type="text" name="city"    placeholder="City"    id="city"></li>
+              <li><input type="text" name="state"   placeholder="State"   id="state"></li>
+              <li><input type="text" name="zip"     placeholder="ZIP"     id="zip"></li>
               <li><input type="text" name="country" placeholder="Country" id="country"></li>
           </ul><br><br>
 
           <table class="phone-info-title"><tr>
             <td width="84%"><font color="blue"><b>Phone</b></font></td>
-            <td width="0%"><font color="blue"><b>Mobile</b></font></td>
+            <td width="0%"><font  color="blue"><b>Mobile</b></font></td>
           </tr></table>          
           <ul class="phone-info">
-            <li><input type="text" name="phone1" placeholder="Phone" id="phone1"></li>
+            <li><input type="text" name="phone1" placeholder="Phone"  id="phone1"></li>
             <li><input type="text" name="phone2" placeholder="Mobile" id="phone2"></li>
           </ul><br><br>
 
