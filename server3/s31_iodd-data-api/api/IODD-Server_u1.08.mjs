@@ -523,36 +523,36 @@ this.Member_postRoute = function( ) {                                           
 
        var  aNow = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
 
-       var  pValidArgs = {  id              : [ 'MemberNo',      /.[0-9]+/,  "required", "must be a number" ]
-                         ,  title           : [ 'TitleName',     /.+/, ]
-                         ,  firstname       : [ 'FirstName',     /.+/, ]
-                         ,  middleinits     : [ 'MiddleName',    /.+/, ]
-                         ,  lastname        : [ 'LastName',      /.+/, ]
-                         ,  suffix          : [ 'PostName',      /.+/, ]
-//                       ,  role            : [ 'RoleId',        /.+/, ]
-                         ,  username        : [ 'Email',         /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/, "", "must be a valid email address (xx@xx.xx)" ]  // .(30515.03.1 RAM Was: email)
-                         ,  password        : [ 'PIN',           /[a-zA-Z0-9]{4,}/,                         "", "must be at least 4 characters" ]
-//                       ,  active          : [ 'Active',        /.+/, 'Y' ]                                // .(30515.03.2 RAM Set in SQL)
-//                       ,  login           : [ 'IsLoggedIn',    /.+/, 'N' ]                                // .(30515.03.3 RAM Set in SQL)
-//                       ,  login_at        : [ 'LogInDateTime', /.+/,  aNow ]                              // .(30515.03.4 RAM Not in form)   
-//                       ,  ipaddr          : [ 'IPv4Address',   /.+/, ]                                    // .(30515.03.5 RAM Not in form)   
-                         , 'co-name'        : [ 'Company',       /.+/, ]
-                         , 'co-addr1'       : [ 'Address1',      /.+/, ]
-                         , 'co-addr2'       : [ 'Address2',      /.+/, ]
-                         ,  city            : [ 'City',          /.+/, ]
-                         ,  state           : [ 'State',         /.+/, ]
-                         ,  zip             : [ 'Zip',           /.[0-9.]{5,10}/, "", "must be a valid zip code (xxxxx[.xxxx])" ]
-                         ,  country         : [ 'Country',       /.+/, ]
-                         ,  phone1          : [ 'Phone1',        /.+/, ]
-                         ,  phone2          : [ 'Phone2',        /.+/, ]
-//                       ,  fax             : [ 'Fax',           /.+/, ]
-                         ,  webSite         : [ 'WebSite',       /.+/, ]
-//                       ,  skills          : [ 'Skills',        /.+/, ]                                    // .(30515.03.6 RAM Not in form)   
-                         ,  bio             : [ 'Bio',           /.+/, ]
-//                       ,  created_at      : [ 'CreatedAt',     /.+/, aNow ]                               // .(30515.03.7 RAM Set in DB)     
-//                       ,  updated_at      : [ 'UpdatedAt',     /.+/, aNow ]                               // .(30515.03.8 RAM Set in DB)   
-                         ,  last_updated    : [ 'LastUpdated',   /.+/, aNow ]                               // .(30515.03.9 RAM Set in SQL)
-                            }
+	   var  pValidArgs = {  memberno         : [ 'MemberNo',     /.[0-9]+/, "required", "must be a number"] // .(30515.03.11 RAM Was id)
+//   					 ,  title            : [ 'TitleName',    /.+/, ]                                    // .(30515.03.12 RAM Not in form) 
+						 , 'first-name'      : [ 'FirstName',    /.+/, ]                                    // .(30515.03.13 RAM Was firstname) 
+						 , 'middle-inits'    : [ 'MiddleName',   /.+/, ]                                    // .(30515.03.14 RAM Was middleinits) 
+						 , 'last-name'       : [ 'LastName',     /.+/, ]                                    // .(30515.03.15 RAM Was lastname) 
+						 ,  suffix           : [ 'PostName',     /.+/, ]
+//                       ,  role             : [ 'RoleId',       /.+/, ]
+						 ,  email            : [ 'Email',        /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/, "", "must be a valid email address (xx@xx.xx)" ]  // .(30515.03.1 RAM Was: email).(30515.03.16 Was username)
+						 ,  password         : [ 'PIN',          /[a-zA-Z0-9]{4,}/,                         "", "must be at least 4 characters" ]
+//                       ,  active           : [ 'Active',       /.+/, 'Y' ]                                // .(30515.03.2  RAM Set in SQL)
+//                       ,  login            : [ 'IsLoggedIn',   /.+/, 'N' ]                                // .(30515.03.3  RAM Set in SQL)
+//                       ,  login_at         : [ 'LogInDateTime',/.+/,  aNow ]                              // .(30515.03.4  RAM Not in form)   
+//                       ,  ipaddr           : [ 'IPv4Address',  /.+/, ]                                    // .(30515.03.5  RAM Not in form)   
+						 , 'company'         : [ 'Company',      /.+/, ]                                    // .(30515.03.17 RAM Was 'co-name') 
+						 , 'company-address1': [ 'Address1',     /.+/, ]                                    // .(30515.03.18 RAM Was 'co-addr1')
+						 , 'company-address2': [ 'Address2',     /.+/, ]                                    // .(30515.03.19 RAM Was 'co-addr2')
+						 ,  city             : [ 'City',         /.+/, ]
+						 ,  state            : [ 'State',        /.+/, ]
+						 ,  zip              : [ 'Zip',          /.[0-9.]{5,10}/, "", "must be a valid zip code (xxxxx[.xxxx])" ]
+						 ,  country          : [ 'Country',      /.+/, ]
+						 ,  phone1           : [ 'Phone1',       /.+/, ]
+						 ,  phone2           : [ 'Phone2',       /.+/, ]
+//                       ,  fax              : [ 'Fax',          /.+/, ]
+						 , 'company-url'     : [ 'WebSite',      /.+/, ]                                    // .(30515.03.20 RAM Was website)
+//                       ,  skills           : [ 'Skills',       /.+/, ]                                    // .(30515.03.6  RAM Not in form)   
+						 ,  bio              : [ 'Bio',          /.+/, ]
+//                       ,  created_at       : [ 'CreatedAt',    /.+/, aNow ]                               // .(30515.03.7  RAM Set in DB)     
+//                       ,  updated_at       : [ 'UpdatedAt',    /.+/, aNow ]                               // .(30515.03.8  RAM Set in SQL)   
+//   					 ,  last_updated     : [ 'LastUpdated',  /.+/, aNow ]                               // .(30515.03.9  RAM Set in SQL)
+								}
 
 //     var  pArgs = chkArgs( pReq, pValidArgs )
 
@@ -566,65 +566,71 @@ this.Member_postRoute = function( ) {                                           
        var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
 
        var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );        
+//      if (mRecs1.error)    { sndErr(  pRes, mRecs1.error ); return }                                      //#.(30515.10.1 RAM return no workie, CUZ mRecs1.error is an error) 
+   if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1]    ); return }                                      // .(30515.10.1 RAM Would mRecs1[0].error be better)
 
-//     var  mRecs2    =    [ { MemberNo: mRecs1[2].affectedId, Count: mRecs1[2].affectedRows     // .(30515.04.1 RAM Why is affectedId = 0)
+//     var  mRecs2    =    [ { MemberNo: mRecs1[2].affectedId, Count: mRecs1[2].affectedRows                // .(30515.04.1 RAM Why is affectedId = 0)
        var  mRecs2    =    [ { MemberNo: pArgs.MemberNo,   Count: mRecs1[2].affectedRows 
-                             , UserName: pArgs.Email, Password: pArgs.PIN } 
+                             , Email: pArgs.Email,        Msg: mRecs1[1] } 
                                ]
        var  mRecs2    =  await getData( pDB,  `SELECT * FROM members WHERE MemberNo = ${mRecs2[0].MemberNo}`, aRoute );        
                                sndJSON( pRes, JSON.stringify( { member: mRecs2 } ), aRoute )
-            }
+         }; 
 //     ---  ------------------  =   --------------------------------
 
-  function  fmtSQL1( pVars ) {
+  function  fmtSQL1_x( pVars ) {
+
+            pVars.Email = pVars.Email ? `${ pVars.Email }`.trim() : ''                  // .(30515.08.1 RAM Email not a string?) 
 
        var  aSQL = `UPDATE  members
-                       SET  Email           = '${ pVars.Email.trim()    }'
+                       SET  Email           = '${ pVars.Email           }'   
                          ,  PIN             = '${ pVars.PIN             }'
-                         ,  LastUpdated     =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
+                         ,  LastUpdated     =     STR_TO_DATE( '${ aNow }', '%Y-%m-%d %H:%i:%s' )
                      WHERE  MemberNo        =  ${ pVars.MemberNo        }
                    `
     return  aSQL
             }
 //     ---  ------------------  =   --------------------------------
 
-  function  fmtSQL1x( pArgs ) {
+  function  fmtSQL1( pVars ) {
+
+            pVars.Bio = pVars.Bio.replace( /'/g, "''" )                                 // .(30515.08.2 RAM Double up single quotes, if any) 
 
        var  aSQL = `UPDATE  members
-//                     SET  TitleName       = '${ pVars.TitleName     }
-                       SET  FirstName       = '${ pVars.FirstName     }
-                         ,  MiddleName      = '${ pVars.MiddleName    }
-                         ,  LastName        = '${ pVars.LastName      }
-                         ,  PostName        = '${ pVars.PostName      }
-//                       ,  RoleId          = '${ pVars.RoleId        }
-                         ,  Email           = '${ pVars.Email         }
-                         ,  PIN             = '${ pVars.PassWord      }
-                         ,  Active          =          'Y' 
-//                       ,  IsLoggedIn      =          'N'
-//                       ,  LogInDateTime   = '${ pVars.LogInDateTime }
-//                       ,  IPv4Address     = '${ pVars.IPv4Address   }
-                         ,  Company         = '${ pVars.Company       }
-                         ,  Address1        = '${ pVars.Address1      }
-                         ,  Address2        = '${ pVars.Address2      }
-                         ,  City            = '${ pVars.City          }
-                         ,  State           = '${ pVars.State         }
-                         ,  Zip             = '${ pVars.Zip           }
-                         ,  Country         = '${ pVars.Country       }
-                         ,  Phone1          = '${ pVars.Phone1        }
-                         ,  Phone2          = '${ pVars.Phone2        }
-//                       ,  Fax             = '${ pVars.Fax           }
-                         ,  WebSite         = '${ pVars.WebSite       }
-//                       ,  Skills          = '${ pVars.Skills        }
-                         ,  Bio             = '${ pVars.Bio           }
-//                       ,  CreatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
-//                       ,  UpdatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
+--                     SET  TitleName       = '${ pVars.TitleName       }'
+                       SET  FirstName       = '${ pVars.FirstName       }'
+                         ,  MiddleName      = '${ pVars.MiddleName      }'
+                         ,  LastName        = '${ pVars.LastName        }'
+                         ,  PostName        = '${ pVars.PostName        }'
+--                       ,  RoleId          = '${ pVars.RoleId          }'
+                         ,  Email           = '${ pVars.Email           }'
+                         ,  PIN             = '${ pVars.PIN             }'
+                         ,  Active          = 'Y'   
+--                       ,  IsLoggedIn      = 'N'  
+--                       ,  LogInDateTime   = '${ pVars.LogInDateTime   }'
+--                       ,  IPv4Address     = '${ pVars.IPv4Address     }'
+                         ,  Company         = '${ pVars.Company         }'
+                         ,  Address1        = '${ pVars.Address1        }'
+                         ,  Address2        = '${ pVars.Address2        }'
+                         ,  City            = '${ pVars.City            }'
+                         ,  State           = '${ pVars.State           }'
+                         ,  Zip             = '${ pVars.Zip             }'
+                         ,  Country         = '${ pVars.Country         }'
+                         ,  Phone1          = '${ pVars.Phone1          }'
+                         ,  Phone2          = '${ pVars.Phone2          }'
+--                       ,  Fax             = '${ pVars.Fax             }'
+                         ,  WebSite         = '${ pVars.WebSite         }'
+--                       ,  Skills          = '${ pVars.Skills          }'
+                         ,  Bio             = '${ pVars.Bio             }'
+--                       ,  CreatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
+                         ,  UpdatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
                          ,  LastUpdated     =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
-                     WHERE  MemberNo        =  ${ pVars.MemberNo      }
+                     WHERE  Id              =  ${ pVars.MemberNo        }
                    `
     return  aSQL
             }
 //     ---  ------------------  =   --------------------------------
-         }; // eof Member_postRoute                                                                         // .(30510.03.4 End)
+         }; // eof Member_postRoute                                                     // .(30510.03.4 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
@@ -667,17 +673,16 @@ this.Projects_getRoute = function( ) {
 //= projects_list ===============================================================
 //-(ProjectDropdown Listing)-------------------------------------------------------
 
-this.ProjectsList_getRoute = function( ) {                                                          // .(30511.03.4 RAM Beg)
+this.ProjectsList_getRoute = function( ) {                                              // .(30511.03.4 RAM Beg)
 
             setRoute( pApp, 'get', '/projects_list',    JSON_getRoute_Handler, ( pArgs ) => 
               `SELECT * FROM iodd.form_projects_dropdown where MemberId = ${ pArgs.id || -1 }`  )
 
-         }; // eof ProjectsList_getRoute                                                            // .(30511.03.4 End)
+         }; // eof ProjectsList_getRoute                                                // .(30511.03.4 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
-
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                                        // .(30515.09.4 RAM What does this mean?)                            
 
 //= project Primary (singular) ====================================================
 //-(Project Primary Details)-------------------------------------------------------
@@ -687,21 +692,13 @@ this.ProjectsList_getRoute = function( ) {                                      
 
 this.Projects_getRoute = function( ) {
 
-  setRoute( pApp, 'get', '/project?ProjectId=149',         JSON_getRoute_Handler, `SELECT * FROM form_project_info WHERE ProjectStyle='Primary' AND ProjectId=149` )
+  setRoute( pApp, 'get', '/project?ProjectId=149',      JSON_getRoute_Handler, `SELECT * FROM form_project_info WHERE ProjectStyle='Primary' AND ProjectId=149` )
 
 }; // eof Projects_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-
-
-
-
-
-
-
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                                        // .(30515.09.4)
 
 //= project_collaborators ===================================================
 //-(getProjectCollaborators)-------------------------------------------------
