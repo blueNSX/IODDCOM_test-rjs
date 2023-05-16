@@ -101,14 +101,11 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
            var  aAPI_URL =    mLoc[0].toLowerCase() == 'remote'
                          ?    pEnv.API_URL
                          :   `http://${aHost}:${pEnv.Server_Port}`                                          // .(30505.01.2)
-<<<<<<< HEAD
 
            var  aHost    =   (pEnv.Remote_Host.replace( /https*:\/\//, "") || '' )                          // .(30508.01.1)
            var  aVIR_DIR =    mLoc[0].toLowerCase() == 'remote'                                             // .(30508.01.2 RAM Set aVIR_DIR)
                          ?    aHost.match( /\// ) ? aHost.replace( /.*?\//, '/' ) : '/'                     // .(30508.01.3)
                          :   ''                                                                             // .(30508.01.4)
-=======
->>>>>>> 8b653022a12a2f4f99664c63d1e9f0358246cc04
 
            var  aHost    =   (pEnv.Remote_Host.replace( /https*:\/\//, "") || '' )                          // .(30508.01.1)
            var  aVIR_DIR =    mLoc[0].toLowerCase() == 'remote'                                             // .(30508.01.2 RAM Set aVIR_DIR)
@@ -141,7 +138,8 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
         if (typeof(window) != 'undefined') {
 //     var  aPath   =  window.location.href.replace( /[^/]+$/, '')  // has trailing /
        var  aFile   = `${ aPath }_env`
-            console.log( `getEnv[1]             Fetching remote file, '${aFile}'` )
+// $$$ rjs-051523
+       console.log( `getEnv[1]             Fetching remote file, '${aFile}'` )
 //     var  aFile   = '../_env'    // ``${ aPath }_env`
        try {
        var  pRes    =  await fetch(  aFile );                                                               // .(30222.01.4 This await causes Page Reload error when error occurs in another fetch)
@@ -205,7 +203,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
         if (typeof( process ) != 'undefined') {                                                             // .(30411.01.1 RAM )
                     process.exit()
         } else {    // in browser
-                    alert( aMsg.replace( new RegExp(aFill, 'g'), "\n    " ) ) // window.stop( )             // .(30417.04.6)
+// $$$ rjs-051523   alert( aMsg.replace( new RegExp(aFill, 'g'), "\n    " ) ) // window.stop( )             // .(30417.04.6)
             }
           } // eof sayEnvErr                                                                                // .(30328.01.1 End)
 //     ---  ------  =  ---------------------------------------------
@@ -331,7 +329,8 @@ async function postFormDataAsJson( aURL, pFormData ) {
 function  sayErr( aMsg ) {                                                                                  // .(30417.03.1 RAM Move to here)
         var aTS       =  (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' ).substring(2)
         var aCR        =  aMsg.match( /^[ \n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )          // .(30416.01.1)
-            console.log( `${aCR}${aTS}  ${aMsg}` )
+// $$$ rjs-051523 
+          console.log( `${aCR}${aTS}  ${aMsg}` )
 //          console.trace()                                                                         // .(30416.01.2)
          }; // eof sayErr
 //--------  ------  =  -----------------------------------------------------
