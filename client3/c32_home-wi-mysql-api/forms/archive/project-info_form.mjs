@@ -1,9 +1,11 @@
- async function onMemberForm_Submit( pEvent ) {
+ // console.log("hello")
+ async function onProjectForm_Submit( pEvent ) {
 
             pEvent.preventDefault();
 
-       var  aDataSet = 'member'
+       var  aDataSet = 'project_collaborators'
        var  pForm    =  pEvent.currentTarget
+       //var  pForm    =  getElementById('ProjectInfoForm')
             window.bQuiet = true 
 
 //    ----  ------------------------------------------------
@@ -14,8 +16,9 @@
     return  false
 
         } else {
-       var  aAction =  `${aAPI_URL}/${aDataSet}`
-            }
+        var pid = window.location.href.replace(/.+pid=/i,'')    
+        var  aAction =  `${aAPI_URL}/${aDataSet}/pid=${ pid }`
+            } 
 //    ----  ------------------------------------------------
 
        var  bAPI    = (aAction.match(/.html$/) == null) || aAction.match(/api\//)
@@ -92,32 +95,32 @@
          }; // eof onLoginFailure
 //    ----  ------------------------------------------------
 
-  function  onSuccess( pJSON, pForm ) {   // for DataSet: Member
-
+  function  onSuccess( pJSON, pForm ) {   // for DataSet: Project
+        var  aDataSet = 'project_collaborators'
         if (pJSON.error) {
             sayMsg( 1, `onSuccess[1] ** Error Response: '<b>${pJSON.error}</b>'`)
             sayMsg( 2, `onSuccess[1] ** Error Response: '${pJSON.error}'` )
             fmtErrMsg(             ` ** Error Response: '${pJSON.error}'` )
             return
             }
-
-        if (pJSON.member && pJSON.member.length == 0) {
-            sayMsg( 1, `onSuccess[2]   * Member No not found: ${pForm.email}`)
-            sayMsg( 2, `onSuccess[2]   * Member No not found: ${pForm.email}`)
-            fmtErrMsg(                `* MemberNo, ${pForm.memberno}, is not in the IODD database` )
+        if (pJSON[aDataSet] && pJSON[aDataSet].length == 0) {
+            sayMsg( 1, `onSuccess[2]   * Project No not found: ${pForm.email}`)
+            sayMsg( 2, `onSuccess[2]   * Project No not found: ${pForm.email}`)
+            fmtErrMsg(                `* ProjectID, ${pForm.projectname}, is not in the IODD database` )
                             
             return
             }
 
-            sayMsg( 1, `onSuccess[3]    Member updated:`)
-            sayMsg( 2, `onSuccess[3]    Member updated for ${pJSON.member[0].Email}`)
+            var pProjectData = pJSON[aDataSet][0]
+
+            sayMsg( 1, `onSuccess[3]    Project updated:`)
+            sayMsg( 2, `onSuccess[3]    Project updated for ${pProjectData.Email}`)
 //          sayMsg( 2,      pJSON )
-            fmtErrMsg(                 `Member No. ${pJSON.member[0].MemberNo} updated.` )
+            fmtErrMsg(                 `ProjectID. ${pProjectData.ProjectID} updated.` )
 
-       var  pForm    =  document.getElementById( "MembersInfoForm" );         // .(30515.15.2 RAM setMemberForm thinks pForm is a promise, so lets redefine it)                 
+       var  pForm    =  document.getElementById( "ProjectInfoForm" );         // .(30515.15.2 RAM setProjectForm thinks pForm is a promise, so lets redefine it)                 
 
-//          setCookie(      pLogin.MemberNo )
-            setMemberForm(  pJSON.member[0], pForm ) 
+            setProjectForm(  pProjectData, pForm ) 
 
             sayMsg( 2, `onSuccess[4]    Form populated`)
 
@@ -127,36 +130,36 @@
 //--------  ---------------------------------------------------------
 
   function  fmtErrMsg( aMsg ) {                                     // Needs work          
-            $('#WelcomeMemberInfo' ).css( 'display', 'none'  );
-            $('#member-form-error' ).css( 'display', 'block' );
-            $('#member-form-error' ).html( aMsg )
+            $('#WelcomeProjectInfo' ).css( 'display', 'none'  );
+            $('#project-form-error' ).css( 'display', 'block' );
+            $('#project-form-error' ).html( aMsg )
         if (aMsg.match( /\*/)) { return }            
-            $('#member-form-error' ).css( 'color',   'green' )
+            $('#project-form-error' ).css( 'color',   'green' )
             }
 //--------  ---------------------------------------------------------
 
-  function  setMemberForm( pMember, pForm ) {
+  function  setProjectForm( pProject, pForm ) {
 
-            pForm.memberno.value           	=  pMember.MemberNo +'' // .(30515.03.21 RAM Add hidden field)  
-            pForm['first-name'].value   	=  pMember.FirstName    // .(30515.03.13 RAM Was firstname) 
-            pForm['middle-inits'].value 	=  pMember.MiddleName	// .(30515.03.14 RAM Was middleinits)
-            pForm['last-name'].value    	=  pMember.LastName		// .(30515.03.15 RAM Was lastname) 
-            pForm.suffix.value          	=  pMember.PostName
-            pForm.email.value           	=  pMember.Email        
-            pForm.password.value        	=  pMember.PIN
-            pForm['company'].value   		=  pMember.Company      // .(30515.03.17 RAM Was 'co-name') 
-            pForm['company-url'].value    	=  pMember.WebSite      // .(30515.03.20 RAM Was  website ) 
-            pForm['company-address1'].value	=  pMember.Address1	    // .(30515.03.18 RAM Was 'co-addr1')
-            pForm['company-address2'].value =  pMember.Address2	    // .(30515.03.19 RAM Was 'co-addr2')
-            pForm.city.value         		=  pMember.City
-            pForm.state.value        		=  pMember.State
-            pForm.zip.value          		=  pMember.Zip
-            pForm.country.value      		=  pMember.Country
-            pForm.phone1.value       		=  pMember.Phone1
-            pForm.phone2.value       		=  pMember.Phone2
-            pForm.bio.value          		=  pMember.Bio
+            pForm.projectname.value         =  pProject.ProjectName // .(30515.03.21 RAM Add hidden field)  
+            // pForm['first-name'].value   	=  pProject.FirstName    // .(30515.03.13 RAM Was firstname) 
+            // pForm['middle-inits'].value 	=  pProject.MiddleName	// .(30515.03.14 RAM Was middleinits)
+            // pForm['last-name'].value    	=  pProject.LastName		// .(30515.03.15 RAM Was lastname) 
+            // pForm.suffix.value          	=  pProject.PostName
+            // pForm.email.value           	=  pProject.Email        
+            // pForm.password.value        	=  pProject.PIN
+            // pForm['company'].value   		=  pProject.Company      // .(30515.03.17 RAM Was 'co-name') 
+            // pForm['company-url'].value    	=  pProject.WebSite      // .(30515.03.20 RAM Was  website ) 
+            // pForm['company-address1'].value	=  pProject.Address1	    // .(30515.03.18 RAM Was 'co-addr1')
+            // pForm['company-address2'].value =  pProject.Address2	    // .(30515.03.19 RAM Was 'co-addr2')
+            // pForm.city.value         		=  pProject.City
+            // pForm.state.value        		=  pProject.State
+            // pForm.zip.value          		=  pProject.Zip
+            // pForm.country.value      		=  pProject.Country
+            // pForm.phone1.value       		=  pProject.Phone1
+            // pForm.phone2.value       		=  pProject.Phone2
+            // pForm.bio.value          		=  pProject.Bio
 
-         }; // eof setMemberForm
+         }; // eof setProjectForm
 //--------  ---------------------------------------------------------
 
   function  sayMsg( nBoth, aMsg ) {
@@ -166,4 +169,4 @@
             }
 //--------  ---------------------------------------------------------
 
-export { onMemberForm_Submit, setMemberForm }                       // .(30515.07.4 RAM Add setMemberForm)
+export { onProjectForm_Submit, setProjectForm }                       // .(30515.07.4 RAM Add setMemberForm)

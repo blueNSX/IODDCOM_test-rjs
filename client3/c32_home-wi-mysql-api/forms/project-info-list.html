@@ -22,6 +22,13 @@
   <link rel="stylesheet"    href="project-info-list.css">
 
   <script src="../assets/js/header.js"></script>
+  <script type="module">
+    import { setHTML } from './project-info-list.mjs'
+    //--Header / Footer Includes--------------------------------------/  
+      setHTML( 'inc-header', '../includes/inc-header.html' );   
+      setHTML( 'inc-footer', '../includes/inc-footer.html' );   
+
+  </script>
 </head>
 <body>
 <!--  Header -->
@@ -47,77 +54,6 @@
       /*#log {display:none}*/
   </style>
 
-  <script type="module">
-    //--Header / Footer Includes--------------------------------------/  
-        setHTML( 'inc-header', '../includes/inc-header.html' );   
-	    setHTML( 'inc-footer', '../includes/inc-footer.html' );   
-    
-    
-    //--Welcome function---------------------------------------/  
-    var pWelcome = document.getElementById( "WelcomeProjectInfo" )
-                  //fetch( `${aAPI_UTL}/members?id=${ id }` )
-                  fetch( `http://localhost:3012/members?id=${ id }` )
-          .then( ( res  ) => res.json( ) )
-          .then( ( json ) => {  
-          var aHTML = fmtWelcome (json)
-          pWelcome.innerHTML = aHTML 
-          } ) 
-          //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
-          function fmtWelcome ( pJSON ) {
-              var aHTML = "For: " + pJSON.members[0].FullName
-              return aHTML
-          }
-  
-
-//--fetch project list functions ---------------------------------------/  
-
-      function  fmtProjectsList( pJSON ) {  
-       var  mProjectsList =  pJSON.projects_list    // .(30209.01.2 RAM As is  now defined in /projects api)
-       var  aHTML  =  mProjectsList.map( fmtProjectList ).join( "\n" )
-    return  aHTML            
-//     ---  -------  =  -----------------------------------
-
-  function  fmtProjectList( pProjectList, i ) {
-
-       var  aClass = i % 2 == 1 ? "row-even" : "row-odd"
-
-       var  aOwner       =    pProjectList.Owner
-       var  aProjectName =    pProjectList.ProjectName
-
-       var  aRow     = `  
-       		<tr Class="${ aClass }" id="R${ `${ i + 1 }`.padStart( 3, "0" ) }">
-                <td class="owner">${ aOwner }</td>
-                <td class="project-name">${ aProjectName }</td>
-            </tr>`
-
-     aData = aRow
-     return aData
-            }   // eof  fmtProjectList
-//     ---  -------  =  ----------------------------------
-            }   // eof  fmtProjectsList
-//--------  -------  =  -------------------------------------------------------
-//--------  -------  =  -------------------------------------------------------
-
-  function  parseJSON(  aFile ) {
-       var  pFS      =  require( 'fs' )
-       var  aDir     =  __dirname
-       var  aText    =  pFS.readFileSync( `${aDir}/${aFile}`, "ASCII" )
-            aText    =  aText.replace( //g, "'" )
-            aText    =  aText.replace( //g, "'" )
-
-        if (aFile.match( /\.json$/)) {   
-       var  pJSON    =  JSON.parse( aText )
-            }
-        if (aFile.match( /\.js$/)) {   
-            eval( aText )    
-            }
-
-    return  pJSON
-            }   // eof  parseJSON
-//--------  -------  =  -------------------------------------------------------
-
-
-  </script>
 
   <!-- inc-header-->
 			<div id="inc-header"></div>
@@ -134,99 +70,20 @@
           <div id="WelcomeProjectInfo"></div>
           <div class="req-fields-notice">* required fields</div>  
           <div id="projects-form-error">ERROR!</div>
-          <div class="new-project"><span class="new-project-span"><a href="#" title="Add a new project">+</a>&nbsp;<a href="#" title="Add a new project">Add New Project</a></span></div>
+          <!-- <div class="new-project"><span class="new-project-span"><a href="#" title="Add a new project">+</a>&nbsp;<a href="#" title="Add a new project">Add New Project</a></span></div> -->
           <br>
-          
-          <div class="projects-list" align="center">
 
-            <table width="90%" class="main-table" cellspacing="0" bgcolor="#E5E5E5">
-                <tr class="main-row">
-                  <td width="5%" align="right"><a href="project-info.html?pId=149"><img src="../assets/images/pencilDots.gif" title="Edit This Project"></a>&nbsp;&nbsp;</td>
-                  <td width="75%" class="project-name-primary" align="left">PFEP (Plan For Every Part)</td>
-                  <td width="20%" align="right" class="owner-name">Owner</td>
-                </tr>
-            </table>
-            <div class="spacer"></div>
-            <table width="90%" class="main-table" cellspacing="0" bgcolor="#F5F5F5">
-              <tr class="main-row">
-                <td width="5%" align="right"><a href="project-info.html?pId=44"><img src="../assets/images/pencilDots.gif" title="Edit This Project"></a>&nbsp;&nbsp;</td>
-                <td width="75%" class="project-name-primary" align="left">AMS (Automated Menu System)</td>
-                <td width="20%" align="right" class="owner-name">Owner</td>
-              </tr>
+          <div class="owner-title">Owner&nbsp;&nbsp;<span class="new-project-span"><a href="#" title="Add a new project">+</a></span></div>          
+          <table class="main-table" cellspacing="0">
+              <tbody class="projects-list-primary" id="projects-list-primary"></tbody>
           </table>
-            <div class="spacer"></div>
-            <table width="90%" class="main-table" cellspacing="0" bgcolor="#E5E5E5">
-              <tr class="main-row">
-                <td width="5%" align="right"><a href="project-info.html?pId=150"><img src="../assets/images/pencilDots.gif" title="Edit This Project"></a>&nbsp;&nbsp;</td>
-                <td width="75%" class="project-name-primary" align="left">AES (Automated Engineering System)</td>
-                <td width="20%" align="right" class="owner-name">Owner</td>
-              </tr>
+
+          <div class="spacer"><hr></div>
+
+          <div class="collaborator-title">Collaborator&nbsp;&nbsp;<span class="new-collaborator-span"><a href="#" title="Add a new collaborator">+</a></span></div>          
+          <table class="main-table" cellspacing="0">
+              <tbody class="projects-list-secondary" id="projects-list-secondary"></tbody>
           </table>
-          <div class="spacer"></div>
-          <div class="spacer2"></div>
-            <table width="90%" class="main-table" cellspacing="0" bgcolor="#F5F5F5">
-              <tr class="main-row">
-                <td width="5%" align="right"><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td>
-                <td width="75%" class="project-name-secondary" align="left">123 Easy Cards</td>
-                <td width="20%" align="right" class="collaborator-name">Collaborator</td>
-              </tr>
-            </table>
-            <div class="spacer"></div>
-            <table width="90%" class="main-table" cellspacing="0" bgcolor="#E5E5E5">
-              <tr class="main-row">
-                <td width="5%" align="right"><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td>
-                <td width="75%" class="project-name-secondary" align="left">Financial Management System Inventory</td>
-                <td width="20%" align="right" class="collaborator-name">Collaborator</td>
-              </tr>
-            </table>
-            <div class="spacer"></div>
-            <table width="90%" class="main-table" cellspacing="0" bgcolor="#F5F5F5">
-              <tr class="main-row">
-                <td width="5%" align="right"><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td>
-                <td width="75%" class="project-name-secondary" align="left">FIPS (Financial Improvement Progress System)</td>
-                <td width="20%" align="right" class="collaborator-name">Collaborator</td>
-              </tr>
-            </table>
-            <div class="spacer"></div>
-            <table width="90%" class="main-table" cellspacing="0" bgcolor="#E5E5E5">
-              <tr class="main-row">
-                <td width="5%" align="right"><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td>
-                <td width="75%" class="project-name-secondary" align="left">Office of Weights and Measures</td>
-                <td width="20%" align="right" class="collaborator-name">Collaborator</td>
-              </tr>
-            </table>
-            <div class="spacer"></div>
-            <table width="90%" class="main-table" cellspacing="0" bgcolor="#F5F5F5">
-              <tr class="main-row">
-                <td width="5%" align="right"><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td>
-                <td width="75%" class="project-name-secondary" align="left">Web Time Cards</td>
-                <td width="20%" align="right" class="collaborator-name">Collaborator</td>
-              </tr>
-            </table>
-            <div class="spacer"></div>
-
-
-
-
-            <!--
-
-            <table>
-                <tr><td colspan="2"><hr></td></tr>
-                <tr><td></td><td class="collaborator-title">Collaborator</td></tr>
-                <tr><td><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td><td class="project-name-secondary" align="left" bgcolor="#F5F5F5">123 Easy Card</td><td></tr>
-                <tr><td><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td><td class="project-name-secondary" align="left" bgcolor="#E5E5E5">Financial Management System Inventory</td><td></tr>
-                <tr><td><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td><td class="project-name-secondary" align="left" bgcolor="#F5F5F5">FIPS (Financial Improvement Progress System)</td><td></tr>
-                <tr><td><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td><td class="project-name-secondary" align="left" bgcolor="#E5E5E5">Office of Weights and Measures</td><td></tr>
-                <tr><td><img src="../assets/images/pencilBlank.gif">&nbsp;&nbsp;</td><td class="project-name-secondary" align="left" bgcolor="#F5F5F5">Web Time Cards</td><td></tr>
-                <tr><td colspan="2"><hr></td></tr>
-
-                <tbody id="ProjectsList"></tbody>
-            </table>
--->
-      </div>
-          
-
-
     </div>
   <!--  END Section 1 -->
 

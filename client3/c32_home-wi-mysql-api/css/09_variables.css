@@ -10,8 +10,8 @@
 /*Must go to line ~73-74 in assets/js/header.js to
   comment in or out */
 { 
-    display:none;
-    /* display:inline-flexbox; */
+    /* display:none; */
+    display:inline-flexbox;
 }
 
 .logout-temp-div {

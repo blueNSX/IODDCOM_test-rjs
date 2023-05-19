@@ -58,6 +58,7 @@
         .then( function( res  )  {
         return res.json( ) } )
         .then( function ( json )  {  
+
         return                   pMembers.innerHTML = fmtMembersProjectsMobile( json ) 
         } ) 
         .catch(( err  ) =>   pMembers.innerHTML `** ${err.message}` );   

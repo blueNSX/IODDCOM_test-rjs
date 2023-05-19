@@ -166,7 +166,7 @@ label {
   list-style-type: none;
   height: 50px;
 }
-#client-name {
+#clientname {
   width: 480px;
 }
 
@@ -186,7 +186,7 @@ label {
   width: 600px;
   height: 50px;
 }
-#project-url {
+#projecturl {
   width: 480px;
   margin-left:60px;
 }
@@ -207,7 +207,7 @@ label {
   width: 600px;
   height: 50px;
 }
-#client-url {
+#clienturl {
   width: 480px;
   margin-left:60px;
 }
@@ -249,7 +249,7 @@ label {
 }
 #role {
   width: 160px;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   /* margin-left: 60px; */
 }
 #duration {
