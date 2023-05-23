@@ -61,7 +61,6 @@
 
         try {
        var  pRes                =  await fetch( aAction, pFetchCfg );
-//       var pCollaborators       =  await fetch( `project_collaborators?pid=44` )
 
         } catch( pErr ) {
             sayMsg( 1, `onSubmit[6]  ** Server error: '${aAction}'\n ${pErr}` )
@@ -116,7 +115,6 @@
             }
 
             var pProjectData = pJSON[aDataSet][0]
-            
 
             sayMsg( 1, `onSuccess[3]    Project updated:`)
             sayMsg( 2, `onSuccess[3]    Project updated for ${pProjectData.Email}`)
@@ -128,7 +126,6 @@
             setProjectForm(  pProjectData, pForm ) 
 
             sayMsg( 2, `onSuccess[4]    Form populated`)
-            window.location = '#top'
 
             } // eof onSuccess
 //    ----  ------------------------------------------------
@@ -163,34 +160,6 @@
         
         }; // eof setProjectForm
 //--------  ---------------------------------------------------------
-   function setCollaboratorsForm( mProjects, aId ) {
-        var pForm = $( '#'+aId )
-        var mCollaborators = mProjects.filter(pProject => pProject.ProjectStyle == 'Secondary')
-        mCollaborators = mCollaborators.sort( function (a,b) { return a.LastName > b.LastName ? 1 : -1} )
-        var aHTML = mCollaborators.map( fmtCollaborator ).join('/n')
-        var aNewRow = `
-            <tr>
-            <td align="right"><font color="red"><a href="project-info.html" title="Add Collaborator"><img src="../assets/images/plus.gif"></a></font></td>
-            <td align="right">
-              <input type="text" name="collaboratoradd" placeholder="Add Collaborator" id="collaboratoradd">
-            </td></tr>
-        `
-
-        pForm.html(aHTML + aNewRow) 
-
-        function fmtCollaborator( pCollaborator, i ) {    
-            var rowId = `R${i}`
-            var aNameField = `<div id="${rowId}_Name">${pCollaborator.FullName}</div>`
-            var aRowBtn    = `<div id="${rowId}_Btn">${pCollaborator.MemberNo}</div>`
-            var aRow  = `
-                        <tr>
-                            <td align="right"><font color="red"><a href="project-info.html" title="Remove Collaborator"><img src="../assets/images/dash.gif"></a></font></td>
-                            <td><font color="black">${ aNameField }</font></td>
-                        </tr>
-                        `
-        return aRow
-    }
-    }
 
   function  sayMsg( nBoth, aMsg ) {
         if (nBoth == 2 || nBoth == 3) { console.log( aMsg ); }
@@ -200,4 +169,3 @@
 //--------  ---------------------------------------------------------
 
 export { onProjectForm_Submit, setProjectForm }                       // .(30515.07.4 RAM Add setMemberForm)
-export { setCollaboratorsForm }

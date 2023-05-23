@@ -510,8 +510,10 @@ this.Meetings_getRoute = function( ) {
 //-(Members Listing)-------------------------------------------------------
 
 this.Members_getRoute = function( ) {
-
-            setRoute( pApp, 'get', '/members',          JSON_getRoute_Handler, `SELECT * FROM members_view` )
+           // var aSQL = `SELECT DISTINCT FullName, Address1, Address2, City, State, Zip, LastName FROM iodd.AllData2_view WHERE Active = 'Y' ORDER BY LastName ;`
+            var aSQL = `SELECT * FROM members_view`
+            setRoute( pApp, 'get', '/members',          JSON_getRoute_Handler, aSQL )
+//            setRoute( pApp, 'get', '/members',          JSON_getRoute_Handler, `SELECT * FROM members_view` )
 
          }; // eof Members_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
@@ -639,8 +641,10 @@ this.Member_postRoute = function( ) {                                           
 //-(Bios)------------------------------------------------------------------
 
 this.MembersBios_getRoute = function( ) {
-
-            setRoute( pApp, 'get', '/members_bios',     JSON_getRoute_Handler, `SELECT * FROM members_bios_view` )
+            //var aSQL = `SELECT DISTINCT FullName, Bio, LastName FROM AllData2_view WHERE Active = 'Y' ORDER BY LastName ;`
+            var aSQL = `SELECT * FROM members_bios_view`
+            setRoute( pApp, 'get', '/members_bios',     JSON_getRoute_Handler, aSQL )
+            //setRoute( pApp, 'get', '/members_bios',     JSON_getRoute_Handler, `SELECT * FROM members_bios_view` )
 
          }; // eof MembersBios_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
@@ -771,7 +775,9 @@ this.ProjectBanner_getRoute = function( ) {
 this.ProjectCollaborators_getRoute = function( ) {
 
        var  aRoute    = '/project_collaborators'
-       var  pValidArgs=  { pid: /[0-9]+/ }
+         var  pValidArgs=  { pid: /[0-9]+/ }
+              pValidArgs [ "action" ] = /(delete|insert)/
+              pValidArgs [ "name" ] = /.{4,}/
 //     ---  ------------------  =   --------------------------------
 
        pApp.get( `${aAPI_Host}${aRoute}`, async function( pReq, pRes ) {
@@ -782,18 +788,33 @@ this.ProjectCollaborators_getRoute = function( ) {
        var  mRecs     =  await getData( pDB,   aSQL  )                                                         // .(30407.03.8 RAM No Errors??)
                                sndRecs( mRecs, aSQL, aRoute, pRes, "ProjectCollaborators_getRoute_Handler" )   // .(30407.03.9)
 
-            } ) // eof pApp.get( /project_colaborators )
+            } ) // eof pApp.get( /project_collaborators )
 
             sayMsg( 'get', aRoute )
 //     ---  ------------------  =   --------------------------------
 
   function  fmtSQL( pArgs ) {
        var  nId       =  pArgs.pid || -1
+       var  aAction   =  pArgs.action || ""
+       if (aAction == "") { 
        var aSQL       = `
-          SELECT  Distinct *
-            FROM  members_projects_view
- ${ nId ? `WHERE  ProjectId = ${ nId }` : `` } `
-   return  aSQL
+           SELECT  Distinct *
+           FROM  members_projects_view
+ ${ nId ? `WHERE  ProjectId = ${ nId }` : `` } 
+           `
+          }
+          if (aAction == "delete") { 
+            var mpid = pArgs.pid
+            var aSQL      =  `
+          DELETE FROM members_projects WHERE Id = ${mpid}
+        `  
+          }
+          if (aAction == "insert") { 
+            var aSQL      =  `
+          
+          `  
+          }  
+          return  aSQL
             }; // eof fmtSQL
 //     ---  ------------------  =   --------------------------------
          }; // eof ProjectCollaborators_getRoute

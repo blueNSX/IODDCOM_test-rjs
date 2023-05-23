@@ -1,0 +1,1 @@
+SELECT DISTINCT Email, PIN, IsLoggedIn, IPv4Address FROM iodd.AllData2_view WHERE MemberId = 90 ;
