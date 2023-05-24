@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+  <link rel="shortcut icon" href="favicon.png">
+  <link rel="stylesheet"    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
+
+<!--BEGINNING OF Global STYLE SHEETS (CSS)-->
+  <link rel="stylesheet"    href="../css/00_global_variables.css">
+  <link rel="stylesheet"    href="../css/01_hamburger.css">
+  <link rel="stylesheet"    href="../css/02_header.css">
+  <link rel="stylesheet"    href="../css/03_footer.css">
+  <link rel="stylesheet"    href="../css/04_index.css">
+<!--RESPONSIVE STYLE SHEETS (CSS)-->
+  <link rel="stylesheet"    href="../css/05_resp_GT0950-bigScreen.css">
+  <link rel="stylesheet"    href="../css/06_resp_741-950-tabletPortrait.css">
+  <link rel="stylesheet"    href="../css/07_resp_440-740-mobileLandscape.css">
+  <link rel="stylesheet"    href="../css/08_resp_LT0440-mobilePortrait.css">
+  <link rel="stylesheet"    href="../css/09_variables.css">
+<!--BEGINNING OF LOCAL STYLE SHEETS (CSS)-->
+  <link rel="stylesheet"    href="project-info-list.css">
+
+  <script src="../assets/js/header.js"></script>
+  <script type="module">
+    import { setHTML } from './project-info-list.mjs'
+    //--Header / Footer Includes--------------------------------------/  
+      setHTML( 'inc-header', '../includes/inc-header.html' );   
+      setHTML( 'inc-footer', '../includes/inc-footer.html' );   
+
+  </script>
+</head>
+<body>
+<!--  Header -->
+  <style>
+      #MenuBlank {display:block;}
+      #HomeLink {display:block;}
+      #HomeLinkLine {display:block;}
+      #MembersLink {display:block}
+      #ContactLink a {color:grey}
+      #BiosLink a {color:grey}
+      #MembersLinkLine {display:block}
+      #MembersProjectsLink {display:block}
+      #ProjectDetailsLink a {color:blue}
+      #MembersProjectsLinkLine {display:block}
+      #GuruLink a {color:grey}
+      #SupportLink a {color:grey}
+      #LicenseLink a {color:grey;}
+      #MtgLocLinkLine {display:block;}
+      #MtgLocLink a {display: block}
+      #LoginLinkLine {display:block;}
+      #LoginLink {display:none}
+      #MenuBlank {display:block;}
+      /*#log {display:none}*/
+  </style>
+
+
+  <!-- inc-header-->
+			<div id="inc-header"></div>
+		<!-- END inc-header -->
+  <!-- END  Header -->
+
+  <!--  Section 1 -->
+    <div class="Section1"> 
+      <div class="Section1Title">institute of database developers</div>
+
+      <div class="form-setting">
+        <h1>
+          Project(s) List<br>
+          <div id="WelcomeProjectInfo"></div>
+          <div class="req-fields-notice">* required fields</div>  
+          <div id="projects-form-error">ERROR!</div>
+          <!-- <div class="new-project"><span class="new-project-span"><a href="#" title="Add a new project">+</a>&nbsp;<a href="#" title="Add a new project">Add New Project</a></span></div> -->
+          <br>
+
+          <div class="owner-title">Owner&nbsp;&nbsp;<span class="new-project-span"><a href="#" title="Add a new project">+</a></span></div>          
+          <table class="main-table" cellspacing="0">
+              <tbody class="projects-list-primary" id="projects-list-primary"></tbody>
+          </table>
+
+          <div class="spacer"><hr></div>
+
+          <div class="collaborator-title">Collaborator&nbsp;&nbsp;<span class="new-collaborator-span"><a href="#" title="Add a new collaborator">+</a></span></div>          
+          <table class="main-table" cellspacing="0">
+              <tbody class="projects-list-secondary" id="projects-list-secondary"></tbody>
+          </table>
+    </div>
+  <!--  END Section 1 -->
+
+  <!--  Section 2 -->
+  <!--  END Section 2 -->
+  
+  <!--  Footer -->
+  <!-- inc-footer-->
+			<div id="inc-footer"></div>
+		<!-- END inc-footer -->
+  <!-- END  Footer -->
+
+  </body>
+</html>

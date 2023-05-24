@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<script src="https://www.w3schools.com/lib/w3.js"></script>
+<!--<script src="https://www.w3schools.com/lib/w3.js"></script>--><!-- .(30502.02.1 RAM Not needed) -->
 	<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 	<title>Home</title>
 	<link rel="shortcut icon" href="favicon.png">
@@ -24,22 +24,19 @@
 		<link rel="stylesheet"    href="css/08_resp_LT0440-mobilePortrait.css">
 		<link rel="stylesheet"    href="css/09_variables.css">
 
-	<script>
-		// document.cookie = "MemberID=1"
-		// //let c = 1;
-		// let c = document.cookie("MemberID");
-		// console.log(c);
-	</script>
 	<script src="assets/js/header.js"></script>
-
 </head>
 <body>
-<script>var aName = "Home"</script>	
+
+<script type="module">
+	setHTML( 'inc-header', 'includes/inc-header-home.html' );   
+	setHTML( 'inc-section1', 'includes/inc-section1.html' );  
+	setHTML( 'inc-footer', 'includes/inc-footer.html' );  
+</script>	
 <!--  Container DIV -->
 <div class="container">
 
 <!--  Header -->
-
 		<style>
 			#MenuBlank {display:block;}
 			#HomeLink {display:none;}
@@ -64,25 +61,14 @@
 
 		<!-- inc-header-->
 			<div id="inc-header"></div>
-			<script> 
-			//$("#inc-header").load("includes/inc-header-home.html");
-			setHTML( 'inc-header', 'includes/inc-header-home.html' );   
-			</script> 
 		<!-- END inc-header -->
-
 <!-- END  Header -->
 
 
 <!--  Section1 -->
-
 		<!-- inc-section1-->
 			<div id="inc-section1"></div>
-			<script> 
-				//$("#inc-section1").load("includes/inc-section1.html");
-				setHTML( 'inc-section1', 'includes/inc-section1.html' );  
-			</script> 
 		<!-- END inc-section1 -->
-
 <!-- END  Section1 -->
 
 <!--  Section2 -->
@@ -93,18 +79,27 @@
 				<div id="WelcomeBanner"></div>
 				<div class="Links">
 					<ol>
-						<li>Members <a href="#"><img id="pencil-image-members" class="PencilImage" src="assets/images/pencilDots.gif"></a></li>
+
+						<!--Members-->
+						<li>Members&nbsp;
+							<a href="./forms/member-info.html"><img id="pencil-image-members" class="PencilImageMembers" src="assets/images/pencilDots.gif" title="Change Your Password & Edit Your Members Information"></a>
+						</li>
 						<ul>
 							<li><i class="fa fa-address-book"></i>&nbsp;&nbsp;<a href="members/members.html">Member Listing</a>&nbsp;<img class="PencilImage" src="assets/images/pencilDots.gif"></li> <!-- .(30214.02.1 RAM Was href="../m") -->
 							<li id="BiosLink"><i class="fa fa-graduation-cap"></i>&nbsp;&nbsp;<a href="members-bios/members-bios.html">Bios</a>&nbsp;<img class="PencilImage" src="assets/images/pencilDots.gif"></li>
 							<li id="ContactLink"><span id="ContactAll"><i class="fa fa-file-text"></i>&nbsp;&nbsp;<a href="#">Contact Sheet</a>&nbsp;<img class="PencilImage" src="assets/images/pencilDots.gif"></span></li>
 							
 						</ul>
-						<li>Projects <a href="#"><img id="pencil-image-projects" class="PencilImage" src="assets/images/pencilDots.gif"></a></li>
+
+						<!--Projects-->
+						<li>Projects&nbsp;
+							<a href="./forms/project-info-list.html"><img id="pencil-image-projects" class="PencilImageProjects" src="assets/images/pencilDots.gif"></a></li>
 						<ul>
 							<li><i class="fa fa-address-card"></i>&nbsp;&nbsp;<a href="members-projects/members-projects.html">Project Listing</a></li> <!-- .(30214.02.2 RAM Was href="../m") -->
 							<li id="ProjectDetailsLink"><i class="fa fa-list-ol"></i>&nbsp;&nbsp;<a href="projects/projects.html">Project Details</a>&nbsp;<img class="PencilImage" src="assets/images/pencilDots.gif"></li> <!-- .(30214.02.2 RAM Was href="../p") -->
 						</ul>
+
+						<!--Games-->
 						<li>Out of the Box</li>
 						<ul>
 							<li id="OthelloLink"  ><i class="fa fa-fw fa-link"></i>&nbsp;&nbsp;<a href="othello/index.html" target="_blank">Play Othello</a></li>
@@ -119,17 +114,10 @@
 <!-- END  Section2 -->
 
 <!--  Footer -->
-
 		<!-- inc-footer -->
 			<div id="inc-footer"></div>
-			<script> 
-				//$("#inc-footer").load("includes/inc-footer.html");
-				setHTML( 'inc-footer', 'includes/inc-footer.html' );  
-			</script> 
 		<!-- END inc-footer -->
-
 <!-- END  Footer -->
-
 </div> 
 <!--END Container DIV-->
 

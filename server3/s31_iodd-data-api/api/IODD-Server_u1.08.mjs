@@ -129,6 +129,7 @@ this.setRoutes = function( bQuiet ) {                                           
             this.Projects_getRoute( )
             this.ProjectsList_getRoute( )           // .(30511.03.2)
             this.ProjectCollaborators_getRoute( )
+            this.ProjectCollaborators_postRoute( )
             this.MembersProjects_getRoute( )
 //          this.ProjectCollaboratorsLetters_getRoute( '/letters' )
 
@@ -218,13 +219,14 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
             <form ${ fmtForm1( 'robin.mattern@gmail.com', 'user', 40, 'login', 'login_form' ) }</form>    <!-- .(30511.01.1) -->
             <a href="${aAPI_Host}/meetings"                          >/meetings</a><br>
             <a href="${aAPI_Host}/members"                           >/members</a><br>
-            <form ${ fmtForm2( '', 'Update',                     120, 'member' ) }</form>                 <!-- .(30511.01.2).(30510.02.4 RAM Add POST member) -->
+            <form ${ fmtForm2( '', 90, 'Update',                 200, 'member' ) }</form>                 <!-- .(30511.01.2).(30510.02.4 RAM Add POST member).(30510.03.1 RAM Modified) -->
             <a href="${aAPI_Host}/members_bios"                      >/members_bios</a><br>
             <a href="${aAPI_Host}/members_projects"                  >/members_projects</a><br>
             <a href="${aAPI_Host}/projects"                          >/projects</a><br>
+            <a href="${aAPI_Host}/projects?Id=149"                   >/projects?Id=149</a><br>
             <a href="${aAPI_Host}/projects_list?id=90"               >/projects_list?id=90</a><br>        <!-- .(30511.03.3 RAM Add GET projects_list) -->
             <a href="${aAPI_Host}/project_collaborators"             >/project_collaborators</a><br>
-            <form ${ fmtForm2( 'sam', 'Add',                      60, 'user'   ) }</form>                 <!-- .(30511.01.3).(30510.02.5 RAM Add POST User) -->
+            <form ${ fmtForm3( 'sam', 'Add',                      60, 'user'   ) }</form>                 <!-- .(30511.01.3).(30510.02.5 RAM Add POST User) -->
             <a href="${aAPI_Host}/users"                             >/users</a><br>                      <!-- .(30328.03.1 Add Users) -->
             <a href="${aAPI_Host}/user?id=7"                         >/user?id=7</a><br>                  <!-- .(30405.03.1 End) -->
             </div> `;
@@ -245,14 +247,25 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
             }; // eof fmtForm1                                                                              // .(30511.01.4 End)
 //     ---  ------------------  =   --------------------------------
 
-  function  fmtForm2( aValue, aAction, nWdt, aRoute ) {                                                     // .(30511.01.5 RAM Beg)
+  function  fmtForm2( aValue, nId, aAction, nWdt, aRoute ) {                                                // .(30511.01.5 RAM Beg).(30515.03.2 RAM Add nId)
+        var aHTML = ` method="POST" action="${aAPI_Host}/${aRoute}" style="margin-bottom:-5px;">
+              /${aRoute} email: <input type="text" name="username" value=" ${aValue}" style="padding:0px; width:${nWdt}px" />
+                            id: <input type="text" name="id"       value=" ${nId}"    style="padding:0px; width:30px">
+              <input type="hidden" name="password" value="iodd">
+              <input type="submit" value="${aAction}" style="padding:0px; width:53px" />
+            `   
+     return aHTML         
+            }; // eof fmtForm2                                                                              // .(30511.01.5 End)
+//     ---  ------------------  =   --------------------------------
+
+  function  fmtForm3( aValue, aAction, nWdt, aRoute ) {                                                     // .(30515.03.2 RAM Beg) 
         var aHTML = ` method="POST" action="${aAPI_Host}/${aRoute}" style="margin-bottom:-5px;">
               /${aRoute}: <input type="text" name="username" value=" ${aValue}" style="padding:0px; width:${nWdt}px" />
               <input type="hidden" name="password" value="iodd">
               <input type="submit" value="${aAction}" style="padding:0px; width:53px" />
             `   
      return aHTML         
-            }; // eof fmtForm2                                                                              // .(30511.01.5 End)
+            }; // eof fmtForm2                                                                              // .(30515.03.2 End)
 //     ---  ------------------  =   --------------------------------
          }; // eof Root_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
@@ -497,8 +510,11 @@ this.Meetings_getRoute = function( ) {
 //-(Members Listing)-------------------------------------------------------
 
 this.Members_getRoute = function( ) {
+     // var aSQL = `SELECT DISTINCT FullName, Address1, Address2, City, State, Zip, LastName FROM iodd.AllData2_view WHERE Active = 'Y' ORDER BY LastName ;`
+        var aSQL = `SELECT * FROM members_view`
 
-            setRoute( pApp, 'get', '/members',          JSON_getRoute_Handler, `SELECT * FROM members_view` )
+            setRoute( pApp, 'get', '/members',          JSON_getRoute_Handler, aSQL )
+//          setRoute( pApp, 'get', '/members',          JSON_getRoute_Handler, `SELECT * FROM members_view` )
 
          }; // eof Members_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
@@ -511,35 +527,35 @@ this.Member_postRoute = function( ) {                                           
 
        var  aNow = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
 
-       var  pValidArgs = {  id              : [ 'MemberNo',      /.[0-9]+/,  "required", "must be a number" ]
-                         ,  title           : [ 'TitleName',     /.+/, ]
-                         ,  firstname       : [ 'FirstName',     /.+/, ]
-                         ,  middleinits     : [ 'MiddleName',    /.+/, ]
-                         ,  lastname        : [ 'LastName',      /.+/, ]
-                         ,  suffix          : [ 'PostName',      /.+/, ]
-                         ,  RoleId          : [ 'RoleId',        /.+/, ]
-                         ,  email           : [ 'Email',         /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/, "", "must be a valid email address (xx@xx.xx)" ]
-                         ,  password        : [ 'PIN',           /[a-zA-Z0-9]{4,}/,                         "", "must be at least 4 characters" ]
-                         ,  ipaddr          : [ 'IPv4Address',   /.+/, ]
-                         ,  logged_in       : [ 'IsLoggedIn',    /.+/, 'N']
-                         ,  logged_in_at    : [ 'LogInDateTime', /.+/,  aNow ]
-                         ,  active          : [ 'Active',        /.+/, 'Y' ]
-                         , 'co-name'        : [ 'Company',       /.+/, ]
-                         , 'co-addr1'       : [ 'Address1',      /.+/, ]
-                         , 'co-addr2'       : [ 'Address2',      /.+/, ]
-                         ,  city            : [ 'City',          /.+/, ]
-                         ,  state           : [ 'State',         /.+/, ]
-                         ,  zip             : [ 'Zip',           /.[0-9.]{5,10}/, "", "must be a valid zip code (xxxxx[.xxxx])" ]
-                         ,  country         : [ 'Country',       /.+/, ]
-                         ,  phone1          : [ 'Phone1',        /.+/, ]
-                         ,  phone2          : [ 'Phone2',        /.+/, ]
-                         ,  fax             : [ 'Fax',           /.+/, ]
-                         ,  webSite         : [ 'WebSite',       /.+/, ]
-                         ,  skills          : [ 'Skills',        /.+/, ]
-                         ,  bio             : [ 'Bio',           /.+/, ]
-                         ,  created_at      : [ 'CreatedAt',     /.+/, ]
-                         ,  updated_at      : [ 'UpdatedAt',     /.+/, ]
-                         ,  last_updated    : [ 'LastUpdated',   /.+/, ]
+	   var  pValidArgs = {  memberno         : [ 'MemberNo',     /.[0-9]+/, "required", "must be a number"] // .(30515.03.11 RAM Was id)
+//                       ,  title            : [ 'TitleName',    /.+/, ]                                    // .(30515.03.12 RAM Not in form) 
+                         , 'first-name'      : [ 'FirstName',    /.+/, ]                                    // .(30515.03.13 RAM Was firstname) 
+                         , 'middle-inits'    : [ 'MiddleName',   /.+/, ]                                    // .(30515.03.14 RAM Was middleinits) 
+                         , 'last-name'       : [ 'LastName',     /.+/, ]                                    // .(30515.03.15 RAM Was lastname) 
+                         ,  suffix           : [ 'PostName',     /.+/, ]
+//                       ,  role             : [ 'RoleId',       /.+/, ]
+                         ,  email            : [ 'Email',        /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/, "", "must be a valid email address (xx@xx.xx)" ]  // .(30515.03.1 RAM Was: email).(30515.03.16 Was username)
+                         ,  password         : [ 'PIN',          /[a-zA-Z0-9]{4,}/,                         "", "must be at least 4 characters" ]
+//                       ,  active           : [ 'Active',       /.+/, 'Y' ]                                // .(30515.03.2  RAM Set in SQL)
+//                       ,  login            : [ 'IsLoggedIn',   /.+/, 'N' ]                                // .(30515.03.3  RAM Set in SQL)
+//                       ,  login_at         : [ 'LogInDateTime',/.+/,  aNow ]                              // .(30515.03.4  RAM Not in form)   
+//                       ,  ipaddr           : [ 'IPv4Address',  /.+/, ]                                    // .(30515.03.5  RAM Not in form)   
+                         , 'company'         : [ 'Company',      /.+/, ]                                    // .(30515.03.17 RAM Was 'co-name') 
+                         , 'company-address1': [ 'Address1',     /.+/, ]                                    // .(30515.03.18 RAM Was 'co-addr1')
+                         , 'company-address2': [ 'Address2',     /.+/, ]                                    // .(30515.03.19 RAM Was 'co-addr2')
+                         ,  city             : [ 'City',         /.+/, ]
+                         ,  state            : [ 'State',        /.+/, ]
+                         ,  zip              : [ 'Zip',          /.[0-9.]{5,10}/, "", "must be a valid zip code (xxxxx[.xxxx])" ]
+                         ,  country          : [ 'Country',      /.+/, ]
+                         ,  phone1           : [ 'Phone1',       /.+/, ]
+                         ,  phone2           : [ 'Phone2',       /.+/, ]
+//                       ,  fax              : [ 'Fax',          /.+/, ]
+                         , 'company-url'     : [ 'WebSite',      /.+/, ]                                    // .(30515.03.20 RAM Was website)
+//                       ,  skills           : [ 'Skills',       /.+/, ]                                    // .(30515.03.6  RAM Not in form)   
+                         ,  bio              : [ 'Bio',          /.+/, ]
+//                       ,  created_at       : [ 'CreatedAt',    /.+/, aNow ]                               // .(30515.03.7  RAM Set in DB)     
+//                       ,  updated_at       : [ 'UpdatedAt',    /.+/, aNow ]                               // .(30515.03.8  RAM Set in SQL)   
+                         ,  last_updated     : [ 'LastUpdated',  /.+/, aNow ]                               // .(30515.03.9  RAM Set in SQL)
                             }
 
 //     var  pArgs = chkArgs( pReq, pValidArgs )
@@ -550,52 +566,71 @@ this.Member_postRoute = function( ) {                                           
 
                                sayMsg(  pReq, aMethod, aRoute )
 //     var  pArgs     =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
-       var  pArgs     =                 pReq.body.map( aFld => pValidArgs[ aFld ][0] )
+//     var  pArgs     =                 pReq.body.map( aFld => pValidArgs[ aFld ][0] )
+       var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
 
-       var  mRecs1    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );        
+       var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );        
+//      if (mRecs1.error)    { sndErr(  pRes, mRecs1.error ); return }                                      //#.(30515.10.1 RAM return no workie, CUZ mRecs1.error is an error) 
+   if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1]    ); return }                                      // .(30515.10.1 RAM Would mRecs1[0].error be better)
 
-       var  mRecs2    =    [ { Id: mRecs1[2].affectedId, Count: mRecs2[2].affectedRows 
-                             , UserName: pArgs.username, Password: pArgs.password } 
+//     var  mRecs2    =    [ { MemberNo: mRecs1[2].affectedId, Count: mRecs1[2].affectedRows                // .(30515.04.1 RAM Why is affectedId = 0)
+       var  mRecs2    =    [ { MemberNo: pArgs.MemberNo,   Count: mRecs1[2].affectedRows 
+                             , Email: pArgs.Email,        Msg: mRecs1[1] } 
                                ]
-//     var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );        
-                               sndJSON( pRes, JSON.stringify( { user: mRecs1 } ), aRoute )
+       var  mRecs2    =  await getData( pDB,  `SELECT * FROM members WHERE MemberNo = ${mRecs2[0].MemberNo}`, aRoute );        
+                               sndJSON( pRes, JSON.stringify( { member: mRecs2 } ), aRoute )
+         }; 
+//     ---  ------------------  =   --------------------------------
+
+  function  fmtSQL1_x( pVars ) {
+
+            pVars.Email = pVars.Email ? `${ pVars.Email }`.trim() : ''                  // .(30515.08.1 RAM Email not a string?) 
+
+       var  aSQL = `UPDATE  members
+                       SET  Email           = '${ pVars.Email           }'   
+                         ,  PIN             = '${ pVars.PIN             }'
+                         ,  LastUpdated     =     STR_TO_DATE( '${ aNow }', '%Y-%m-%d %H:%i:%s' )
+                     WHERE  MemberNo        =  ${ pVars.MemberNo        }
+                   `
+    return  aSQL
             }
 //     ---  ------------------  =   --------------------------------
 
-  function  fmtSQL1( pArgs ) {
+  function  fmtSQL1( pVars ) {
+
+            pVars.Bio = pVars.Bio.replace( /'/g, "''" )                                 // .(30515.08.2 RAM Double up single quotes, if any) 
 
        var  aSQL = `UPDATE  members
-                       SET  MemberNo        =  ${ nMemberNo      }
-                         ,  TitleName       = '${ aTitleName     }
-                         ,  FirstName       = '${ aFirstName     }
-                         ,  MiddleName      = '${ aMiddleName    }
-                         ,  LastName        = '${ aLastName      }
-                         ,  PostName        = '${ aPostName      }
-                         ,  RoleId          = '${ aRoleId        }
-                         ,  Email           = '${ aEmail         }
-                         ,  PIN             = '${ aPassWord      }
-                         ,  IPv4Address     = '${ IPv4Address    }
-                         ,  IsLoggedIn      =     'N'
-                         ,  LogInDateTime   = '${ dLogInDateTime }
-                         ,  Active          = '${ aActive        }
-                         ,  Company         = '${ aCompany       }
-                         ,  Address1        = '${ aAddress1      }
-                         ,  Address2        = '${ aAddress2      }
-                         ,  City            = '${ aCity          }
-                         ,  State           = '${ aState         }
-                         ,  Zip             = '${ aZip           }
-                         ,  Country         = '${ aCountry       }
-                         ,  Phone1          = '${ aPhone1        }
-                         ,  Phone2          = '${ aPhone2        }
-                         ,  Fax             = '${ aFax           }
-                         ,  WebSite         = '${ aWebSite       }
-                         ,  Skills          = '${ aSkills        }
-                         ,  Bio             = '${ aBio           }
-                         ,  CreatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
+--                     SET  TitleName       = '${ pVars.TitleName       }'
+                       SET  FirstName       = '${ pVars.FirstName       }'
+                         ,  MiddleName      = '${ pVars.MiddleName      }'
+                         ,  LastName        = '${ pVars.LastName        }'
+                         ,  PostName        = '${ pVars.PostName        }'
+--                       ,  RoleId          = '${ pVars.RoleId          }'
+                         ,  Email           = '${ pVars.Email           }'
+                         ,  PIN             = '${ pVars.PIN             }'
+                         ,  Active          = 'Y'   
+--                       ,  IsLoggedIn      = 'N'  
+--                       ,  LogInDateTime   = '${ pVars.LogInDateTime   }'
+--                       ,  IPv4Address     = '${ pVars.IPv4Address     }'
+                         ,  Company         = '${ pVars.Company         }'
+                         ,  Address1        = '${ pVars.Address1        }'
+                         ,  Address2        = '${ pVars.Address2        }'
+                         ,  City            = '${ pVars.City            }'
+                         ,  State           = '${ pVars.State           }'
+                         ,  Zip             = '${ pVars.Zip             }'
+                         ,  Country         = '${ pVars.Country         }'
+                         ,  Phone1          = '${ pVars.Phone1          }'
+                         ,  Phone2          = '${ pVars.Phone2          }'
+--                       ,  Fax             = '${ pVars.Fax             }'
+                         ,  WebSite         = '${ pVars.WebSite         }'
+--                       ,  Skills          = '${ pVars.Skills          }'
+                         ,  Bio             = '${ pVars.Bio             }'
+--                       ,  CreatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
                          ,  UpdatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
                          ,  LastUpdated     =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
-                     WHERE  Id = ${ id }
-                            `
+                     WHERE  Id              =  ${ pVars.MemberNo        }
+                   `
     return  aSQL
             }
 //     ---  ------------------  =   --------------------------------
@@ -607,8 +642,11 @@ this.Member_postRoute = function( ) {                                           
 //-(Bios)------------------------------------------------------------------
 
 this.MembersBios_getRoute = function( ) {
+     // var aSQL = `SELECT DISTINCT FullName, Bio, LastName FROM AllData2_view WHERE Active = 'Y' ORDER BY LastName ;`
+        var aSQL = `SELECT * FROM members_bios_view`
 
-            setRoute( pApp, 'get', '/members_bios',     JSON_getRoute_Handler, `SELECT * FROM members_bios_view` )
+            setRoute( pApp, 'get', '/members_bios',     JSON_getRoute_Handler, aSQL )
+         // setRoute( pApp, 'get', '/members_bios',     JSON_getRoute_Handler, `SELECT * FROM members_bios_view` )
 
          }; // eof MembersBios_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
@@ -632,32 +670,115 @@ this.MembersProjects_getRoute = function( ) {
 //-(Project Details)-------------------------------------------------------
 
 this.Projects_getRoute = function( ) {
+        var pArgs = {id:/[0-9]+/}                                            // .(30511.03.4 RAM Beg)
 
             setRoute( pApp, 'get', '/projects',         JSON_getRoute_Handler, `SELECT * FROM members_projects_colaboration_view` )
+//          setRoute( pApp, 'get', '/projects',         JSON_getRoute_Handler, `SELECT * FROM projects where Id = ${ pArgs.id || -1 }` )
 
          }; // eof Projects_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
-//= projects_list ===============================================================
-//-(ProjectDropdown Listing)-------------------------------------------------------
+//-(postProject)-----------------------------------------------------------
+//-(Update/Insert Project)--------------------------------------------------
 
-this.ProjectsList_getRoute = function( ) {                                                          // .(30511.03.4 RAM Beg)
+this.Project_postRoute = function( ) {                                                                       // .(30510.03.4 Beg RAM Add Members_postRoute)
 
-            setRoute( pApp, 'get', '/projects_list',    JSON_getRoute_Handler, ( pArgs ) => 
-              `SELECT * FROM iodd.form_projects_dropdown where MemberId = ${ pArgs.id || -1 }`  )
+  var  aNow = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
 
-         }; // eof ProjectsList_getRoute                                                            // .(30511.03.4 End)
+var  pValidArgs = {  pid               : [ 'Id',            /.[0-9]+/, "required", "must be a number"] // .(30515.03.11 RAM Was id)   
+                  ,  projectname       : [ 'ProjectName',          /.+/                                     ]
+                  }
+
+//     var  pArgs = chkArgs( pReq, pValidArgs )
+
+       setRoute( pApp, 'post', '/projects', Project_postRoute_Handler, pValidArgs )
+
+async  function Project_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
+
+                          sayMsg(  pReq, aMethod, aRoute )
+//     var  pArgs     =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
+  var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
+  pArgs.Id = pReq.body.pid
+  pArgs.Name = pReq.body.projectname
+  
+  console.log("pArgs", pArgs)
+  var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );        
+if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1]    ); return }                                      // .(30515.10.1 RAM Would mRecs1[0].error be better)
+                          
+  var  mRecs2    =  await getData( pDB,  `SELECT * FROM projects WHERE ProjectId = ${pArgs.ProjectId}`, aRoute );        
+                          sndJSON( pRes, JSON.stringify( { project: mRecs2 } ), aRoute )
+    }; 
+//     ---  ------------------  =   --------------------------------
+//     ---  ------------------  =   --------------------------------
+
+function  fmtSQL1( pProject ) {
+
+       //pProject.Description = pProject.Description.replace( /'/g, "''" )                                 // .(30515.08.2 RAM Double up single quotes, if any) 
+
+  var  aSQL = `UPDATE  projects
+                  SET  Name            = '${ pProject.Name       }'
+                WHERE  Id              =  ${ pProject.Id         }
+              `
+return  aSQL
+       }
+//     ---  ------------------  =   --------------------------------
+    }; // eof Project_postRoute                                                     // .(30510.03.4 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
-//= project_collaborators ===================================================
+
+
+
+
+
+
+
+//= projects_list ===============================================================
+//-(ProjectDropdown Listing)-------------------------------------------------------
+
+this.ProjectsList_getRoute = function( ) {  
+            var pValidArgs = {id:/[0-9]+/, owner:/primary|secondary/}                                            // .(30511.03.4 RAM Beg)
+            function fmtSQL (pArgs) {
+              var aSQL = `SELECT * FROM iodd.form_projects_dropdown where Owner like '${ pArgs.owner || ''}%' AND MemberId = ${ pArgs.id || -1 }`
+//              var aSQL = `SELECT * FROM iodd.form_projects_dropdown where  ProjectId = ${ pArgs.id || -1 }`
+              return aSQL
+            }
+            setRoute( pApp, 'get', '/projects_list',    JSON_getRoute_Handler, pValidArgs, ( pArgs ) => {return fmtSQL(pArgs)})
+              
+         }; // eof ProjectsList_getRoute                                                // .(30511.03.4 End)
+//--------  ------------------  =   -------------------------------- ------------------
+//=====================================================================================
+
+//= project (singular) ===============================================================
+//-(Project Banner)-------------------------------------------------------
+
+this.ProjectBanner_getRoute = function( ) {  
+  var pValidArgs = {pid:/[0-9]+/}                                            // .(30511.03.4 RAM Beg)
+  function fmtSQL (pArgs) {
+    var aSQL = `SELECT * FROM iodd.form_projects_dropdown WHERE ProjectId = ${ pArgs.pid || -1 }`
+    return aSQL
+  }
+  setRoute( pApp, 'get', '/project_banner',    JSON_getRoute_Handler, pValidArgs, ( pArgs ) => {return fmtSQL(pArgs)})
+    
+}; // eof ProjectBanner_getRoute                                                // .(30511.03.4 End)
+//--------  ------------------  =   -------------------------------- ------------------
+//=====================================================================================
+
+
+
+
+
+//= project_collaborators =======================================e===========
+
 //-(getProjectCollaborators)-------------------------------------------------
 
 this.ProjectCollaborators_getRoute = function( ) {
 
        var  aRoute    = '/project_collaborators'
-       var  pValidArgs=  { id: /[0-9]+/ }
+       var  pValidArgs=  { pid: /[0-9]+/ }
+            pValidArgs [ "action" ] = /(delete|insert)/
+            pValidArgs [ "name" ] = /.{4,}/
 //     ---  ------------------  =   --------------------------------
 
        pApp.get( `${aAPI_Host}${aRoute}`, async function( pReq, pRes ) {
@@ -668,21 +789,115 @@ this.ProjectCollaborators_getRoute = function( ) {
        var  mRecs     =  await getData( pDB,   aSQL  )                                                         // .(30407.03.8 RAM No Errors??)
                                sndRecs( mRecs, aSQL, aRoute, pRes, "ProjectCollaborators_getRoute_Handler" )   // .(30407.03.9)
 
-            } ) // eof pApp.get( /project_colaborators )
+            } ) // eof pApp.get( /project_collaborators )
 
             sayMsg( 'get', aRoute )
 //     ---  ------------------  =   --------------------------------
 
   function  fmtSQL( pArgs ) {
-       var  nId       =  pArgs.id || -1
+       var  nId       =  pArgs.pid || -1
+       var  aAction   =  pArgs.action || ""
+       if (aAction == "") { 
        var aSQL       = `
-          SELECT  Distinct *
-            FROM  members_projects_view
- ${ nId ? `WHERE  ProjectId = ${ nId }` : `` } `
-   return  aSQL
+           SELECT  Distinct *
+           FROM  members_projects_view
+ ${ nId ? `WHERE  ProjectId = ${ nId }` : `` } 
+           `
+          }
+          if (aAction == "delete") { 
+            var mpid = pArgs.pid
+            var aSQL      =  `
+          DELETE FROM members_projects WHERE Id = ${mpid}
+        `  
+          }
+          if (aAction == "insert") { 
+            var aSQL      =  `
+          
+          `  
+          }  
+          return  aSQL
             }; // eof fmtSQL
 //     ---  ------------------  =   --------------------------------
          }; // eof ProjectCollaborators_getRoute
+//--------  ------------------  =   -------------------------------- ------------------
+
+//RJS
+//=====================================================================================
+//-(postProjectCollaborators)-----------------------------------------------------------
+//-(Update/Insert Member)--------------------------------------------------
+
+this.ProjectCollaborators_postRoute = function( ) {                                                                       // .(30510.03.4 Beg RAM Add Members_postRoute)
+
+  var  aNow = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
+
+var  pValidArgs = {  pid               : [ 'Id',            /.[0-9]+/, "required", "must be a number"] // .(30515.03.11 RAM Was id)   
+                  ,  mpid              : [ 'Id',            /.[0-9]+/                                     ]
+                  ,  projectname       : [ 'Name',          /.+/                                     ]
+                  ,  projecturl        : [ 'ProjectWeb',    /.+/                                     ]
+                  ,  clientname        : [ 'Client',        /.+/                                     ]
+                  ,  clienturl         : [ 'ClientWeb',     /.+/                                     ]
+                  ,  industry          : [ 'Industry',      /.+/                                     ]
+                  ,  location          : [ 'Location',      /.+/                                     ]
+                  ,  description       : [ 'Description',   /.+/                                     ]
+                  ,  role              : [ 'Role',          /.+/                                     ]
+                  ,  dates             : [ 'Dates',         /.+/                                     ]
+                  ,  duration          : [ 'Duration',      /.+/                                     ]
+                }
+
+//     var  pArgs = chkArgs( pReq, pValidArgs )
+
+       setRoute( pApp, 'post', '/project_collaborators', ProjectCollaborators_postRoute_Handler, pValidArgs )
+
+async  function ProjectCollaborators_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
+
+                          sayMsg(  pReq, aMethod, aRoute )
+//     var  pArgs     =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
+//  var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
+  var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ aFld ] = pReq.body[ aFld ] } } )
+  pArgs.Id = pReq.body.pid
+  pArgs.Name = pReq.body.projectname
+  
+  console.log("pArgs", pArgs)
+  var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );        
+if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1]    ); return }                                      // .(30515.10.1 RAM Would mRecs1[0].error be better)
+  var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );                                
+  console.log("mRecs2", mRecs2)
+if (mRecs2[0] == 'error') { sndErr(  pRes, mRecs2[1]    ); return }                                      // .(30515.10.1 RAM Would mRecs1[0].error be better)
+  var  mRecs3    =  await getData( pDB,  `SELECT * FROM members_projects_view WHERE Members_ProjectsId = ${pArgs.mpid}`, aRoute );        
+                          sndJSON( pRes, JSON.stringify( { project_collaborators: mRecs3 } ), aRoute )
+    }; 
+//     ---  ------------------  =   --------------------------------
+//     ---  ------------------  =   --------------------------------
+
+function  fmtSQL1( pForm ) {
+
+       //pForm.Description = pForm.Description.replace( /'/g, "''" )                                 // .(30515.08.2 RAM Double up single quotes, if any) 
+
+  var  aSQL = `UPDATE  projects
+                  SET  Name            = '${ pForm.projectname            }'
+                    ,  ProjectWeb      = '${ pForm.projecturl      }'
+              WHERE  Id                =  ${ pForm.pid             }
+              `
+return  aSQL
+       }
+
+  function  fmtSQL2( pForm ) {
+
+        //pForm.Description = pForm.Description.replace( /'/g, "''" )                                 // .(30515.08.2 RAM Double up single quotes, if any) 
+ 
+   var  aSQL = `UPDATE  members_projects
+                SET  Dates              = '${ pForm.dates           }'              
+                  ,  Role               = '${ pForm.role            }'
+                WHERE  Id               =  ${ pForm.mpid            }
+                   `
+                   return  aSQL
+                   
+                }
+           
+
+
+       //     ---  ------------------  =   --------------------------------
+    }; // eof Project_postRoute                                                     // .(30510.03.4 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 

@@ -11,7 +11,9 @@
 
     </head>
     <body>
-
+    <script type="module">
+        setHTML( 'inc-dropdown-home', '/includes/inc-dropdown-home.html' );   
+    </script>
     <!--  Header -->
     <div class="Header">
         <div class="MenuWrap">
@@ -44,14 +46,6 @@
                 </div>
             </div>
         </div>
-<!--
-        <div class="Logo">
-            <span class="LogoText">iodd</span>
-            <span class="device-text"></span>
-        </div>
-        <div class="HeaderSpacer"></div>
--->
-
         <div>
             <div class="new-div">
                 <table class="Header-nav-table" valign="center">
@@ -60,21 +54,20 @@
                         <td class="Logo">
                             <span class="LogoText">iodd</span>
                             <span class="DeviceText"></span>
-
                         </td>
                         <td class="HeaderSpacer"></td>
                         <td class="DropdownMenu">
-                            <!--include using jQuery-->
-                            <div id="inc-dropdown"></div>
-                            <script>
-                                $("#inc-dropdown").load("includes/inc-dropdown-home.html");
-                            </script>
+                            <!--include dropdown home -->
+                            <div id="inc-dropdown-home"></div>
                         </td>
                         <td class="HeaderNavListItemCTA"><a href="meetings/meetings.html" title="CLICK For The Next Meeting Information">Meeting <span class="next-meeting-date"></span></a></td>
-                        <!--<td class="HeaderNavListItemInits"><a href="login/login.html" title="Edit Profile"></a></td>-->
-                        <!-- <td class="HeaderNavListItemLogin"><a href="login/login.html" data-title="Log In"></a></td> -->
                         <!-- <td class="HeaderNavListItemLogin" id="id2"><a href="login/login.html" class="ToolTip"><span class="ToolTipHide"></span></a></td> -->
-                        <td id="login-inits"><a href="login/login.html" title="Log In"><span id="log"></span></a></td>
+                        
+                        <!--WORK ON THIS ON 051623-->
+                        <!-- display: none/block if id > 0 -->
+                        <!-- <td id="login-text"><a href="index.html?Id=0" title=""><span id="log"></span></a></td> -->
+                        
+                        <td id="login-inits"><a href="login/login.html?Id=0" title=""><span id="log"></span></a></td>
                         <td class="HeaderTrailingSpacer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     </tr>
                     </tbody>
@@ -85,6 +78,5 @@
     <!-- END  Header -->
 
     <script src="assets/js/header.js"></script>
-<!--<script src="assets/js/login.js"></script>--><!-- .(40427.01.1 RAM Not Needed)
     </body>
 </html>

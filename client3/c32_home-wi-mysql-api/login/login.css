@@ -4,6 +4,7 @@
   font-size: 16px;
 }
 .logout-temp-div {
+  display: none;
   text-align: right;
   margin: 0px 20px 0px 0px;
 }
@@ -51,7 +52,7 @@
   text-align: center;
   color: #5b6574;
   font-size: 24px;
-  padding: 20px 0 20px 0;
+  padding: 20px 0 1px 0;
   border-bottom: 1px solid #dee0e4;
 }
 .login form {

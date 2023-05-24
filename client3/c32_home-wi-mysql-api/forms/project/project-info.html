@@ -26,7 +26,6 @@
 </head>
 <body>
 <script type="module">
-  import { setCollaboratorsForm } from './project-info.mjs'
   import { onProjectForm_Submit, setProjectForm } from './project-info.mjs'          // .(30515.07.1 RAM Add setMemberForm)
   import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'      // .(30515.06.1 RAM Get setAPI_URL)
   await setAPI_URL()
@@ -55,6 +54,24 @@
           }
 
 
+        // var pProjectBanner = document.getElementById( "ProjectBanner" )
+
+        // // var pid = window.location.href.replace(/.+pid=/i,'')    
+        // // alert ("pid = " + pid)
+
+        // fetch( `${aAPI_URL}/project_collaborators?id=${ id }` )
+        //           //fetch( `http://localhost:3012/members?id=${ id }` )
+        //   .then( ( res  ) => res.json( ) )
+        //   .then( ( json ) => {  
+        //   var aHTML = fmtProjectBanner (json)
+        //   pWelcome.innerHTML = aHTML 
+        //   } ) 
+        //   //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
+        //   function fmtProjectBanner ( pJSON ) {
+        //       var aHTML =  pJSON.members[0].ProjectName
+        //       return aHTML
+        //   }
+
         //forms/project-info.html?pId=149
         var aURL = window.location.href
         var pid = aURL.replace(/.+pid=/i,'')
@@ -63,8 +80,7 @@
           .then( ( res  ) => { 
           return res.json( ) })
           .then( ( json ) => {  
-          setProjectForm(json.project_collaborators[0], pProjectInfoForm) 
-          setCollaboratorsForm(json.project_collaborators, 'collaboratorsform')      
+          setProjectForm(json.project_collaborators[0], pProjectInfoForm)       
         } ) 
       
           //.catch(( err  ) =>   alert ( `*** ${err.message}` ));                     
@@ -109,7 +125,7 @@
           Project Information<br>  
           <div id="member-form-error">ERROR!</div>
           <div id="WelcomeMemberInfo"></div>
-          <div id="ProjectNameBanner"></div>
+          <div id="ProjectNameBanner">PFEP (Plan For Every Part)</div>
           <div class="req-fields-notice">* required fields</div>  
           <div id="member-form-error">ERROR!</div>
       </h1>
@@ -166,25 +182,26 @@
             <li><input type="text" name="dates" placeholder="Dates" id="dates"></li>
           </ul><br><br>
 
+
           <table class="description-title"><tr>
             <td width="45%"><font color="blue"><b>Project Description</b></font></td>
           </tr></table>
           <ul class="description-info">
             <li><textarea name="description" placeholder="Project Description" id="description" title="Please enter the project description here" rows="14" cols="10" wrap="soft" style="padding: 10px 10px 10px 15px;"></textarea></li>
           </ul><br><br><br><br>
-          <input id="submit-button" type="submit" value="Submit">
-        <br>
-        <div><hr></div>
+
+          
           <table class="collaborators-title">
-            <tr><td colspan="1"><font color="blue"><b>Collaborator(s)</b></font></td><td><font color="red" style='font-size:x-large;'></td></tr>
-            <tbody id="collaboratorsform"></tbody>
+            <tr><td colspan="1"><font color="blue"><b>Collaborator(s)</b></font></td><td><font color="blue"><b title="Add a Collaborator">+</b></font></td></tr>
+            <tr><td align="right"><font color="red"><b title="Remove Collaborator">-</b></font>&nbsp;</td><td><font color="black"><b>Bruce Troutman</b></font></td></tr>
           </table>
           <br><br><br><br><br><br>
-        </form>
-        <br><br>
-        <div><hr></div>
 
+          <input id="submit-button" type="submit" value="Submit">
+        </form>
       </div>
+      <br><br><br><br>
+
     </div>
   <!--  END Section 1 -->
 

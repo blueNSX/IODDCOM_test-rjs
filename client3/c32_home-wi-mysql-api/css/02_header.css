@@ -493,6 +493,18 @@ and (max-width: 740px)
             }
 }
 
+
+/* @media only screen
+and (min-width: 620px)
+and (max-width: 740px) 
+{
+    .Logo {
+        padding: 0px 0px 20px 35px;
+    }
+
+} */
+
+
 /*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 /*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 /*MEDIA - IPHONE PORTRAIT*/

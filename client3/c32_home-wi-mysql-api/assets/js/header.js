@@ -60,7 +60,7 @@
 
         if (id > 0)  
         {  
-            //alert("id = " + id )
+           // alert("id = " + id )
             var aLogIn = iLogin;
             //let aLogIn = "<a href='#' title='Welcome' style='text-decoration:none;'>RS</a>";
             var pSpan = $("#log") 
@@ -70,8 +70,8 @@
             $("#ContactLink").css("display", "block");
             $("#contact-dropdown").css("display", "block");
             $("#login-inits").css("width", "35px")
-            $("#pencil-image-members").css("display", "inline-block")
-            $("#pencil-image-projects").css("display", "inline-block")
+            // $("#pencil-image-members").css("display", "inline-block")
+            // $("#pencil-image-projects").css("display", "inline-block")
             $("#pencil-image-inits").css("display", "inline-block")
             pSpan.css("text-decoration", "none");
             pSpan.css("color", "white");
@@ -82,7 +82,6 @@
             pSpan.css("font-family", "monospace");
             pSpan.css("border-radius", "50%");
             pSpan.css("border", "solid #5A5A5A 3px");
-//          pSpan.a.css("text-align", "center");          //#.(30414.01.2) 
             pSpan.css("text-align", "center");            // .(30414.01.2 RAM Was pSpan.a.css which did not exist)
          // pSpan.css("display", "block");
         } 
@@ -170,4 +169,4 @@
         //      sayMsg(     `setHTML[2]     Included '${aFile}’`, nSay2)
             }                                                           // .(30401.02.1 End)
         //  ------------------------------------------------------------        //  ------------------------------------------------------------
-        
+

@@ -1,18 +1,25 @@
-.PencilImage
- {
-    display: none;
-}
 
 #BiosLink,
 #ProjectDetailsLink,
 #WonderLink {
     height: 30px;
 }
+.form-links, /*links in the dropdown menu*/
+.PencilImageMembers, /*Pencil Image on Index.html (Section2) */
+.PencilImageProjects /*Pencil Image on Index.html (Section2) */
+/*Must go to line ~73-74 in assets/js/header.js to
+  comment in or out */
+{ 
+    /* display:none; */
+    display:inline-flexbox;
+}
 
 .logout-temp-div {
     /* display: none; */
 }
-
+.PencilImage {
+    display: none;
+}
 
 /***********************************/
 /*LOGIN - LOGOUT DISPLAY ATTRIBUTES*/

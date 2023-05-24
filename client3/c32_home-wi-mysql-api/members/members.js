@@ -31,7 +31,7 @@ if ( aTests.match( /test2/ ) ) {
            .catch(( err  ) => console.log( `** ${err.message}` ) );      
                 
   function  onFetch( pJSON ) {
-       var  aHTML    =  fmtMembers( pJSON )
+       var  aHTML    =  s( pJSON )
             console.log( aHTML )   
             } // eof onFetch 
      

@@ -13,6 +13,8 @@
 ##FD formr_server-fns_v1.06.mjs |  45567|  4/13/23 15:31|   653| v1-06.30412.1630
 ##FD formr_server-fns_v1.06.mjs |  45567|  4/13/23 16:31|   653| v1-06.30412.1630
 ##FD formr_server-fns_u1.06.mjs |  46749|  4/13/23 17:00|   665| u1-06.30413.1700
+##FD formr_server-fns_u1.06.mjs |  55801|  5/11/23 15:45|   730| u1-06`30511.1545
+##FD formr_server-fns_u1.06.mjs |  56121|  5/15/23 21:05|   732| u1-06`30515.2105
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
@@ -85,11 +87,12 @@
 # .(30415.02  4/15/23 RAM  9:00p|  Use typeof instead of if (MT) {}
 # .(30415.03  4/15/23 RAM  8:00p|  Add ${aAPI_Host} to sayMsg
 # .(30415.04  4/15/23 RAM 10:00p|  Check if cssjson is present
-# .(30416.01  4/16/23 RAM 10:30a|  Preserve \n in sayMsg 
+# .(30416.01  4/16/23 RAM 10:30a|  Preserve \n in sayMsg
 # .(30416.02  4/16/23 RAM 11:20a|  Use tracrR
 # .(30416.03  4/16/23 RAM  1:55p|  Use __appDir
 # .(30417.03  4/17/23 RAM  1:15p|  Move sayErr to formr_utility-fns.mjs
 # .(30511.02  5/11/23 RAM  3:45p|  Prevent crash if SELECT nothing if no args
+# .(30515.03  5/15/23 RAM  9:05p|  Don't remove // or -- from SQL if preceeded by a space
 
 ##SRCE     +====================+===============================================+
 #*/
@@ -97,14 +100,14 @@
 
    import   mysql            from  'mysql2/promise';
    import { inspect }        from  'util'                                                                   // .(30328.05.3 RAM Add)
-   import   express          from  'express';  
+   import   express          from  'express';
 // import   bodyParser       from  'body-parser';                                                           // .(30424.09.x RAM Use express.json)
    import   cssjson          from  'cssjson';                                                               // .(30402.02.5)
    import   cors             from  'cors';
 // import   fs               from  'fs'
 
    import { getEnv_sync, __dirname, __appDir, traceR, aOS }  from  './formr_utility-fns_u1.06.mjs'          // .(30410.02.1).(30410.03.1 Add setAPI_URL).(30412.02.10).(30416.02.3).(30416.03.3)
-   import { sayErr }                                         from  './formr_utility-fns_u1.06.mjs'          // .(30417.03.3) 
+   import { sayErr }                                         from  './formr_utility-fns_u1.06.mjs'          // .(30417.03.3)
 
    var  bQuiet    =  false    // it's global in this module
        var  aEnv      = '../../.env'
@@ -116,14 +119,14 @@
 
 //  ------  ------------------  =   -------------------------------- ------------------ ------------------+
 
- async function  putData( pDB, aSQL, aDatasetName, pRes ) {                                                                                         // .(30407.03.1 Beg RAM Write function)
+ async function  putData( pDB, aSQL, aDatasetName, pRes ) {                                                 // .(30407.03.1 Beg RAM Write function)
        var  mRecs         =  await putData_( pDB, aSQL, aDatasetName );
-        if (pRes) { sndErr(  pRes, mRecs[1] );
+        if (pRes) { sndErr(  pRes, mRecs[1] );                                                              // .(30515.12.1 RAM What is this for???)
             process.exit()
          } else {
     return  mRecs
             }
-         }; // eof putData                                                                                                                          // .(30407.03.1 End)
+         }; // eof putData                                                                                  // .(30407.03.1 End)
 //  ------  ------------------  =   -------------------------------- ------------------ ------------------+
 
  async function  putData_( pDB, aSQL, aDatasetName ) {                                                                                              // .(30403.05.1 Beg RAM Write function).(30407.03.2)
@@ -149,8 +152,8 @@
        var  mRecs         =  await getData_( pDB, aSQL, aDatasetName );
         if (mRecs[0] == 'error') {
         if (pRes) { sndErr( pRes, mRecs[1] );
-//          process.exit()                                                                                                                          //#.(30511.02.1 RAM Don't abort).30407.03.x RAM I'd rather continue, but we've already sent an error)       
-            return null                                                                                                                             // .(30511.02.2 RAM Return !mRecs)                                                               
+//          process.exit()                                                                                                                          //#.(30511.02.1 RAM Don't abort).30407.03.x RAM I'd rather continue, but we've already sent an error)
+            return null                                                                                                                             // .(30511.02.2 RAM Return !mRecs)
             }                                                                                                                                       //#.(30410.03.2 RAM ?? )
          } else {
     return (mRecs[0] == 'nodata') ? [] : mRecs                                                                                                      // .(30407.03.4 RAM Return [] if no data)
@@ -206,7 +209,7 @@
        var  toJSON     =  cssjson.toJSON;
        var  toCSS      =  cssjson.toCSS;
        var  nSay3      =  process.env.Log_Styles == true                                // .(30417.02.3)
-     
+
        if (!Array.isArray(mStyles)) { aDivID = mStyles }
         if (aDivID) {
        var  pSheet     =  $( `#${aDivID}` )
@@ -217,7 +220,7 @@
             traceR(      "getStyles[2]", "Fetching StyleSheet",        nSay3, aFile  )  //#.(30402.05.4)
        var  aSheet     = (await fetchFile( aFile, false )).text
             traceR(      "getStyles[3]", "Fetched: aSheet",            nSay3, aSheet )  //#.(30402.05.4)
-       if (mStyles.length == 0) { return  aSheet }                                      // .(30420.04.1 RAM Opps.)  
+       if (mStyles.length == 0) { return  aSheet }                                      // .(30420.04.1 RAM Opps.)
        var  pJSON      =  toJSON( aSheet ), pStyles = {}, aCSS = ''                     // .(30415.04.2)
             traceR(      "getStyles[4]", "Convered aSheet into pJSON", nSay3, pJSON  )  //#.(30402.05.4)
 //          pJSON.children['*'].attributes
@@ -227,13 +230,13 @@
 
 //     var  aStyles   =  indexObj( pStyles.children, mStyles )
 //          mStyles.forEach( aStyle => { pStyles[ aStyle ] =  pJSON.children[aStyle].attributes } )
-//          pStyles   =   pJSON 
+//          pStyles   =   pJSON
 
-            mStyles.forEach( aStyle => { 
+            mStyles.forEach( aStyle => {
                 if (pJSON.children[aStyle]) {                                           // .(30420.02.1 RAM Check if style exists)
                     pStyles[ aStyle ] = pJSON.children[aStyle]                          //   .children and .attributes
-                } else {                                                                // .(30420.02.2 Beg) 
-                    traceR(      "getStyles[5]", `** Style, '${aStyle}', not found`, 1 )   
+                } else {                                                                // .(30420.02.2 Beg)
+                    traceR(      "getStyles[5]", `** Style, '${aStyle}', not found`, 1 )
                     }                                                                   // .(30420.02.2 End)
                 } )
             pStyles   = { children: pStyles, attributes: { } }
@@ -260,7 +263,7 @@
 //  ------  ------------------  =   -------------------------------- ------------------ ------------------+
 
   function  saySQL( aSQL, nFill ) {                                                                         // .(30328.04.3 Beg RAM Add)
-       var  nSQL = 'SQL';  aSQL = aSQL.replace( /[\/-]{2}.*/g, '' )                                         // .(30413.01.3 RAM Remove comments: // or -- )
+       var  nSQL = 'SQL';  aSQL = aSQL.replace( / [\/-]{2}.*/g, '' )                                        // .(30413.01.3 RAM Remove comments: // or --).(30515.03.1 RAM Only if prefixed by a space)
         if (aSQL.match( /^ *SQL[0-9]+/)) {
        var  nSQL = aSQL.match( /^ *(SQL[0-9]+)/ )[1]
             aSQL = aSQL.replace( new RegExp( `${nSQL}[ :\n]+` ), '' )
@@ -370,7 +373,7 @@
 
   function  sndJSON( pRes, aJSON, aDatasetName ) {
             pRes.setHeader( 'Content-Type', 'application/json' );
-        if (typeof(aJSON) == 'object') { aJSON = JSON.stringify( aJSON ) }                                  // .(30424.09.x)                                      
+        if (typeof(aJSON) == 'object') { aJSON = JSON.stringify( aJSON ) }                                  // .(30424.09.x)
             pRes.send(  aJSON )
             pRes.end();
         if (aJSON.match( /{ "error": /)) { return }
@@ -380,11 +383,11 @@
 //  ------  ------------------  =   -------------------------------- ------------------ ------------------+
 
   function  chkArgs( pReq, pRes, pValidArgs ) {
-         if (Object.keys( pReq.body).length == 0 && pReq.method != 'GET') {                                 // .(30424.09.x RAM Beg)                      
+         if (Object.keys( pReq.body).length == 0 && pReq.method != 'GET') {                                 // .(30424.09.x RAM Beg)
                           sndErr( pRes, '** Request Body/Query is empty' )
                           sayErr(       '** Request Body/Query is empty\n' )                                // .(30402.05.7)
-    return  null       
-            }                                                                                               // .(30429.09.x End)                       
+    return  null
+            }                                                                                               // .(30429.09.x End)
        var  pArgs_ = { ...pReq.body, ...pReq.query }, mErrArgs = []                                         // .(30403.02.3 RAM pReq.query overrides pReq.body)
        if (!pValidArgs) {
     return  pArgs // pReq.query                                                                             // .(30318.01.1 RAM S.It.B {} ??).(30403.02.4)
@@ -396,7 +399,7 @@
         if (mArgs.length > 0) {
             mErrArgs   =  mArgs.filter( chkArg )
         } else {
-            mErrArgs   =  pValidArgs.required ? [ [ 'Required', 'yes' ] ] : [ ]                             // .(30403.02.5 RAM Are any args required? What if not. fmtSQL must handle it) 
+            mErrArgs   =  pValidArgs.required ? [ [ 'Required', 'yes' ] ] : [ ]                             // .(30403.02.5 RAM Are any args required? What if not. fmtSQL must handle it)
          }  }
         if (mErrArgs.length == 0) {
     return  pArgs                   // pReq.query; all? or nothing; could be {} if no args given                     // .(30403.02.6)
@@ -409,7 +412,7 @@
 
   function  fmtArg( mArg ) {                                                                                // .(30425.01.3 RAM Beg Write fmtArg)
             mArg[1] = `"${mArg[1]}"`
-    return  mArg.join(' = ') 
+    return  mArg.join(' = ')
             }                                                                                               // .(30425.01.3 End)
 
   function  chkArg( mArg ) {
@@ -437,7 +440,7 @@
                           sayMsg( `Handler,   '${aOnRouteFnc ? aOnRouteFnc : 'onRoute'}', executed` );      // .(30331.01.6)
                           pRes.send( aHTML )
         if (typeof(aURI) != 'undefined') {                                                                  // .(30414.03.1).(30415.02.1)
-                          sayMsg( `HTML Page, '${aAPI_Host}${aURI}', sent\n` ) }                            // .(30415.03.1)                
+                          sayMsg( `HTML Page, '${aAPI_Host}${aURI}', sent\n` ) }                            // .(30415.03.1)
 
          }; // eof sndHTML
 //  ------  ------------------  =   -------------------------------- ------------------ ------------------+
@@ -456,12 +459,12 @@
 //          pRes.setHeader( 'Content-Type', 'text/html' );                                                  // .(30424.09.x RAM ??? Should it be json?)
 //     var  aItems     =  mItems ? ( mItems.length > 0 ? `, '${ mItems.join(    ) }'` : "") : ""
        var  aItems     =  mItems ? ( mItems.length > 0 ? `, ${ mItems.join( ', ') }`  : "") : ""; aMsg = aMsg.replace( /[: ]$/, "" )  // .(30511.02.6 RAM ?? Trailing :)
-        if (pRes.req.headers['accept'] == 'application/json') {                                             // .(30424.09.x)      
-                          sndJSON( pRes, { error: `${aMsg}: ${aItems.substring(2)}` } )                 // .(30424.09.x)      
-       } else {                                                                                             // .(30424.09.x)      
+        if (pRes.req.headers['accept'] == 'application/json') {                                             // .(30424.09.x)
+                          sndJSON( pRes, { error: `${aMsg}: ${aItems.substring(2)}` } )                     // .(30424.09.x)
+       } else {                                                                                             // .(30424.09.x)
                           pRes.send(     `<h3>${aMsg}: ${ aItems.substring(2).replace( /""/g, '"' ) }</h3>` )
 //                        sayErr( `${aMsg}\n` )                                                             //#.(30402.05.9 RAM Remove)
-            }                                                                                               // .(30424.09.x)      
+            }                                                                                               // .(30424.09.x)
          }; // eof sndErr
 //  ------  ------------------  =   -------------------------------- ------------------ ------------------+
 /*
@@ -469,7 +472,7 @@
 
         var aTS       =  (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' ).substring(2)
         var aCR        =  aMsg.match( /^[ \n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )          // .(30416.01.1)
-            console.log( `${aCR}${aTS}  ${aMsg}` )  
+            console.log( `${aCR}${aTS}  ${aMsg}` )
 //          console.trace()                                                        // .(30416.01.2)
 
          }; // eof sayErr
@@ -485,7 +488,7 @@
        var  aMsg       = `${ aMethod.toUpperCase() } Route, '${aAPI_Host}${aRoute}`                         // .(30415.03.2)
             aMsg       = `${aMsg}${pReq.args}', recieved`
         } else {
-       var  aMsg       = `${ aMethod.toUpperCase() } Route, '${aRoute}'`                                    // .(30415.03.3 RAM aRoute, set has ${aAPI_Host}) 
+       var  aMsg       = `${ aMethod.toUpperCase() } Route, '${aRoute}'`                                    // .(30415.03.3 RAM aRoute, set has ${aAPI_Host})
             aMsg       =  typeof(aRoute) != 'undefined' ? `${aMsg}', set` : aMethod                         // .(30414.03.1 RAM aMethod == aMsg if aRoute is not defined
             }
         var aTS        = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' ).substring(2)
@@ -511,7 +514,7 @@
             pApp.use( express.urlencoded( { extended: true  } ) )                                            // .(30403.02.2 RAM Needed for form body vars)
 //          pApp.use( express.urlencoded( { extended: false } ) )                                            // .(30424.09.1 RAM Set to false)
             pApp.use( express.json() );                                                                      // .(30424.09.2 RAM Instead of bodyParser.json() )
-            
+
 //          ---------  =  ----------------------------------------------------------
 
        var  aEnv_Dir   =  __appDir; // `${__dirname}/../..`                                                 // .(30322.03.1 Beg RAM Set different var).(30416.03.5)
@@ -587,7 +590,19 @@
         } else {                                                                                            // .(30214.03.12 Beg)
             console.log( `\n    Server is running at: ${ aRemote_Host }${aAPI_Host} -> port:${nPort}` )     // .(30322.03.5)
             }                                                                                               // .(30214.03.12 End)
-            console.log(   `    Server is running in: ${ process.argv[1] }\n` )                             // .(30214.03.10 RAM Display root dir)
+//     var  __filepath =  process.argv[1]                                                                   //#.(30315.01.1)
+       var  __filepath =  new Error().stack.match( /IODD-Server_u.+\.mjs/ )[0]                              // .(30315.01.1 RAM get correct running server file)
+//     var  __filepath =  new Error().stack.match( /C:.+api\/IODD-Server_u.+\.mjs/ )[0]                     //#.(30315.01.2)
+            __filepath = `${__dirname.replace( /assets\/mjs/, "" )}/${__filepath }`                         // .(30315.01.2)
+            console.log(   `    Server is running in: ${__filepath}\n` )                                    // .(30214.03.10 RAM Display root dir).(30315.01.3)
+
+       var  bLocal     =  aAPI_Host == '', aLocation = ''                                                   // .(30315.02.1 RAM Beg Check if running locally)
+        if (aOS == 'windows' && !bLocal) {  aLocation = 'local'  }
+        if (aOS == 'linux'   &&  bLocal) {  aLocation = 'remote' }
+        if (aLocation) {
+            console.log( `*** Server is running in ${aOS}. Should the .env.Host_Location be set to: ${aLocation}?\n`)
+//          process.exit()
+            }                                                                                               // .(30315.02.1 End)
 
          }; // eof start
 //--------  ------------------  =   -------------------------------- ------------------ ------------------+

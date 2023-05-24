@@ -1,0 +1,266 @@
+* {
+  box-sizing: border-box;
+  font-family: var(--GlobalFontFamily);
+  font-size: 14px;
+}
+
+.Section1 {
+  height: 700px; /*was 120px*/
+  width: var(--GlobalMaxWidth);
+  width: 100%;
+  top: 60px;
+  left: 0px;  
+  background: url( '../assets/images/monaco-blue-soft.jpg');
+  /*background-color: whitesmoke;*/
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.Section1Title {
+  padding: 30px 0px 0px 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: whitesmoke;
+  text-shadow: 1px 1px 3px #000000;
+}
+.Section2 {
+  height: 600px;
+  background-color: aliceblue;
+}
+
+.req-fields-notice {
+  display: none;
+  color:blue;
+}
+.form-div {
+  display: none;
+}
+.form-setting {
+  width: 650px;
+  background-color: whitesmoke;
+  box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+  margin: 20px auto;
+  border: solid blue 1px;
+}
+.form-setting h1 {
+  text-align: center;
+  color: #5b6574;
+  font-size: 24px;
+  padding: 20px 0px 20px 0px;
+  border-bottom: 1px solid #ECECEC;
+}
+.new-project {
+  width: 610px;
+  text-align: right;
+}
+.new-project-span a {
+  text-decoration: none;
+  font-size: 22px;
+  color: blue;
+}
+.new-collaborator-span a {
+  text-decoration: none;
+  font-size: 22px;
+  color: black;
+}
+.main-table {
+  width: 85%;
+  margin-left: 50px;
+  /* border: #000000 1px solid;
+  box-shadow: 10px 5px 5px #000000; */
+  padding: 5px 5px 5px 5px;
+  
+}
+.spacer {
+  padding: 20px;
+}
+.spacer hr {
+  margin-left: 35px;
+  width: 90%;
+  border-top: 5px solid blue;
+}
+.owner-title,
+.owner-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: blue;
+  text-align: left;
+  margin-left: 35px;
+}
+.collaborator-title,
+.collaborator-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: black;
+  text-align: left;
+  margin-left: 35px;
+}
+.head-project-name {
+    font-size: 20px;
+    text-decoration: underline;
+    padding: 0px 0px 10px 0px;
+}
+.project-name-primary {
+    font-size: 18px;
+    color: blue;
+    width: 500px;
+    height: 30px;
+    text-align: left;
+    padding: 0px 0px 0px 5px;
+}
+.project-name-secondary {
+    font-size: 18px;
+    color: black;
+    width: 500px;
+    height: 30px;
+    text-align: left;
+    padding: 0px 0px 0px 5px;
+}
+.row-even {
+  background-color: #f5f5f5;
+}
+.row-odd {
+  background-color: #e5e5e5;
+}
+
+#WelcomeProjectInfo {
+  font-size: 18px;
+}
+#projects-form-error {
+  border-top: red 1px solid;
+  border-bottom: red 1px solid;
+  color: red;
+  font-size: 14px;
+  background-color: yellow;
+  padding: 10px 0px 10px 0px;
+  display: none;
+}
+#form-error a {
+  font-size: 14px;
+}
+.Footer {
+  display: block;
+  height: 60px;
+ 
+} 
+.FooterNavList {
+  justify-content: center;
+  padding-left: 0px;
+  margin: 5px;
+  text-align: center;
+}
+.FooterNavListItem  {
+  padding: 10px 0px 10px 0px;
+}
+  .FooterNavListItem a {
+    color: #505050;
+}
+
+
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+/*-----------------------------------------
+The @media MAX-width query properties
+***** IPHONE - Landscape
+/*If Device Width 
+  is >= 441px AND 
+  <= 740px Then...*/
+
+/*=========================================*/
+@media only screen
+and (min-width: 441px)
+and (max-width: 700px) 
+{
+
+  .Section1 {
+    max-width: 700px;
+  }
+  .Section1Title {
+    font-size: 24px;
+    padding: 10px 0px 0px 25px;
+  }
+  /*-----------------------------------*/
+  .form-setting {
+    background-color: whitesmoke;
+    margin: 0px auto;
+  }
+  /*-----------------------------------*/
+  .Footer {
+    display: none;
+  }
+}
+
+
+  /*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+  /*-----------------------------------------
+  The @media MAX-width query properties
+  ***** IPHONE
+  /*If Device Width is <= to 440px Then...*/
+
+  /*=========================================*/
+  @media only screen
+  and (max-width: 440px)
+  {
+
+      .Section1 {
+        max-width: 100vw;
+      }
+
+      /*--------------------------------*/
+
+      .form-setting {
+        width: 370px;
+        background-color: #ECECEC;
+        margin: 0px auto;
+      }
+      .form-setting h1 {
+        font-size: 20px;
+      }
+      .form-setting form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 20px;
+      }
+      .form-setting form label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        background-color: #3274d6;
+        color: #ffffff;
+      }
+      .form-setting form input[type="password"], 
+      .form-setting form input[type="text"] {
+        width: 130px;
+        height: 40px;
+        border: 1px solid #dee0e4;
+        margin-bottom: 20px;
+        padding: 0 15px;
+      }
+      .form-setting form input[type="submit"] {
+        width: 100%;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #3274d6;
+        border: 0;
+        cursor: pointer;
+        font-weight: bold;
+        color: #ffffff;
+        transition: background-color 0.2s;
+      }
+      .form-setting form input[type="submit"]:hover {
+        background-color: #2868c7;
+        transition: background-color 0.2s;
+        /* border: solid blue 1px; */
+      }
+      .member-title {
+        font-size: 16px;
+      }      
+
+      /*--------------------------------*/
+
+      .Footer {
+        display: none;
+      }
+  }
