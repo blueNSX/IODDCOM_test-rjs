@@ -9,6 +9,9 @@
 ##FD      IODD-Server_u1.06.mjs |  35577|  4/25/23 17:04|   598| u1-06`30425.1704
 ##FD      IODD-Server_u1.06.mjs |  35736|  4/28/23 16:21|   598| u1-06`30412.1621
 ##FD      IODD-Server_u1.06.mjs |  36039|  4/28/23 23:20|   618| u1-06`30428.2320
+##FD      IODD-Server_u1.08.mjs |  50025|  5/11/23 16:00|   823| u1-08`30511.1600
+##FD      IODD-Server_u1.08.mjs |  66923|  5/24/23 19:30|  1065| u1-08`30524.1930
+##FD      IODD-Server_u1.08.mjs |  75467|  5/25/23 16:08|  1160| u1-08`30525.1608
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file modifies the Login Button
 ##LIC      .--------------------+----------------------------------------------+
@@ -19,18 +22,22 @@
 #             getTable          |
 #             Root_getRoute     |
 #             Login_getRoute    |
-#             Login_getRoute    |
+#             Login_postRoute   |
 #             Meetings_getRoute |
 #             Members_getRoute  |
 #             Member_postRoute  |                                                       // .(30510.03.1 RAM Add Member_postRoute)
 #             MembersBios_getRoute     |
 #             MembersProjects_getRoute |
+#             Project_getRoute  |                                                       // .(30525.04.1 RAM Add Project_getRoute)
 #             Projects_getRoute |
-#             ProjectsList_getRoute |                                                   // .(30511.03.1 RAM Add ProjectsList_getRoute)
-#             ProjectCollaborators_getRoute |
+#             Project_postRoute |                                                       // .(30516.01.1 RJS Add Project_postRoute)
+#             ProjectsList_getRoute  |                                                  // .(30511.03.1 RAM Add ProjectsList_getRoute)
+#             ProjectCollaborators_getRoute  |
+#             ProjectCollaborators_postRoute |                                          // .(30510.05,1 RAN Add ProjectCollaborators_postRoute)
+#             ProjectBanner_getRoute |                                                  // .(30521.01.1 RJS Add ProjectBanner_getRoute)
+#             User_getRoute     |
 #             User_postRoute    |                                                       // .(30510.02.1 RAM Finish User_postRoute)
 #             Users_getRoute    |
-#             User_getRoute     |
 #             init              |
 #             start             |
 #          onRoute              |
@@ -65,16 +72,30 @@
 # .(30417.02  4/17/23 RAM 10:20a|  Add bLog_HTML and bLog_Styles
 # .(30428.03  4/28/23 RAM 11:20p|  Missing pReq.ip
 # .(30510.02  5/10/23 RAM  9:00p|  Finish User_postRoute
-# .(30510.03  5/10/23 RAM  9:15p|  Members_postRoute
+# .(30510.03  5/10/23 RAM  9:15p|  Add Members_postRoute
+# .(30510.05  5/11/23 RAM  8:00a|  Add ProjectCollaborators_postRoute
 # .(30511.01  5/11/23 RAM  8:15a|  Write fmtForm fns for Root_getRoute
 # .(30511.02  5/11/23 RAM  3:45p|  Prevent crash if SELECT nothing if no args
 # .(30511.03  5/11/23 RAM  4:00p|  Add ProjectsList_getRoute
+# .(30515.03  5/11/23 RAM  7:30a|  Finish Members_postRoute
+# .(30515.04  5/15/23 RAM  8:00a|  Finish ProjectCollaborators_postRoute
+# .(30515.08  5/15/23 RAM  9:30a|  Double up single quotes, if any
+# .(30516.01  5/16/23 RJS  8:00a|  Add Project_postRoute
+# .(30521.01  5/21/23 RJS  3:00p|  Add ProjectBanner_getRoute
+# .(30524.01  5/24/23 RAM  7:30a|  Add insert & delete project_collaborators
+# .(30525.02  5/25/23 RAM  9:30a|  Finish project_collaborators
+# .(30525.03  5/25/23 RAM  9:30a|  Finish project_collaborators
+# .(30525.04  5/25/23 RAM  2:15p|  Add Project_getRoute
+# .(30525.05  5/25/23 RAM  2:30p|  Keep members?id=, rather than mid=
+# .(30525.06  5/25/23 RAM  3:15p|  Use userid, not username in URL
+# .(30525.07  5/25/23 RAM  4:00p|  ToDo: Allow pArgs to be anycase
+# .(30508.08  5/25/23 RAM  4:08p|  ToDo: Use any id in SQL for plural route
 
 ##PRGM     +====================+===============================================+
 ##ID                            |
 ##SRCE     +====================+===============================================+
 #*/
-//  --------------------------  =   -------------------------------- ------------------ ------------------+ --------------------------
+//========================================================================================================= #  ===============================  #
 
     import  express from  'express';
 
@@ -99,7 +120,7 @@
             }
 //--------  ------------------  =   -------------------------------- ------------------ ------------------+
 
-//--------  ------------------  =   -------------------------------- ------------------ ------------------+
+//=========================================================================================================
 
   function  IODD ( ) {
 
@@ -125,12 +146,15 @@ this.setRoutes = function( bQuiet ) {                                           
             this.Member_postRoute( )                // .(30510.03.2)
             this.Members_getRoute( )
             this.MembersBios_getRoute( )
+            this.MembersProjects_getRoute( )
 
+            this.Project_getRoute( )                // .(30525.04.2)
             this.Projects_getRoute( )
             this.ProjectsList_getRoute( )           // .(30511.03.2)
             this.ProjectCollaborators_getRoute( )
-            this.ProjectCollaborators_postRoute( )
-            this.MembersProjects_getRoute( )
+            this.ProjectCollaborators_postRoute( )  // .(30510.05.2)
+            this.ProjectBanner_getRoute()           // .(30521.01.2 RJS Robin added)
+
 //          this.ProjectCollaboratorsLetters_getRoute( '/letters' )
 
             this.User_postRoute( )                  // .(30510.02.2)
@@ -211,73 +235,104 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
             Use any of the following APIs:<br><br>
             <div style="margin-left:40px; font-size:18px; line-height: 25px;">
 
-            <a href="${aAPI_Host}/login?id=90"                       >/login?id=90</a><br>
-            <a href="${aAPI_Host}/login_form?id=90"                  >/login_form?id=90</a><br>
-<!--        <a href="${aAPI_Host}/login_form?form&id=90"             >/login_form?form&id=90</a><br> -->
+            <a href="${aAPI_Host}/login?uid=90"                      >/login?uid=90</a><br>                  <!-- .(30525.03.1 RAM Was: id) -->
+            <a href="${aAPI_Host}/login_form?uid=90"                 >/login_form?uid=90</a><br>             <!-- .(30525.03.2 RAM Was: id) -->
+<!--        <a href="${aAPI_Host}/login_form?form&uid=90"            >/login_form?form&uid=90</a><br> -->
 <!--        <a href="${aAPI_Host}/login_form_post?username=a.b@c&password=" >/login_form_post</a><br> -->
 <!--        <a href="${aAPI_Host}/login_form"                        >/login_form?id=90</a><br> -->
-            <form ${ fmtForm1( 'robin.mattern@gmail.com', 'user', 40, 'login', 'login_form' ) }</form>    <!-- .(30511.01.1) -->
+            <form ${ fmtForm1( 'robin.mattern@gmail.com','email',200, 'login', 'login'        ) }</form>     <!-- .(30511.01.1) -->
             <a href="${aAPI_Host}/meetings"                          >/meetings</a><br>
             <a href="${aAPI_Host}/members"                           >/members</a><br>
-            <form ${ fmtForm2( '', 90, 'Update',                 200, 'member' ) }</form>                 <!-- .(30511.01.2).(30510.02.4 RAM Add POST member).(30510.03.1 RAM Modified) -->
+            <a href="${aAPI_Host}/members?id=90"                     >/members?id=90 # Spcial case</a><br>   <!-- .(30525.05.1 RAM Uses id) -->
+            <form ${ fmtForm2( '', 90, 'Update',                 200, 'member'                ) }</form>     <!-- .(30510.03.3 RAM Add Member_postRoute) -->
             <a href="${aAPI_Host}/members_bios"                      >/members_bios</a><br>
             <a href="${aAPI_Host}/members_projects"                  >/members_projects</a><br>
             <a href="${aAPI_Host}/projects"                          >/projects</a><br>
-            <a href="${aAPI_Host}/projects?Id=149"                   >/projects?Id=149</a><br>
-            <a href="${aAPI_Host}/projects_list?id=90"               >/projects_list?id=90</a><br>        <!-- .(30511.03.3 RAM Add GET projects_list) -->
-            <a href="${aAPI_Host}/project_collaborators"             >/project_collaborators</a><br>
-            <form ${ fmtForm3( 'sam', 'Add',                      60, 'user'   ) }</form>                 <!-- .(30511.01.3).(30510.02.5 RAM Add POST User) -->
-            <a href="${aAPI_Host}/users"                             >/users</a><br>                      <!-- .(30328.03.1 Add Users) -->
-            <a href="${aAPI_Host}/user?id=7"                         >/user?id=7</a><br>                  <!-- .(30405.03.1 End) -->
+            <a href="${aAPI_Host}/project?pid=149"                   >/project?pid=149</a><br>               <!-- .(30525.03.3 RAM Was: id).(30525.04.3) -->
+            <a href="${aAPI_Host}/projects_list?mid=90"              >/projects_list?mid=90</a><br>          <!-- .(30511.03.3 RAM Add GET projects_list).(30525.03.4 RAM Was: id) -->
+            <a href="${aAPI_Host}/project_banner?pid=149"            >/project_banner?pid=149</a><br>        <!-- .(30521.01.3 RJS).(30525.03.5 RAM Was: id) -->
+            <a href="${aAPI_Host}/project_collaborators?pid=149"     >/project_collaborators?pid=149</a><br> <!-- .(30525.03.6 RAM Was: id) -->
+            <form ${ fmtForm5( 'Insert',  99, 90,             30, 30, 'project_collaborators' ) }</form>     <!-- .(30524.01.2 RAM Add Insert project_collaborators) -->
+            <form ${ fmtForm4( 'Delete', 111,                     35, 'project_collaborators' ) }</form>     <!-- .(30524.01.1 RAM Add Delete project_collaborators) -->
+            <a href="${aAPI_Host}/users"                             >/users</a><br>                         <!-- .(30328.03.1 Add Users) -->
+            <a href="${aAPI_Host}/user?uid=7"                        >/user?uid=7</a><br>                    <!-- .(30405.03.1 End).(30525.03.7 RAM Was: id) -->
+            <form ${ fmtForm3( 'new email', 'Add',               200, 'user'                  ) }</form>     <!-- .(30511.01.3).(30510.02.5 RAM Add POST User) -->
             </div> `;
 
     return  aHTML
             }; // eof fmtRoot
 //     ---  ------------------  =   --------------------------------
- 
+
   function  fmtForm1( aValue, aDefault, nWdt, aRoute, aRouteName ) {                                        // .(30511.01.4 RAM Beg)
-            aRouteName = aRouteName ? aRouteName : aRoute  
-        var aHTML = ` method="POST" action="${aAPI_Host}/${aRoute}" style="margin-bottom:-5px;">
-              /${aRouteName}: <input type="text"   name="" value=" ${aDefault}" style="padding:0px; width:${nWdt}px" />
-              <input type="hidden" name="username" value="${aValue}" placeholder=" Email Address" >
-              <input type="hidden" name="password" value="iodd">
-              <input type="submit" value="Submit" style="padding:0px; width:53px" />
-            `   
-     return aHTML         
+       var  aURL  =   aRouteName ? aRouteName : aRoute
+       var  aHTML = ` method="POST" action="${aAPI_Host}/${aURL}"                     style="margin-bottom: -5px;">
+              /${aRoute }` +
+                   `?userid=<input type="text"   name=""         value=" ${aDefault}" style="padding: 0px;  width:${nWdt}px" />
+                            <input type="hidden" name="userid"   value="${aValue}"    placeholder=" Email Address" >
+                            <input type="hidden" name="password" value="iodd">
+                            <input type="submit"   id="form1"    value="Submit"       style="padding: 0px;  width: 54px" />
+            `
+    return  aHTML
             }; // eof fmtForm1                                                                              // .(30511.01.4 End)
 //     ---  ------------------  =   --------------------------------
 
-  function  fmtForm2( aValue, nId, aAction, nWdt, aRoute ) {                                                // .(30511.01.5 RAM Beg).(30515.03.2 RAM Add nId)
-        var aHTML = ` method="POST" action="${aAPI_Host}/${aRoute}" style="margin-bottom:-5px;">
-              /${aRoute} email: <input type="text" name="username" value=" ${aValue}" style="padding:0px; width:${nWdt}px" />
-                            id: <input type="text" name="id"       value=" ${nId}"    style="padding:0px; width:30px">
-              <input type="hidden" name="password" value="iodd">
-              <input type="submit" value="${aAction}" style="padding:0px; width:53px" />
-            `   
-     return aHTML         
+  function  fmtForm2( aValue, mid, aAction, nWdt, aRoute ) {                                                // .(30511.01.5 RAM Beg).(30515.03.1 RAM Add nId)
+       var  aHTML = ` method="POST" action="${aAPI_Host}/${aRoute}"                   style="margin-bottom: -5px;">
+              /${aRoute}` +
+                 `?email=<input type="text"   name="email"    value=" ${aValue}"    style="padding: 0px;  width: ${nWdt}px" />
+                        mid=<input type="text"   name="mid"      value=" ${mid}"       style="padding: 0px;  width: 30px" />
+                            <input type="submit"   id="form2"    value="${aAction}"    style="padding: 0px;  width: 56px" />
+            `
+    return  aHTML
             }; // eof fmtForm2                                                                              // .(30511.01.5 End)
 //     ---  ------------------  =   --------------------------------
 
-  function  fmtForm3( aValue, aAction, nWdt, aRoute ) {                                                     // .(30515.03.2 RAM Beg) 
-        var aHTML = ` method="POST" action="${aAPI_Host}/${aRoute}" style="margin-bottom:-5px;">
-              /${aRoute}: <input type="text" name="username" value=" ${aValue}" style="padding:0px; width:${nWdt}px" />
-              <input type="hidden" name="password" value="iodd">
-              <input type="submit" value="${aAction}" style="padding:0px; width:53px" />
-            `   
-     return aHTML         
-            }; // eof fmtForm2                                                                              // .(30515.03.2 End)
+  function  fmtForm3( aValue, aAction, nWdt, aRoute ) {                                                     // .(30515.03.2 RAM Beg Add fmtForm3)
+       var  aHTML = ` method="POST" action="${aAPI_Host}/${aRoute}"                 style="margin-bottom: -5px;">
+              /${aRoute }` +
+                  `?userid=<input type="text"   name="userid"   value=" ${aValue}"     style="padding: 0px;  width: ${nWdt}px" />
+                           <input type="hidden" name="password" value="iodd">
+                           <input type="submit"   id="form3"    value="${aAction}"       style="padding: 0px;  width: 38px" />
+            `
+    return  aHTML
+            }; // eof fmtForm3                                                                              // .(30515.03.2 End)
+//     ---  ------------------  =   --------------------------------
+
+  function  fmtForm4( aAction, mpid, nWdt, aRoute ) {                                                       // .(30524.01.3 RAM Beg Add fmtForm4)
+       var  aURL  = `${aRoute}?action=${ aAction.toLowerCase().trim() }`
+       var  aHTML = ` method="GET" action="${aAPI_Host}/${aURL}"                    style="margin-bottom: -5px;">
+              /${ aURL  }` + `
+                   &mpid=<input type="text"   name="mpid"     value=" ${mpid}"      style="padding: 0px;  width: ${nWdt}px;" />
+                         <input type="hidden" name="action"   value="${aAction}"                                       />
+                         <input type="submit"   id="form4"    value="${aAction}"    style="padding: 0px;  width: 53px" />
+            `
+     return aHTML
+            }; // eof fmtForm4                                                                              // .(30524.01.3 End)
+//     ---  ------------------  =   --------------------------------
+
+  function  fmtForm5( aAction, pid, mid, nWdt1, nWdt2, aRoute ) {                                                        // .(30524.01.4 RAM Beg Add fmtForm5)
+       var  aURL  = `${aRoute}?action=${ aAction.toLowerCase().trim() }`
+       var  aHTML = ` method="GET" action="${aAPI_Host}/${aURL}"                    style="margin-bottom: -5px;">
+              /${ aURL   }` + `
+                    &pid=<input type="text"   name="pid"      value=" ${pid}"       style="padding: 0px;  width: ${nWdt1}px;" />
+                    &mid=<input type="text"   name="mid"      value=" ${mid}"       style="padding: 0px;  width: ${nWdt2}px;" />
+                         <input type="hidden" name="action"   value="${aAction}"                                       />
+                         <input type="submit"   id="form5"    value="${aAction}"    style="padding: 0px;  width: 50px" />
+            `
+     return aHTML
+            }; // eof fmtForm5                                                                              // .(30524.01.4 End)
 //     ---  ------------------  =   --------------------------------
          }; // eof Root_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
 
 // BEGINNING OF FETCHES (= MENU NAME)
 
-//=login==================================================================
+//=login===============================================================================
 //-(getLogin)----------------------------------------------------------------
 
 this.Login_getRoute  = function( ) {    // Send back JSON                                                   // .(30404.02.2 )
 
-       var  pValidArgs ={ id : /[0-9]+/ }
+       var  pValidArgs ={ uid : /[0-9]+/ }                                                                  // .(30525.03.8 RAM Was: id)
 
             setRoute( pApp, 'get', '/login', Login_getRoute_Handler, pValidArgs, `SELECT * FROM login_view`  )
 
@@ -291,18 +346,19 @@ this.Login_getRoute  = function( ) {    // Send back JSON                       
          }; // eof Login_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
 
+
 //-(getLogin_form)--------------------------------------------------------
 
 this.Login_getForm  = function( ) {     // Send back HTML form with route = '/login?form' if present        // .(30404.02.3)
 
-       var  pValidArgs ={ id : /[0-9]+/ }
+       var  pValidArgs ={ uid : /[0-9]+/ }                                                                  // .(30525.03.9 RAM Was: id)
 
             setRoute( pApp, 'get', '/login_form', Login_getForm_Handler )
 
      async  function Login_getForm_Handler( aMethod, pReq, pRes, aRoute ) {
 
-                         sayMsg(  pReq, aMethod, aRoute )
-       var  pArgs     =  chkArgs( pReq, pRes,  pValidArgs   ); if (!pArgs) { return }
+                               sayMsg(  pReq, aMethod, aRoute )                                             // GET Route, '/login_form
+       var  pArgs     =        chkArgs( pReq, pRes,  pValidArgs   ); if (!pArgs) { return }
         if (pArgs.id > 0) {
        var  aSQL      =  await fmtSQL(  pArgs )
        var  mRecs     =  await getData( pDB,   aSQL, aRoute, pRes );                                        // .(30402.05.13 RAM say aRoute found).(30407.03.3)
@@ -312,7 +368,7 @@ this.Login_getForm  = function( ) {     // Send back HTML form with route = '/lo
 //     var  aHTML     =  fmtHTML( mRecs[0], await fmtStyles( ) )                                            // .(30402.04.1)
 
        var  aHTML     =  await fmtHTML( mRecs[0] )                                                          // .(30403.01.1)
-                         sndHTML( pRes, aHTML, `${aRoute}${pReq.args}`, "Login_getForm_Handler" )           // .(30331.01.1).(30404.02.4)
+                               sndHTML( pRes, aHTML, `${aRoute}${pReq.args}`, "Login_getForm_Handler" )     // .(30331.01.1).(30404.02.4)
 
             } // eof Login_getForm_Handler
 //     ---  ------------------  =   --------------------------------
@@ -329,11 +385,12 @@ this.Login_getForm  = function( ) {     // Send back HTML form with route = '/lo
          }; // eof Login_getForm
 //--------  ------------------  =   -------------------------------- ------------------
 
+
 //-( postLoginRoute )----------------------------------------------------------
 
 this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise send back empty JSON or HTML form with error and route = '/login?form' if present
 
-       var  pValidArgs =  { username : /[a-zA-Z0-9]+/
+       var  pValidArgs =  { userid   : /[a-zA-Z0-9]+/                                                      // .(30525.06.1 RAM Was: username)
                           , password : /[a-zA-Z0-9]{4,}/
                             }
             setRoute( pApp, 'post', '/login', Login_postRoute_Handler )
@@ -376,7 +433,7 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
             fmtSQL1 : function( pArgs ) {                                                                   // .(30404.04.3 RAM Define function differently)
                                                                                                             // .(30405.04.1 RAM PIN vs Password and 'yes' vs 'Y')
     return `SQL1: SELECT * FROM login_view2                                                                 -- .(30413.01.5 RAM Parse SQL with SQLn:)
-                   WHERE Email    = '${ pArgs.username }'
+                   WHERE Email    = '${ pArgs.userid }'                                                     -- .(30525.06.2 RAM Was: username)
                      AND PIN      = '${ pArgs.password }'
                      AND Active   = 'yes'`
             } // eof fmtSQL1
@@ -449,7 +506,7 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
                         , '.login form input[type="password"], .login form input[type="text"]'
                         , '.login form input[type="submit"]', '.login form input[type="submit"]:hover'
                            ]
-       var  aStyleSheet =  `${__appDir}/login/login_u1.03.css`                                              // .(30416.05.1)
+       var  aStyleSheet =  `${__appDir}/login/login.css`                                                    // .(30416.05.1)
        var  aStyles   =  await getStyles( aStyleSheet, mStyles )                                            // .(30416.04.1 RAM was '../../login/login.css')
             aStyles  += `\n#ErrorMsg { display: ${ aErr ? 'block' : 'none' } }`
 //          traceR(     'login_fmtHTML[1]', `aStyles:\n'${aStyles}'`, 1 );
@@ -465,7 +522,7 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
               <!-- font awesome icon -->
               <i class="fas fa-user"></i>
             </label>
-            <input type="text"     name="username" placeholder="eMail"    id="username" value="${pData.Email}" required>
+            <input type="text"     name="userid" placeholder="eMail"    id="username" value="${pData.Email}" required>  <!-- .(30525.06.3) -->
             <label for="password">
               <i class="fas fa-lock"></i>
             </label>
@@ -481,6 +538,7 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
             } // eof Login_fmtHTMLogin                                                                      // .(30330.06.3 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
+
 
 //= meeting s==============================================================
 //-(Meeting Notification)--------------------------------------------------
@@ -506,19 +564,22 @@ this.Meetings_getRoute = function( ) {
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
+
 //= members ===============================================================
 //-(Members Listing)-------------------------------------------------------
 
 this.Members_getRoute = function( ) {
+
      // var aSQL = `SELECT DISTINCT FullName, Address1, Address2, City, State, Zip, LastName FROM iodd.AllData2_view WHERE Active = 'Y' ORDER BY LastName ;`
         var aSQL = `SELECT * FROM members_view`
 
-            setRoute( pApp, 'get', '/members',          JSON_getRoute_Handler, aSQL )
+            setRoute( pApp, 'get', '/members',          JSON_getRoute_Handler, aSQL )                        // .(30525.05.2 RAM Allows pArg.id with pValidArgs)
 //          setRoute( pApp, 'get', '/members',          JSON_getRoute_Handler, `SELECT * FROM members_view` )
 
          }; // eof Members_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
+
 
 //-(postMembers)-----------------------------------------------------------
 //-(Update/Insert Member)--------------------------------------------------
@@ -527,22 +588,22 @@ this.Member_postRoute = function( ) {                                           
 
        var  aNow = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
 
-	   var  pValidArgs = {  memberno         : [ 'MemberNo',     /.[0-9]+/, "required", "must be a number"] // .(30515.03.11 RAM Was id)
-//                       ,  title            : [ 'TitleName',    /.+/, ]                                    // .(30515.03.12 RAM Not in form) 
-                         , 'first-name'      : [ 'FirstName',    /.+/, ]                                    // .(30515.03.13 RAM Was firstname) 
-                         , 'middle-inits'    : [ 'MiddleName',   /.+/, ]                                    // .(30515.03.14 RAM Was middleinits) 
-                         , 'last-name'       : [ 'LastName',     /.+/, ]                                    // .(30515.03.15 RAM Was lastname) 
+       var  pValidArgs = {  mid              : [ 'Id',           /.[0-9]+/, "required", "must be a number"] // .(30515.03.3 RAM Was id).(30525.03.10 RAM Was: MemberNo)
+//                       ,  title            : [ 'TitleName',    /.+/, ]                                    // .(30515.03.4 RAM Not in form)
+                         , 'first-name'      : [ 'FirstName',    /.+/, ]                                    // .(30515.03.5 RAM Was firstname)
+                         , 'middle-inits'    : [ 'MiddleName',   /.+/, ]                                    // .(30515.03.6 RAM Was middleinits)
+                         , 'last-name'       : [ 'LastName',     /.+/, ]                                    // .(30515.03.7 RAM Was lastname)
                          ,  suffix           : [ 'PostName',     /.+/, ]
 //                       ,  role             : [ 'RoleId',       /.+/, ]
-                         ,  email            : [ 'Email',        /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/, "", "must be a valid email address (xx@xx.xx)" ]  // .(30515.03.1 RAM Was: email).(30515.03.16 Was username)
+                         ,  email            : [ 'Email',        /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/, "", "must be a valid email address (xx@xx.xx)" ]  // .(30515.03.8 RAM Was: email).(30515.03.9 Was username)
                          ,  password         : [ 'PIN',          /[a-zA-Z0-9]{4,}/,                         "", "must be at least 4 characters" ]
-//                       ,  active           : [ 'Active',       /.+/, 'Y' ]                                // .(30515.03.2  RAM Set in SQL)
-//                       ,  login            : [ 'IsLoggedIn',   /.+/, 'N' ]                                // .(30515.03.3  RAM Set in SQL)
-//                       ,  login_at         : [ 'LogInDateTime',/.+/,  aNow ]                              // .(30515.03.4  RAM Not in form)   
-//                       ,  ipaddr           : [ 'IPv4Address',  /.+/, ]                                    // .(30515.03.5  RAM Not in form)   
-                         , 'company'         : [ 'Company',      /.+/, ]                                    // .(30515.03.17 RAM Was 'co-name') 
-                         , 'company-address1': [ 'Address1',     /.+/, ]                                    // .(30515.03.18 RAM Was 'co-addr1')
-                         , 'company-address2': [ 'Address2',     /.+/, ]                                    // .(30515.03.19 RAM Was 'co-addr2')
+//                       ,  active           : [ 'Active',       /.+/, 'Y' ]                                // .(30515.03.10 RAM Set in SQL)
+//                       ,  login            : [ 'IsLoggedIn',   /.+/, 'N' ]                                // .(30515.03.11 RAM Set in SQL)
+//                       ,  login_at         : [ 'LogInDateTime',/.+/,  aNow ]                              // .(30515.03.12 RAM Not in form)
+//                       ,  ipaddr           : [ 'IPv4Address',  /.+/, ]                                    // .(30515.03.13 RAM Not in form)
+                         , 'company'         : [ 'Company',      /.+/, ]                                    // .(30515.03.14 RAM Was 'co-name')
+                         , 'company-address1': [ 'Address1',     /.+/, ]                                    // .(30515.03.15 RAM Was 'co-addr1')
+                         , 'company-address2': [ 'Address2',     /.+/, ]                                    // .(30515.03.16 RAM Was 'co-addr2')
                          ,  city             : [ 'City',         /.+/, ]
                          ,  state            : [ 'State',        /.+/, ]
                          ,  zip              : [ 'Zip',          /.[0-9.]{5,10}/, "", "must be a valid zip code (xxxxx[.xxxx])" ]
@@ -550,12 +611,12 @@ this.Member_postRoute = function( ) {                                           
                          ,  phone1           : [ 'Phone1',       /.+/, ]
                          ,  phone2           : [ 'Phone2',       /.+/, ]
 //                       ,  fax              : [ 'Fax',          /.+/, ]
-                         , 'company-url'     : [ 'WebSite',      /.+/, ]                                    // .(30515.03.20 RAM Was website)
-//                       ,  skills           : [ 'Skills',       /.+/, ]                                    // .(30515.03.6  RAM Not in form)   
+                         , 'company-url'     : [ 'WebSite',      /.+/, ]                                    // .(30515.03.17 RAM Was website)
+//                       ,  skills           : [ 'Skills',       /.+/, ]                                    // .(30515.03.18 RAM Not in form)
                          ,  bio              : [ 'Bio',          /.+/, ]
-//                       ,  created_at       : [ 'CreatedAt',    /.+/, aNow ]                               // .(30515.03.7  RAM Set in DB)     
-//                       ,  updated_at       : [ 'UpdatedAt',    /.+/, aNow ]                               // .(30515.03.8  RAM Set in SQL)   
-                         ,  last_updated     : [ 'LastUpdated',  /.+/, aNow ]                               // .(30515.03.9  RAM Set in SQL)
+//                       ,  created_at       : [ 'CreatedAt',    /.+/, aNow ]                               // .(30515.03.19 RAM Set in DB)
+//                       ,  updated_at       : [ 'UpdatedAt',    /.+/, aNow ]                               // .(30515.03.20 RAM Set in SQL)
+                         ,  last_updated     : [ 'LastUpdated',  /.+/, aNow ]                               // .(30515.03.21 RAM Set in SQL)
                             }
 
 //     var  pArgs = chkArgs( pReq, pValidArgs )
@@ -564,33 +625,35 @@ this.Member_postRoute = function( ) {                                           
 
      async  function Member_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
 
-                               sayMsg(  pReq, aMethod, aRoute )
+                               sayMsg(  pReq, aMethod, aRoute )                                             // POST Route, '/member' received
 //     var  pArgs     =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
 //     var  pArgs     =                 pReq.body.map( aFld => pValidArgs[ aFld ][0] )
        var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
 
-       var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );        
-//      if (mRecs1.error)    { sndErr(  pRes, mRecs1.error ); return }                                      //#.(30515.10.1 RAM return no workie, CUZ mRecs1.error is an error) 
-   if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1]    ); return }                                      // .(30515.10.1 RAM Would mRecs1[0].error be better)
+       var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );
+//      if (mRecs1.error)    { sndErr(  pRes, mRecs1.error   ); return }                                    //#.(30515.03.22 RAM return no workie, CUZ mRecs1.error is an error)
+        if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1] ); return }                                    // .(30515.03.22 RAM Would mRecs1[0].error be better)
 
-//     var  mRecs2    =    [ { MemberNo: mRecs1[2].affectedId, Count: mRecs1[2].affectedRows                // .(30515.04.1 RAM Why is affectedId = 0)
-       var  mRecs2    =    [ { MemberNo: pArgs.MemberNo,   Count: mRecs1[2].affectedRows 
-                             , Email: pArgs.Email,        Msg: mRecs1[1] } 
+//     var  mRecs2    =    [ { MemberNo:mRecs1[2].affectedId, Count: mRecs1[2].affectedRows, ... }          // .(30515.03.23 RAM Why is affectedId = 0)
+//     var  mRecs2    =    [ { MemberNo:pArgs.MemberNo,  Count: mRecs1[2].affectedRows, ... }               //#.(30525.03.14)
+       var  mRecs2    =    [ { Id:      pArgs.Id,        Count: mRecs1[2].affectedRows                      // .(30525.03.14 RAM Was: MemberNo. Gotta change it here too)
+                             , Email:   pArgs.Email,       Msg: mRecs1[1] }
                                ]
-       var  mRecs2    =  await getData( pDB,  `SELECT * FROM members WHERE MemberNo = ${mRecs2[0].MemberNo}`, aRoute );        
+       var  mRecs2    =  await getData( pDB,  fmtSQL2( mRecs2[0] ), aRoute );
+
                                sndJSON( pRes, JSON.stringify( { member: mRecs2 } ), aRoute )
-         }; 
+         }; // eof Member_postRoute_Handler
 //     ---  ------------------  =   --------------------------------
 
   function  fmtSQL1_x( pVars ) {
 
-            pVars.Email = pVars.Email ? `${ pVars.Email }`.trim() : ''                  // .(30515.08.1 RAM Email not a string?) 
+            pVars.Email = pVars.Email ? `${ pVars.Email }`.trim() : ''                                      // .(30515.03.24 RAM Email not a string?)
 
        var  aSQL = `UPDATE  members
-                       SET  Email           = '${ pVars.Email           }'   
+                       SET  Email           = '${ pVars.Email           }'
                          ,  PIN             = '${ pVars.PIN             }'
                          ,  LastUpdated     =     STR_TO_DATE( '${ aNow }', '%Y-%m-%d %H:%i:%s' )
-                     WHERE  MemberNo        =  ${ pVars.MemberNo        }
+                     WHERE  Id              =  ${ pVars.Id              }
                    `
     return  aSQL
             }
@@ -598,9 +661,25 @@ this.Member_postRoute = function( ) {                                           
 
   function  fmtSQL1( pVars ) {
 
-            pVars.Bio = pVars.Bio.replace( /'/g, "''" )                                 // .(30515.08.2 RAM Double up single quotes, if any) 
+            pVars.Email   =  pVars.Email ? `${ pVars.Email }`.trim() : ''                                   // .(30515.03.24 RAM Email not a string?)
+//          pVars.Active  = 'Y'
+        if (pVars.Bio) {                                                                                    // .(30525.02.1 RAM Bio may not be present)
+            pVars.Bio     =  pVars.Bio.replace( /'/g, "''" ) }                                              // .(30515.08.2 RAM Double up single quotes, if any).(30525.02.2)
+
+//     var  updateFld     = (aFld) => `, ${aFld} ='${ pVars[ aFld ] }'`.padStart( 25 )
+       var  updateFld     =  function( aFld ) {
+                                   if (aFld == 'Id') { return null }                                        //#.(30525.03.13 RAM Was: MemberNo)
+//                                     aFld =  `, ${aFld} ='${ pVars[ aFld ] }'`.padStart( 25 )             //#.(30525.02.3)
+                                       aFld =  `,  ${aFld.trim()} = '${ pVars[ aFld ].trim() }'`            // .(30525.02.3 RAM padStart: no workie)
+                               return `${''.padEnd(25)}${aFld}`
+                                       }
+       var  aUpdateFlds   =  Object.keys( pVars ).map( updateFld ).filter( aFld => aFld ).join('\n')        // .(30525.02.4 RAM Beg Loop thru only those present)
 
        var  aSQL = `UPDATE  members
+                       SET  ${ aUpdateFlds.substring( 28 ) }
+                     WHERE  Id = ${ pVars.Id.trim( ) }
+                     `                                                                                      // .(30525.02.4 End)
+/*     var  aSQL = `UPDATE  members                                                                         //#.(30525.02.4 Beg RAM Revised)
 --                     SET  TitleName       = '${ pVars.TitleName       }'
                        SET  FirstName       = '${ pVars.FirstName       }'
                          ,  MiddleName      = '${ pVars.MiddleName      }'
@@ -609,8 +688,8 @@ this.Member_postRoute = function( ) {                                           
 --                       ,  RoleId          = '${ pVars.RoleId          }'
                          ,  Email           = '${ pVars.Email           }'
                          ,  PIN             = '${ pVars.PIN             }'
-                         ,  Active          = 'Y'   
---                       ,  IsLoggedIn      = 'N'  
+                         ,  Active          = 'Y'
+--                       ,  IsLoggedIn      = 'N'
 --                       ,  LogInDateTime   = '${ pVars.LogInDateTime   }'
 --                       ,  IPv4Address     = '${ pVars.IPv4Address     }'
                          ,  Company         = '${ pVars.Company         }'
@@ -630,18 +709,27 @@ this.Member_postRoute = function( ) {                                           
                          ,  UpdatedAt       =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
                          ,  LastUpdated     =     STR_TO_DATE( '${ aNow }' , '%Y-%m-%d %H:%i:%s' )
                      WHERE  Id              =  ${ pVars.MemberNo        }
-                   `
+                     `
+*/                                                                                                          //#.(30525.02.4 End)
     return  aSQL
+            }
+//     ---  ------------------  =   --------------------------------
+
+  function  fmtSQL2( pMember ) {
+//  return `SELECT * FROM members WHERE MemberNo = ${pMember.MemberNo}`                                     //#.(30525.03.15)
+    return `SELECT * FROM members WHERE Id  = ${pMember.Id}`                                                // .(30525.03.15 RAM Was: MemberNo )
             }
 //     ---  ------------------  =   --------------------------------
          }; // eof Member_postRoute                                                                         // .(30510.03.4 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
+
 //= members_bios============================================================
 //-(Bios)------------------------------------------------------------------
 
 this.MembersBios_getRoute = function( ) {
+
      // var aSQL = `SELECT DISTINCT FullName, Bio, LastName FROM AllData2_view WHERE Active = 'Y' ORDER BY LastName ;`
         var aSQL = `SELECT * FROM members_bios_view`
 
@@ -651,6 +739,7 @@ this.MembersBios_getRoute = function( ) {
          }; // eof MembersBios_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
+
 
 // =members_projects ======================================================
 //-(Project Listing)-------------------------------------------------------
@@ -663,110 +752,121 @@ this.MembersProjects_getRoute = function( ) {
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
-//= projects ==============================================================
-//-(Project Details)-------------------------------------------------------
 
 //=projects================================================================
 //-(Project Details)-------------------------------------------------------
 
-this.Projects_getRoute = function( ) {
-        var pArgs = {id:/[0-9]+/}                                            // .(30511.03.4 RAM Beg)
+this.Projects_getRoute = function( ) {                                                    // GET Route, '/projects
 
-            setRoute( pApp, 'get', '/projects',         JSON_getRoute_Handler, `SELECT * FROM members_projects_colaboration_view` )
-//          setRoute( pApp, 'get', '/projects',         JSON_getRoute_Handler, `SELECT * FROM projects where Id = ${ pArgs.id || -1 }` )
+
+        var aSQL      =  `SELECT * FROM members_projects_colaboration_view`
+
+            setRoute( pApp, 'get', '/projects',         JSON_getRoute_Handler,  aSQL )
 
          }; // eof Projects_getRoute
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
-//-(postProject)-----------------------------------------------------------
-//-(Update/Insert Project)--------------------------------------------------
+this.Project_getRoute  = function( ) {                                                    // .(30525.04.4 RAM Beg Add: GET Route, '/project
 
-this.Project_postRoute = function( ) {                                                                       // .(30510.03.4 Beg RAM Add Members_postRoute)
+        var pValidArgs = { pid:/[0-9]+/ }                                                 // .(30525.03.11 RAM Was: id)
+        var fmtSQL     =   pArgs => `SELECT * FROM projects where Id = ${ pArgs.pid || -1 }`
 
-  var  aNow = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
+            setRoute( pApp, 'get', '/project',          JSON_getRoute_Handler,  fmtSQL, pValidArgs )
 
-var  pValidArgs = {  pid               : [ 'Id',            /.[0-9]+/, "required", "must be a number"] // .(30515.03.11 RAM Was id)   
-                  ,  projectname       : [ 'ProjectName',          /.+/                                     ]
-                  }
-
-//     var  pArgs = chkArgs( pReq, pValidArgs )
-
-       setRoute( pApp, 'post', '/projects', Project_postRoute_Handler, pValidArgs )
-
-async  function Project_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
-
-                          sayMsg(  pReq, aMethod, aRoute )
-//     var  pArgs     =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
-  var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
-  pArgs.Id = pReq.body.pid
-  pArgs.Name = pReq.body.projectname
-  
-  console.log("pArgs", pArgs)
-  var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );        
-if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1]    ); return }                                      // .(30515.10.1 RAM Would mRecs1[0].error be better)
-                          
-  var  mRecs2    =  await getData( pDB,  `SELECT * FROM projects WHERE ProjectId = ${pArgs.ProjectId}`, aRoute );        
-                          sndJSON( pRes, JSON.stringify( { project: mRecs2 } ), aRoute )
-    }; 
-//     ---  ------------------  =   --------------------------------
-//     ---  ------------------  =   --------------------------------
-
-function  fmtSQL1( pProject ) {
-
-       //pProject.Description = pProject.Description.replace( /'/g, "''" )                                 // .(30515.08.2 RAM Double up single quotes, if any) 
-
-  var  aSQL = `UPDATE  projects
-                  SET  Name            = '${ pProject.Name       }'
-                WHERE  Id              =  ${ pProject.Id         }
-              `
-return  aSQL
-       }
-//     ---  ------------------  =   --------------------------------
-    }; // eof Project_postRoute                                                     // .(30510.03.4 End)
+         }; // eof Project_getRoute                                                       // .(30525.04.4 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
 
+//-(postProject)-----------------------------------------------------------
+//-(Update/Insert Project)--------------------------------------------------
 
+this.Project_postRoute = function( ) {                                                  // .(30516.01.4 Beg RJS Copied Members_postRoute)
 
+       var  aNow       = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
 
+       var  pValidArgs = {  pid               : [ 'Id',            /.[0-9]+/, "required", "must be a number"]
+                         ,  projectname       : [ 'ProjectName',         /.+/                                     ]
+                            }
 
+//     var  pArgs = chkArgs( pReq, pValidArgs )
+
+            setRoute( pApp, 'post', '/projects', Project_postRoute_Handler, pValidArgs )
+
+     async  function Project_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
+
+                          sayMsg(  pReq, aMethod, aRoute )
+
+//     var  pArgs      =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
+       var  pArgs      = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
+
+            pArgs.Id   =  pReq.body.pid
+            pArgs.Name =  pReq.body.projectname
+
+            console.log("pArgs", pArgs)
+       var  mRecs1     =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );
+        if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1]    ); return }
+
+        var  mRecs2    =  await getData( pDB,  `SELECT * FROM projects WHERE ProjectId = ${pArgs.ProjectId}`, aRoute );
+                          sndJSON( pRes, JSON.stringify( { project: mRecs2 } ), aRoute )
+
+            }; // eof Project_postRoute_Handler
+//     ---  ------------------  =   --------------------------------
+
+  function  fmtSQL1( pProject ) {
+
+       var  aSQL       = `UPDATE  projects
+                             SET  Name            = '${ pProject.Name       }'
+                           WHERE  Id              =  ${ pProject.Id         }
+                           `
+    return  aSQL
+            }
+//     ---  ------------------  =   --------------------------------
+    }; // eof Project_postRoute                                                         // .(30516.01.4 End)
+//--------  ------------------  =   -------------------------------- ------------------
+//=====================================================================================
 
 
 //= projects_list ===============================================================
 //-(ProjectDropdown Listing)-------------------------------------------------------
 
-this.ProjectsList_getRoute = function( ) {  
-            var pValidArgs = {id:/[0-9]+/, owner:/primary|secondary/}                                            // .(30511.03.4 RAM Beg)
-            function fmtSQL (pArgs) {
-              var aSQL = `SELECT * FROM iodd.form_projects_dropdown where Owner like '${ pArgs.owner || ''}%' AND MemberId = ${ pArgs.id || -1 }`
-//              var aSQL = `SELECT * FROM iodd.form_projects_dropdown where  ProjectId = ${ pArgs.id || -1 }`
-              return aSQL
+this.ProjectsList_getRoute = function( ) {                                              // .(30511.03.4 Beg Add ProjectsList_getRoute)
+
+       var  aRoute     = '/projects_list'
+       var  pValidArgs = {  mid    : /[0-9]+/
+                         ,  owner  : /primary|secondary/
+                            }
+
+  function  fmtSQL (pArgs) {
+       var  aSQL = `SELECT * FROM iodd.form_projects_dropdown where Owner like  '${ pArgs.owner || ''}%' AND MemberId = ${ pArgs.mid || -1 }`
+//     var  aSQL = `SELECT * FROM iodd.form_projects_dropdown where  ProjectId = ${ pArgs.id || -1 }`
+    return  aSQL
             }
             setRoute( pApp, 'get', '/projects_list',    JSON_getRoute_Handler, pValidArgs, ( pArgs ) => {return fmtSQL(pArgs)})
-              
+
          }; // eof ProjectsList_getRoute                                                // .(30511.03.4 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
+
 //= project (singular) ===============================================================
 //-(Project Banner)-------------------------------------------------------
 
-this.ProjectBanner_getRoute = function( ) {  
-  var pValidArgs = {pid:/[0-9]+/}                                            // .(30511.03.4 RAM Beg)
-  function fmtSQL (pArgs) {
-    var aSQL = `SELECT * FROM iodd.form_projects_dropdown WHERE ProjectId = ${ pArgs.pid || -1 }`
-    return aSQL
-  }
-  setRoute( pApp, 'get', '/project_banner',    JSON_getRoute_Handler, pValidArgs, ( pArgs ) => {return fmtSQL(pArgs)})
-    
-}; // eof ProjectBanner_getRoute                                                // .(30511.03.4 End)
+this.ProjectBanner_getRoute = function( ) {                                             // .(30521.01.3 RJS Beg)
+
+       var  aRoute     =  '/project_banner'
+       var  pValidArgs = { pid:/[0-9]+/ }
+
+  function  fmtSQL (pArgs) {
+    return `SELECT * FROM iodd.form_projects_dropdown WHERE ProjectId = ${ pArgs.pid || -1 }`
+            }
+//          setRoute( pApp, 'get', '/project_banner',    JSON_getRoute_Handler, pValidArgs, ( pArgs ) => {return fmtSQL(pArgs)})
+            setRoute( pApp, 'get',  aRoute,              JSON_getRoute_Handler, pValidArgs, fmtSQL )
+
+         }; // eof ProjectBanner_getRoute                                               // .(30521.01.3 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
-
-
-
 
 
 //= project_collaborators =======================================e===========
@@ -776,18 +876,29 @@ this.ProjectBanner_getRoute = function( ) {
 this.ProjectCollaborators_getRoute = function( ) {
 
        var  aRoute    = '/project_collaborators'
-       var  pValidArgs=  { pid: /[0-9]+/ }
-            pValidArgs [ "action" ] = /(delete|insert)/
-            pValidArgs [ "name" ] = /.{4,}/
+       var  aHandler  = 'ProjectCollaborators_getRoute_Handler'
+
+       var  pValidArgs=  { mpid: /[0-9]+/
+                         , pid:  /[0-9]+/
+                         , mid:  /[0-9]+/ }
+            pValidArgs[ "action" ] = /([Dd]elete|[Ii]nsert)/                            // .(30525.07.1 RAM ToDo: Allow anycase)
+
 //     ---  ------------------  =   --------------------------------
 
        pApp.get( `${aAPI_Host}${aRoute}`, async function( pReq, pRes ) {
 
                                sayMsg(  pReq, 'get', aRoute )
+
        var  pArgs     =        chkArgs( pReq, pRes,  pValidArgs  ); if (!pArgs) { return }
-       var  aSQL      =        chkSQL(  fmtSQL, pArgs )                                                        // .(30403.06.7)
-       var  mRecs     =  await getData( pDB,   aSQL  )                                                         // .(30407.03.8 RAM No Errors??)
-                               sndRecs( mRecs, aSQL, aRoute, pRes, "ProjectCollaborators_getRoute_Handler" )   // .(30407.03.9)
+
+       var  aSQL      =        chkSQL(  fmtSQL, pArgs )                                 // .(30403.06.7)
+   if (aSQL.match(/SELECT/)) {                                                          // .(30524.01.5 RAM )
+       var  mRecs     =  await getData( pDB,   aSQL  )                                  // .(30407.03.8 RAM No Errors??)
+   } else {                                                                             // .(30524.01.6 Beg RAM use putData)
+       var  mRecs     =  await putData( pDB,   aSQL  )
+            mRecs     =  mRecs
+            }                                                                           // .(30524.01.6 End)
+                               sndRecs( mRecs, aSQL, aRoute, pRes, aHandler )           // .(30407.03.9)
 
             } ) // eof pApp.get( /project_collaborators )
 
@@ -795,27 +906,28 @@ this.ProjectCollaborators_getRoute = function( ) {
 //     ---  ------------------  =   --------------------------------
 
   function  fmtSQL( pArgs ) {
-       var  nId       =  pArgs.pid || -1
-       var  aAction   =  pArgs.action || ""
-       if (aAction == "") { 
-       var aSQL       = `
-           SELECT  Distinct *
-           FROM  members_projects_view
- ${ nId ? `WHERE  ProjectId = ${ nId }` : `` } 
-           `
-          }
-          if (aAction == "delete") { 
-            var mpid = pArgs.pid
-            var aSQL      =  `
-          DELETE FROM members_projects WHERE Id = ${mpid}
-        `  
-          }
-          if (aAction == "insert") { 
-            var aSQL      =  `
-          
-          `  
-          }  
-          return  aSQL
+       var  nId       =  pArgs.pid    || -1
+       var  aAction   = (pArgs.action || '').toLowerCase()                            // .(30525.07.2).(30525.07.2 RAM Fix Err: toLowerCase() on undefined) )
+       var  aName     =  pArgs.name   || ""
+
+        if (aAction == "") {                                                            // .(30524.01.7)
+       var  aSQL       = `
+            SELECT  Distinct *
+            FROM  members_projects_view
+  ${ nId ? `WHERE  ProjectId = ${ nId }` : `` }
+            `
+            }                                                                           // .(30524.01.8 Beg RAM Add Insert and Delete)
+        if (aAction == "delete") {
+       var  aSQL      =  `
+            DELETE FROM members_projects WHERE Id = ${ pArgs.mpid }
+            `
+            }
+        if (aAction == "insert") {
+       var  aSQL      =  `
+            INSERT INTO members_projects ( MemberId, ProjectId ) VALUES ( ${pArgs.mid}, ${pArgs.pid} )
+            `
+            }                                                                           // .(30524.01.8 End)
+    return  aSQL
             }; // eof fmtSQL
 //     ---  ------------------  =   --------------------------------
          }; // eof ProjectCollaborators_getRoute
@@ -826,23 +938,24 @@ this.ProjectCollaborators_getRoute = function( ) {
 //-(postProjectCollaborators)-----------------------------------------------------------
 //-(Update/Insert Member)--------------------------------------------------
 
-this.ProjectCollaborators_postRoute = function( ) {                                                                       // .(30510.03.4 Beg RAM Add Members_postRoute)
+this.ProjectCollaborators_postRoute = function( ) {                                     // .(30510.05.3 Beg RAM Add ProjectCollaborators_postRoute )
 
-  var  aNow = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
+       var  aRoute     = '/project_collaborators'
+//     var  aNow       = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
 
-var  pValidArgs = {  pid               : [ 'Id',            /.[0-9]+/, "required", "must be a number"] // .(30515.03.11 RAM Was id)   
-                  ,  mpid              : [ 'Id',            /.[0-9]+/                                     ]
-                  ,  projectname       : [ 'Name',          /.+/                                     ]
-                  ,  projecturl        : [ 'ProjectWeb',    /.+/                                     ]
-                  ,  clientname        : [ 'Client',        /.+/                                     ]
-                  ,  clienturl         : [ 'ClientWeb',     /.+/                                     ]
-                  ,  industry          : [ 'Industry',      /.+/                                     ]
-                  ,  location          : [ 'Location',      /.+/                                     ]
-                  ,  description       : [ 'Description',   /.+/                                     ]
-                  ,  role              : [ 'Role',          /.+/                                     ]
-                  ,  dates             : [ 'Dates',         /.+/                                     ]
-                  ,  duration          : [ 'Duration',      /.+/                                     ]
-                }
+       var  pValidArgs = {  pid         : [ 'Id',            /.[0-9]+/, "required", "must be a number"] // .(30515.04.1 RAM Was: id)
+                         ,  mpid        : [ 'Id',            /.[0-9]+/                                ]
+                         ,  projectname : [ 'Name',          /.+/                                     ]
+                         ,  projecturl  : [ 'ProjectWeb',    /.+/                                     ]
+                         ,  clientname  : [ 'Client',        /.+/                                     ]
+                         ,  clienturl   : [ 'ClientWeb',     /.+/                                     ]
+                         ,  industry    : [ 'Industry',      /.+/                                     ]
+                         ,  location    : [ 'Location',      /.+/                                     ]
+                         ,  description : [ 'Description',   /.+/                                     ]
+                         ,  role        : [ 'Role',          /.+/                                     ]
+                         ,  dates       : [ 'Dates',         /.+/                                     ]
+                         ,  duration    : [ 'Duration',      /.+/                                     ]
+                       }
 
 //     var  pArgs = chkArgs( pReq, pValidArgs )
 
@@ -850,54 +963,61 @@ var  pValidArgs = {  pid               : [ 'Id',            /.[0-9]+/, "required
 
 async  function ProjectCollaborators_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
 
-                          sayMsg(  pReq, aMethod, aRoute )
-//     var  pArgs     =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
-//  var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
-  var  pArgs     = { };   Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ aFld ] = pReq.body[ aFld ] } } )
-  pArgs.Id = pReq.body.pid
-  pArgs.Name = pReq.body.projectname
-  
-  console.log("pArgs", pArgs)
-  var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );        
-if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1]    ); return }                                      // .(30515.10.1 RAM Would mRecs1[0].error be better)
-  var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );                                
-  console.log("mRecs2", mRecs2)
-if (mRecs2[0] == 'error') { sndErr(  pRes, mRecs2[1]    ); return }                                      // .(30515.10.1 RAM Would mRecs1[0].error be better)
-  var  mRecs3    =  await getData( pDB,  `SELECT * FROM members_projects_view WHERE Members_ProjectsId = ${pArgs.mpid}`, aRoute );        
-                          sndJSON( pRes, JSON.stringify( { project_collaborators: mRecs3 } ), aRoute )
-    }; 
-//     ---  ------------------  =   --------------------------------
+                               sayMsg(  pReq, aMethod, aRoute )
+//     var  pArgs      =       chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
+//     var  pArgs      = { };  Object.keys(   pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
+       var  pArgs      = { };  Object.keys(   pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ aFld ] = pReq.body[ aFld ] } } )
+
+            pArgs.Id   =  pReq.body.pid
+            pArgs.Name =  pReq.body.projectname
+
+//          console.log("pArgs", pArgs)
+       var  mRecs1    =  await putData( pDB,  fmtSQL1( pArgs ), aRoute );
+        if (mRecs1[0] == 'error') { sndErr(   pRes, mRecs1[1]    ); return }            // .(30515.04.2 RAM Would mRecs1[0].error be better)
+
+       var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );
+//          console.log("mRecs2", mRecs2)
+        if (mRecs2[0] == 'error') { sndErr(   pRes, mRecs2[1]    ); return }            // .(30515.04.3 RAM Would mRecs1[0].error be better)
+
+//     var  mRecs3    =  await getData( pDB, `SELECT * FROM members_projects_view WHERE Members_ProjectsId = ${pArgs.mpid}`, aRoute );
+       var  mRecs3    =  await getData( pDB,  fmtSQL3( pArgs.mpid ), aRoute );          // .(30515.04.4 RAM Add fmtSQL3())
+
+                               sndJSON( pRes, JSON.stringify( { project_collaborators: mRecs3 } ), aRoute )
+
+         }; // eof ProjectCollaborators_postRoute_Handler
 //     ---  ------------------  =   --------------------------------
 
 function  fmtSQL1( pForm ) {
 
-       //pForm.Description = pForm.Description.replace( /'/g, "''" )                                 // .(30515.08.2 RAM Double up single quotes, if any) 
+       //   pForm.Description = pForm.Description.replace( /'/g, "''" )                 // .(30515.08.2 RAM Double up single quotes, if any)
 
-  var  aSQL = `UPDATE  projects
-                  SET  Name            = '${ pForm.projectname            }'
-                    ,  ProjectWeb      = '${ pForm.projecturl      }'
-              WHERE  Id                =  ${ pForm.pid             }
+       var  aSQL = `UPDATE  projects
+                       SET  Name       = '${ pForm.projectname  }'
+                         ,  ProjectWeb = '${ pForm.projecturl   }'
+                     WHERE  Id         =  ${ pForm.pid          }
               `
-return  aSQL
-       }
+    return  aSQL
+            }
+//          --------------------------------------------------------
 
   function  fmtSQL2( pForm ) {
 
-        //pForm.Description = pForm.Description.replace( /'/g, "''" )                                 // .(30515.08.2 RAM Double up single quotes, if any) 
- 
-   var  aSQL = `UPDATE  members_projects
-                SET  Dates              = '${ pForm.dates           }'              
-                  ,  Role               = '${ pForm.role            }'
-                WHERE  Id               =  ${ pForm.mpid            }
-                   `
-                   return  aSQL
-                   
-                }
-           
+       var  aSQL = `UPDATE  members_projects
+                       SET  Dates      = '${ pForm.dates        }'
+                         ,  Role       = '${ pForm.role         }'
+                     WHERE  Id         =  ${ pForm.mpid         }
+                     `
+    return  aSQL
+            }
+//          --------------------------------------------------------
 
+  function  fmtSQL3( mpid ) {                                                           // .(30515.04.5 RAM Add fmtSQL3())
+    return `SELECT * FROM members_projects_view WHERE Members_ProjectsId = ${mpid}`
+            }
+//          --------------------------------------------------------
 
-       //     ---  ------------------  =   --------------------------------
-    }; // eof Project_postRoute                                                     // .(30510.03.4 End)
+//     ---  ------------------  =   --------------------------------
+         }; // eof Project_postRoute                                                    // .(30510.05.3 End)
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
 
@@ -906,10 +1026,11 @@ return  aSQL
 
 this.User_getRoute = function() {                                                       // .(30510.02.6 RAM Was Users_getOneRoute)
 
-            setRoute( pApp, 'get', '/user',             JSON_getRoute_Handler, ( pArgs ) => {
-//  return `SELECT * FROM users WHERE Id = ${ pArgs.id       } `                        //#.(30511.02.7)
-    return `SELECT * FROM users WHERE Id = ${ pArgs.id || -1 } `                        // .(30511.02.7 RAM SELECT nothing if no args)
-            } );
+            setRoute( pApp, 'get', '/user',             JSON_getRoute_Handler
+//                  return `SELECT * FROM users WHERE Id = ${ pArgs.uid       } `       //#.(30511.02.7)
+            , ( pArgs ) => `SELECT * FROM users WHERE Id = ${ pArgs.uid || -1 } `       // .(30511.02.7 RAM SELECT nothing if no args).(30525.03.12 RAM Was: id)
+            , { uid: /[0-9]+/ }                                                         // .(30508.08.1 RAM Add kludge)
+                       );
          }; // eof Users_getOneRoute
 //--------  ------------------  =   -------------------------------- ------------------
 //=====================================================================================
@@ -920,7 +1041,7 @@ this.User_getRoute = function() {                                               
 this.Users_getRoute = function( ) {                                                     // .(30328.04.1 Beg RAM Add getUsers).(30510.02.7 RAM Was: Users_getAllRoute)
 
             setRoute( pApp, 'get', '/users',            JSON_getRoute_Handler,
-                      `SELECT * FROM users` )
+                      `SELECT * FROM users`, { uid: /[0-9]+/ } )                        // .(30508.08.2 RAM ToDo: Use any id in SQL)
 
          }; // eof Users_getAllRoute                                                    // .(30328.04.1 End)
 //--------  ------------------  =   -------------------------------- ------------------
@@ -932,10 +1053,10 @@ this.Users_getRoute = function( ) {                                             
 this.User_postRoute  =  function( ) {                                                   // .(30328.05.1 Beg RAM Add addUser)
 
        var  aRoute = `/user`
-       var  pValidArgs =  { username : /[a-zA-Z0-9]+/
+       var  pValidArgs =  { userid   : /[a-zA-Z0-9]+/                                   // .(30525.06.4)
                           , password : /[a-zA-Z0-9]{4,}/
                             }
-       var { fmtSQL1, fmtSQL2 } = Login_fmtSQLfns  
+       var { fmtSQL1, fmtSQL2 } = Login_fmtSQLfns
 
             setRoute( pApp, 'post', '/user', User_postRoute_Handler )
 
@@ -945,16 +1066,17 @@ this.User_postRoute  =  function( ) {                                           
 
                                sayMsg(  pReq, aMethod, aRoute )
        var  pArgs     =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
+            pArgs.username = pArgs.userid                                               // .(30525.06.5 RAM Use username, not userid)
 
-       var  mRecs1    =  await getData( pDB,  fmtSQL1( pArgs ), aRoute, pRes );  
-        if (mRecs1.length != 0) {                                                   
+       var  mRecs1    =  await getData( pDB,  fmtSQL1( pArgs ), aRoute, pRes );
+        if (mRecs1.length != 0) {
        var  mMsg      =  [ `*** The user, ${mRecs1[0].UserName }, currently exists` ]
-                               sndJSON( pRes, JSON.stringify( { error: mMsg  } ), 'user' ) 
+                               sndJSON( pRes, JSON.stringify( { error: mMsg  } ), 'user' )
         } else { // no error
-       var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );        
+       var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );
 
-       var  mRecs2    =    [ { Id: mRecs2[2].affectedId, Count: mRecs2[2].affectedRows 
-                             , UserName: pArgs.username, Password: pArgs.password } 
+       var  mRecs2    =    [ { Id: mRecs2[2].affectedId, Count: mRecs2[2].affectedRows
+                             , UserName: pArgs.username, Password: pArgs.password }
                                ]
                                sndJSON( pRes, JSON.stringify( { user: mRecs2 } ), 'user' )
             }
@@ -962,7 +1084,7 @@ this.User_postRoute  =  function( ) {                                           
 
   function  fmtSQL1( pArgs ) {
 
-    return  `SELECT  UserName 
+    return  `SELECT  UserName
                FROM  users
                WHERE UserName = '${ pArgs.username }'
                `
@@ -1031,8 +1153,8 @@ this.start  = function( nPort, aAPI ) {                                         
 
          }; // eof start
 //--------  ------------------  =   -------------------------------- ------------------
-//=====================================================================================
-    }; // eoc IODD
-//  --------------------------------------------------------------------------
+//=========================================================================================================
+     }; // eoc IODD
+//========================================================================================================= #  ===============================  #
 
-export { IODD }
+    export { IODD }
