@@ -1,6 +1,86 @@
 //SELECT STATEMENT FOR Collaborators for a Project
 //SELECT FullName FROM iodd.members_projects_view where projectstyle='secondary' and projectid=44;
 
+
+//-------- Project Name ----------------------------------//
+$('#projectname').bind('blur', projectname_blur_Handler)
+function projectname_blur_Handler (e) {
+    putField('projectname', e.currentTarget.value)
+}
+
+//-------- Project URL ----------------------------------//
+$('#projecturl').bind('blur', projecturl_blur_Handler)
+function projecturl_blur_Handler (e) {
+    var pDiv = $( "#ProjectURLBanner" )
+    var ahref = `<a href="${e.currentTarget.value}">${e.currentTarget.value}</a>`
+    // if (pDiv) {ahref}
+    pDiv.html(ahref)
+    //alert ("You have left the project url field")
+    putField('projecturl', e.currentTarget.value) 
+
+}
+
+//-------- Clients Name ----------------------------------//
+$('#clientname').bind('blur', clientname_blur_Handler)
+function clientname_blur_Handler (e) {
+    putField('clientname', e.currentTarget.value)
+}
+
+//-------- Client URL ----------------------------------//
+$('#clienturl').bind('blur', clienturl_blur_Handler)
+function clienturl_blur_Handler (e) {
+    var pDiv = $( "#ClientURLBanner" )
+    var ahref = `<a href="${e.currentTarget.value}">${e.currentTarget.value}</a>`
+    // if (pDiv) {ahref}
+    pDiv.html(ahref)
+    //alert ("You have left the project url field")
+    putField('clienturl', e.currentTarget.value)
+}
+
+//-------- Industry ----------------------------------//
+$('#industry').bind('blur', industry_blur_Handler)
+function industry_blur_Handler (e) {
+    putField('industry', e.currentTarget.value)
+}
+
+//-------- Location ----------------------------------//
+$('#location').bind('blur', location_blur_Handler)
+function location_blur_Handler (e) {
+    putField('location', e.currentTarget.value)
+}
+
+//-------- Role --------------------------------------//
+$('#role').bind('blur', role_blur_Handler)
+function role_blur_Handler (e) {
+    putField('role', e.currentTarget.value)
+}
+
+//-------- Duration ----------------------------------//
+$('#duration').bind('blur', duration_blur_Handler)
+function duration_blur_Handler (e) {
+    putField('duration', e.currentTarget.value)
+}
+
+//-------- Dates -------------------------------------//
+$('#dates').bind('blur', dates_blur_Handler)
+function dates_blur_Handler (e) {
+    putField('dates', e.currentTarget.value)
+}
+
+//-------- Description -------------------------------------//
+$('#description').bind('blur', description_blur_Handler)
+function description_blur_Handler (e) {
+    putField('description', e.currentTarget.value)
+}
+
+
+
+
+
+function putField (aName, aValue) {
+    console.log (`Save ${ "'" + aValue + "'" } to "${ aName }"`)
+}
+
 // console.log("hello")
  async function onProjectForm_Submit( pEvent ) {
 
@@ -10,7 +90,6 @@
        var  pForm    =  pEvent.currentTarget
        //var  pForm    =  getElementById('ProjectInfoForm')
             window.bQuiet = true 
-
 //    ----  ------------------------------------------------
 
         if (typeof(aAPI_URL) == 'undefined') {
@@ -145,7 +224,15 @@
 //--------  ---------------------------------------------------------
 
   function  setProjectForm( pProject, pForm ) {
-            $( "#ProjectNameBanner" ).html(pProject.ProjectName)
+            var ProjectBanner = pProject.ProjectName
+            $( "#ProjectNameBanner" ).html(ProjectBanner)
+ 
+            var ProjectURLBanner = `<a href=${pProject.ProjectWeb} title='Open Project Web Site' target='_blank'>${pProject.ProjectWeb}</a>`
+            if (pProject.ProjectWeb) { $( "#ProjectURLBanner" ).html(ProjectURLBanner) }
+ 
+            var ClientURLBanner = `<a href=${pProject.ClientWeb} title='Open Client Web Site' target='_blank'>${pProject.ClientWeb}</a>`
+            if (pProject.ClientWeb) { $( "#ClientURLBanner" ).html(ClientURLBanner) }
+
             pForm.pid.value                 =  pProject.ProjectId // .(30515.03.21 RAM Add hidden field)  
             pForm.mpid.value                =  pProject.Members_ProjectsId // .(30515.03.21 RAM Add hidden field)  
             pForm.projectname.value         =  pProject.ProjectName // .(30515.03.21 RAM Add hidden field)  
@@ -154,7 +241,7 @@
             pForm.clienturl.value       	=  pProject.ClientWeb    // .(30515.03.13 RAM Was firstname) 
             pForm.industry.value          	=  pProject.Industry    // .(30515.03.13 RAM Was firstname) 
             pForm.location.value         	=  pProject.Location    // .(30515.03.13 RAM Was firstname) 
-            pForm.projecturl.value       	=  pProject.ProjectWeb    // .(30515.03.13 RAM Was firstname) 
+//          pForm.projecturl.value       	=  pProject.ProjectWeb    // .(30515.03.13 RAM Was firstname) 
             pForm.role.value            	=  pProject.Role    // .(30515.03.13 RAM Was firstname) 
             pForm.duration.value       	    =  pProject.Duration    // .(30515.03.13 RAM Was firstname) 
             pForm.dates.value       	    =  pProject.Dates    // .(30515.03.13 RAM Was firstname) 
@@ -168,24 +255,57 @@
         var mCollaborators = mProjects.filter(pProject => pProject.ProjectStyle == 'Secondary')
         mCollaborators = mCollaborators.sort( function (a,b) { return a.LastName > b.LastName ? 1 : -1} )
         var aHTML = mCollaborators.map( fmtCollaborator ).join('/n')
-        var aNewRow = `
-            <tr>
-            <td align="right"><font color="red"><a href="project-info.html" title="Add Collaborator"><img src="../assets/images/plus.gif"></a></font></td>
-            <td align="right">
-              <input type="text" name="collaboratoradd" placeholder="Add Collaborator" id="collaboratoradd">
-            </td></tr>
-        `
+        var aNewRow1 = `
 
-        pForm.html(aHTML + aNewRow) 
+            <tr>
+                <td></td>
+                <td class="collaborators-title">
+                    <font color="blue"><b>Collaborator(s)</b></font>
+                </td>
+                </tr>
+        `
+        var aNewRow2 = `
+            <tr>
+                <td></td>
+                <td align="right">
+                    <select>
+                        <option Id="0">Add a Collaborator</option>
+                        <option Id="9">Kennett Fussell</option>
+                        <option Id="90">Richard Schinner</option>
+                        <option Id="0">Mickey Mouse</option>
+                        <option Id="0">Donald Duck</option>
+                        <option Id="0">Minnie Mouse</option>
+                        <option Id="0">Olive Oyl</option>
+                        <option Id="0">Pecos Pete</option>
+                        <option Id="0">Donald Trump</option>
+                        <option Id="0">Ronald Reagan</option>
+                        <option Id="0">George Washington</option>
+                        <option Id="0">Abe Lincoln</option>
+                        <option Id="0">Henry Ford</option>
+                        <option Id="0">Enzo Ferrari</option>
+                        <option Id="0">Elon Musk</option>
+                        <option Id="0">Catturd</option>
+                        <option Id="0">Blue NSX</option>
+                    </select>
+                    <!--<input type="text" name="collaboratoradd" placeholder="Add Collaborator" id="collaboratoradd">-->
+                </td>
+            </tr>
+            <tr>
+            <td></td>
+            <td><input id="submit-button" type="submit" value="Submit"></td>
+            </tr>
+            `
+
+        pForm.html(aNewRow1 + aHTML + aNewRow2) 
 
         function fmtCollaborator( pCollaborator, i ) {    
             var rowId = `R${i}`
             var aNameField = `<div id="${rowId}_Name">${pCollaborator.FullName}</div>`
             var aRowBtn    = `<div id="${rowId}_Btn">${pCollaborator.MemberNo}</div>`
             var aRow  = `
-                        <tr>
-                            <td align="right"><font color="red"><a href="project-info.html" title="Remove Collaborator"><img src="../assets/images/dash.gif"></a></font></td>
-                            <td><font color="black">${ aNameField }</font></td>
+                        <tr id="collaborators">
+                            <td align="right"><font color="red"><a href="project-info.html" title="Remove Collaborator"><img src="../assets/images/dash2.gif"></a></font></td>
+                            <td class="collaborators"><font color="black">${ aNameField }</font></td>
                         </tr>
                         `
         return aRow

@@ -136,6 +136,8 @@
 //--------  ---------------------------------------------------------
 
   function  setMemberForm( pMember, pForm ) {
+            var MemberURLBanner = `<a href=${pMember.WebSite} title='Open Company Web Site' target='_blank'>${pMember.WebSite}</a>`
+            if (pMember.WebSite) { $( "#MemberURLBanner" ).html(MemberURLBanner) }
 
             pForm.memberno.value           	=  pMember.MemberNo +'' // .(30515.03.21 RAM Add hidden field)  
             pForm['first-name'].value   	=  pMember.FirstName    // .(30515.03.13 RAM Was firstname) 
