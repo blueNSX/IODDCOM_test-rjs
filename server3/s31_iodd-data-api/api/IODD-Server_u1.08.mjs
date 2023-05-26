@@ -12,6 +12,7 @@
 ##FD      IODD-Server_u1.08.mjs |  50025|  5/11/23 16:00|   823| u1-08`30511.1600
 ##FD      IODD-Server_u1.08.mjs |  66923|  5/24/23 19:30|  1065| u1-08`30524.1930
 ##FD      IODD-Server_u1.08.mjs |  75467|  5/25/23 16:08|  1160| u1-08`30525.1608
+##FD      IODD-Server_u1.08.mjs |  76787|  5/25/23 21:30|  1171| u1-08`30525.2130
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file modifies the Login Button
 ##LIC      .--------------------+----------------------------------------------+
@@ -84,12 +85,14 @@
 # .(30521.01  5/21/23 RJS  3:00p|  Add ProjectBanner_getRoute
 # .(30524.01  5/24/23 RAM  7:30a|  Add insert & delete project_collaborators
 # .(30525.02  5/25/23 RAM  9:30a|  Finish project_collaborators
-# .(30525.03  5/25/23 RAM  9:30a|  Finish project_collaborators
+# .(30525.03  5/25/23 RAM  9:30a|  Change ids to mid, pid, mpid, uid, etc.
 # .(30525.04  5/25/23 RAM  2:15p|  Add Project_getRoute
 # .(30525.05  5/25/23 RAM  2:30p|  Keep members?id=, rather than mid=
 # .(30525.06  5/25/23 RAM  3:15p|  Use userid, not username in URL
 # .(30525.07  5/25/23 RAM  4:00p|  ToDo: Allow pArgs to be anycase
 # .(30508.08  5/25/23 RAM  4:08p|  ToDo: Use any id in SQL for plural route
+# .(30525.06  5/25/23 RAM  9:00p|  But still use username if submitted
+# .(30525.03  5/25/23 RAM  9:30p|  Gotta still accept memberno, not mid
 
 ##PRGM     +====================+===============================================+
 ##ID                            |
@@ -238,7 +241,7 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
             <a href="${aAPI_Host}/login?uid=90"                      >/login?uid=90</a><br>                  <!-- .(30525.03.1 RAM Was: id) -->
             <a href="${aAPI_Host}/login_form?uid=90"                 >/login_form?uid=90</a><br>             <!-- .(30525.03.2 RAM Was: id) -->
 <!--        <a href="${aAPI_Host}/login_form?form&uid=90"            >/login_form?form&uid=90</a><br> -->
-<!--        <a href="${aAPI_Host}/login_form_post?userid=a.b@c&password=" >/login_form_post</a><br> -->      <!-- .(30525.06.1)    
+<!--        <a href="${aAPI_Host}/login_form_post?userid=a.b@c&password=" >/login_form_post</a><br> -->      <!-- .(30525.06.1)
 <!--        <a href="${aAPI_Host}/login_form"                        >/login_form?id=90</a><br> -->
             <form ${ fmtForm1( 'robin.mattern@gmail.com','email',200, 'login', 'login'        ) }</form>     <!-- .(30511.01.1) -->
             <a href="${aAPI_Host}/meetings"                          >/meetings</a><br>
@@ -434,7 +437,7 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
             fmtSQL1 : function( pArgs ) {                                                                   // .(30404.04.3 RAM Define function differently)
 
             pArgs.userid = pArgs.userid ? pArgs.userid : pArgs.username                                     // .(30525.06.12)
-                                                                                                            // .(30405.04.1 RAM PIN vs Password and 'yes' vs 'Y')     
+                                                                                                            // .(30405.04.1 RAM PIN vs Password and 'yes' vs 'Y')
     return `SQL1: SELECT * FROM login_view2                                                                 -- .(30413.01.5 RAM Parse SQL with SQLn:)
                    WHERE Email    = '${ pArgs.userid }'                                                     -- .(30525.06.3 RAM Was: username)
                      AND PIN      = '${ pArgs.password }'
@@ -592,6 +595,7 @@ this.Member_postRoute = function( ) {                                           
        var  aNow = (new Date).toISOString().replace( /T/, ' ').substring( 0, 19 )
 
        var  pValidArgs = {  mid              : [ 'Id',           /.[0-9]+/, "required", "must be a number"] // .(30515.03.3 RAM Was id).(30525.03.10 RAM Was: MemberNo)
+                         ,  memberno         : [ 'Id',           /.[0-9]+/ ]                                // .(30525.03.21 RAM Can't get rid of it yet)
 //                       ,  title            : [ 'TitleName',    /.+/, ]                                    // .(30515.03.4 RAM Not in form)
                          , 'first-name'      : [ 'FirstName',    /.+/, ]                                    // .(30515.03.5 RAM Was firstname)
                          , 'middle-inits'    : [ 'MiddleName',   /.+/, ]                                    // .(30515.03.6 RAM Was middleinits)
@@ -638,8 +642,8 @@ this.Member_postRoute = function( ) {                                           
         if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1] ); return }                                    // .(30515.03.22 RAM Would mRecs1[0].error be better)
 
 //     var  mRecs2    =    [ { MemberNo:mRecs1[2].affectedId, Count: mRecs1[2].affectedRows, ... }          // .(30515.03.23 RAM Why is affectedId = 0)
-//     var  mRecs2    =    [ { MemberNo:pArgs.MemberNo,  Count: mRecs1[2].affectedRows, ... }               //#.(30525.03.14)
-       var  mRecs2    =    [ { Id:      pArgs.Id,        Count: mRecs1[2].affectedRows                      // .(30525.03.14 RAM Was: MemberNo. Gotta change it here too)
+//     var  mRecs2    =    [ { MemberNo:pArgs.MemberNo,  Count: mRecs1[2].affectedRows, ... }               //#.(30525.03.11)
+       var  mRecs2    =    [ { Id:      pArgs.Id,        Count: mRecs1[2].affectedRows                      // .(30525.03.11 RAM Was: MemberNo. Gotta change it here too)
                              , Email:   pArgs.Email,       Msg: mRecs1[1] }
                                ]
        var  mRecs2    =  await getData( pDB,  fmtSQL2( mRecs2[0] ), aRoute );
@@ -671,7 +675,7 @@ this.Member_postRoute = function( ) {                                           
 
 //     var  updateFld     = (aFld) => `, ${aFld} ='${ pVars[ aFld ] }'`.padStart( 25 )
        var  updateFld     =  function( aFld ) {
-                                   if (aFld == 'Id') { return null }                                        //#.(30525.03.13 RAM Was: MemberNo)
+                                   if (aFld == 'Id') { return null }                                        //#.(30525.03.12 RAM Was: MemberNo)
 //                                     aFld =  `, ${aFld} ='${ pVars[ aFld ] }'`.padStart( 25 )             //#.(30525.02.3)
                                        aFld =  `,  ${aFld.trim()} = '${ pVars[ aFld ].trim() }'`            // .(30525.02.3 RAM padStart: no workie)
                                return `${''.padEnd(25)}${aFld}`
@@ -680,7 +684,7 @@ this.Member_postRoute = function( ) {                                           
 
        var  aSQL = `UPDATE  members
                        SET  ${ aUpdateFlds.substring( 28 ) }
-                     WHERE  Id = ${ pVars.Id.trim( ) }
+                     WHERE  Id = ${ pVars.Id.toString().trim( ) }                                           // .(30525.09.2 RAM Added .toString)
                      `                                                                                      // .(30525.02.4 End)
 /*     var  aSQL = `UPDATE  members                                                                         //#.(30525.02.4 Beg RAM Revised)
 --                     SET  TitleName       = '${ pVars.TitleName       }'
@@ -719,8 +723,8 @@ this.Member_postRoute = function( ) {                                           
 //     ---  ------------------  =   --------------------------------
 
   function  fmtSQL2( pMember ) {
-//  return `SELECT * FROM members WHERE MemberNo = ${pMember.MemberNo}`                                     //#.(30525.03.15)
-    return `SELECT * FROM members WHERE Id  = ${pMember.Id}`                                                // .(30525.03.15 RAM Was: MemberNo )
+//  return `SELECT * FROM members WHERE MemberNo = ${pMember.MemberNo}`                                     //#.(30525.03.13)
+    return `SELECT * FROM members WHERE Id  = ${pMember.Id}`                                                // .(30525.03.13 RAM Was: MemberNo )
             }
 //     ---  ------------------  =   --------------------------------
          }; // eof Member_postRoute                                                                         // .(30510.03.4 End)
@@ -772,7 +776,7 @@ this.Projects_getRoute = function( ) {                                          
 
 this.Project_getRoute  = function( ) {                                                    // .(30525.04.4 RAM Beg Add: GET Route, '/project
 
-        var pValidArgs = { pid:/[0-9]+/ }                                                 // .(30525.03.11 RAM Was: id)
+        var pValidArgs = { pid:/[0-9]+/ }                                                 // .(30525.03.14 RAM Was: id)
         var fmtSQL     =   pArgs => `SELECT * FROM projects where Id = ${ pArgs.pid || -1 }`
 
             setRoute( pApp, 'get', '/project',          JSON_getRoute_Handler,  fmtSQL, pValidArgs )
@@ -1031,7 +1035,7 @@ this.User_getRoute = function() {                                               
 
             setRoute( pApp, 'get', '/user',             JSON_getRoute_Handler
 //                  return `SELECT * FROM users WHERE Id = ${ pArgs.uid       } `       //#.(30511.02.7)
-            , ( pArgs ) => `SELECT * FROM users WHERE Id = ${ pArgs.uid || -1 } `       // .(30511.02.7 RAM SELECT nothing if no args).(30525.03.12 RAM Was: id)
+            , ( pArgs ) => `SELECT * FROM users WHERE Id = ${ pArgs.uid || -1 } `       // .(30511.02.7 RAM SELECT nothing if no args).(30525.03.15 RAM Was: id)
             , { uid: /[0-9]+/ }                                                         // .(30508.08.1 RAM Add kludge)
                        );
          }; // eof Users_getOneRoute
