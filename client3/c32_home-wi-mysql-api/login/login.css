@@ -102,7 +102,7 @@
 background-color: #2868c7;
   transition: background-color 0.2s;
 }
-#login-cancel a {
+#login-cancel {
   display: none;
   background-color: #3274d6;
   color: white;

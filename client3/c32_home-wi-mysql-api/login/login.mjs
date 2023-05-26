@@ -388,6 +388,7 @@ var id = 90
 
   function  fmtErrMsg( aMsg ) {                                                         // .(30421.04.5 RAM Beg Write function).(30429.08.2)
             $("#login-error"      ).css( "display", "block" );
+            $("#login-cancel"     ).css( "display", "block" );
             $("#login-button"     ).css( "display", "none"  );
             $("#show-pin"         ).css( "display", "none"  );
             $("#errMsg"           ).html( aMsg )                                        // .(30429.08.3)
