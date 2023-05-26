@@ -109,7 +109,7 @@
         if (process.argv[1].replace( /.*[\\/]/, '' ).match( /IODD.*\.mjs/ )) {
 
        var  bQuiet // =  true        // Override .env Quiet = {true|false}
-       var  nPort     =  3015        // Override .env Server_Port
+       var  nPort     =  3012        // Override .env Server_Port
        var  aAPI   // = 'api15'      // Override .env API_URL                           // .(30408.02.3)
 
        var  pIODD     =  new IODD                                                       // .(30406.02.1 Beg)
@@ -238,7 +238,7 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
             <a href="${aAPI_Host}/login?uid=90"                      >/login?uid=90</a><br>                  <!-- .(30525.03.1 RAM Was: id) -->
             <a href="${aAPI_Host}/login_form?uid=90"                 >/login_form?uid=90</a><br>             <!-- .(30525.03.2 RAM Was: id) -->
 <!--        <a href="${aAPI_Host}/login_form?form&uid=90"            >/login_form?form&uid=90</a><br> -->
-<!--        <a href="${aAPI_Host}/login_form_post?username=a.b@c&password=" >/login_form_post</a><br> -->
+<!--        <a href="${aAPI_Host}/login_form_post?userid=a.b@c&password=" >/login_form_post</a><br> -->      <!-- .(30525.06.1)    
 <!--        <a href="${aAPI_Host}/login_form"                        >/login_form?id=90</a><br> -->
             <form ${ fmtForm1( 'robin.mattern@gmail.com','email',200, 'login', 'login'        ) }</form>     <!-- .(30511.01.1) -->
             <a href="${aAPI_Host}/meetings"                          >/meetings</a><br>
@@ -390,7 +390,8 @@ this.Login_getForm  = function( ) {     // Send back HTML form with route = '/lo
 
 this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise send back empty JSON or HTML form with error and route = '/login?form' if present
 
-       var  pValidArgs =  { userid   : /[a-zA-Z0-9]+/                                                      // .(30525.06.1 RAM Was: username)
+       var  pValidArgs =  { userid   : /[a-zA-Z0-9]+/                                                       // .(30525.06.2  RAM Was: username)
+                          , username : /[a-zA-Z0-9]+/                                                       // .(30525.06.11 RAM Put it back)
                           , password : /[a-zA-Z0-9]{4,}/
                             }
             setRoute( pApp, 'post', '/login', Login_postRoute_Handler )
@@ -431,9 +432,11 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
        var  Login_fmtSQLfns = {                                                                             // .(30404.04.2 RAM Combine fmtSQL functions)
 
             fmtSQL1 : function( pArgs ) {                                                                   // .(30404.04.3 RAM Define function differently)
-                                                                                                            // .(30405.04.1 RAM PIN vs Password and 'yes' vs 'Y')
+
+            pArgs.userid = pArgs.userid ? pArgs.userid : pArgs.username                                     // .(30525.06.12)
+                                                                                                            // .(30405.04.1 RAM PIN vs Password and 'yes' vs 'Y')     
     return `SQL1: SELECT * FROM login_view2                                                                 -- .(30413.01.5 RAM Parse SQL with SQLn:)
-                   WHERE Email    = '${ pArgs.userid }'                                                     -- .(30525.06.2 RAM Was: username)
+                   WHERE Email    = '${ pArgs.userid }'                                                     -- .(30525.06.3 RAM Was: username)
                      AND PIN      = '${ pArgs.password }'
                      AND Active   = 'yes'`
             } // eof fmtSQL1
@@ -522,7 +525,7 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
               <!-- font awesome icon -->
               <i class="fas fa-user"></i>
             </label>
-            <input type="text"     name="userid" placeholder="eMail"    id="username" value="${pData.Email}" required>  <!-- .(30525.06.3) -->
+            <input type="text"     name="userid" placeholder="eMail"      id="userid"   value="${pData.Email}" required>  <!-- .(30525.06.4) -->
             <label for="password">
               <i class="fas fa-lock"></i>
             </label>
@@ -1053,7 +1056,8 @@ this.Users_getRoute = function( ) {                                             
 this.User_postRoute  =  function( ) {                                                   // .(30328.05.1 Beg RAM Add addUser)
 
        var  aRoute = `/user`
-       var  pValidArgs =  { userid   : /[a-zA-Z0-9]+/                                   // .(30525.06.4)
+       var  pValidArgs =  { userid   : /[a-zA-Z0-9]+/                                   // .(30525.06.5)
+                          , username : /[a-zA-Z0-9]+/                                   // .(30525.06.13 RAM Put it back)
                           , password : /[a-zA-Z0-9]{4,}/
                             }
        var { fmtSQL1, fmtSQL2 } = Login_fmtSQLfns
@@ -1066,7 +1070,7 @@ this.User_postRoute  =  function( ) {                                           
 
                                sayMsg(  pReq, aMethod, aRoute )
        var  pArgs     =        chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
-            pArgs.username = pArgs.userid                                               // .(30525.06.5 RAM Use username, not userid)
+//          pArgs.username  =  pArgs.userid                                             // .(30525.06.6 RAM Use username, not userid)
 
        var  mRecs1    =  await getData( pDB,  fmtSQL1( pArgs ), aRoute, pRes );
         if (mRecs1.length != 0) {
@@ -1076,7 +1080,7 @@ this.User_postRoute  =  function( ) {                                           
        var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );
 
        var  mRecs2    =    [ { Id: mRecs2[2].affectedId, Count: mRecs2[2].affectedRows
-                             , UserName: pArgs.username, Password: pArgs.password }
+                             , UserName: pArgs.userid, Password: pArgs.password }       // .(30525.06.7 RAM Use userid, not userid)
                                ]
                                sndJSON( pRes, JSON.stringify( { user: mRecs2 } ), 'user' )
             }
@@ -1084,22 +1088,25 @@ this.User_postRoute  =  function( ) {                                           
 
   function  fmtSQL1( pArgs ) {
 
-    return  `SELECT  UserName
-               FROM  users
-               WHERE UserName = '${ pArgs.username }'
-               `
+            pArgs.userid = pArgs.userid ? pArgs.userid : pArgs.username                 // .(30525.06.14)
+
+   return  `SELECT  UserName
+              FROM  users
+             WHERE  UserName = '${ pArgs.userid }'                                      -- .(30525.06.8)
+            `
             }; // eof fmtSQL1
 //     ---  ------------------  =   --------------------------------
 
   function  fmtSQL2( pArgs ) {
 
        var  aDay = (new Date).toISOString().substring( 0, 10 )
+            pArgs.userid = pArgs.userid ? pArgs.userid : pArgs.username                 // .(30525.06.15)
 
     return  `INSERT INTO  users
                        (  UserName, Email, Password, PasswordDate, Role, Active, MemberNo )
-                VALUES ( '${ pArgs.username }'
-                       , '${ pArgs.username }@gmail.com'
-                       , '${ pArgs.password }'
+                VALUES ( '${ pArgs.userid }'
+                       , '${ pArgs.userid }@gmail.com'                                  -- .(30525.06.9)
+                       , '${ pArgs.password }'                                          -- .(30525.06.10)
                        ,     STR_TO_DATE( '${ aDay }' , '%Y-%m-%d' )
                        ,    'Admin'
                        ,    'Y'
