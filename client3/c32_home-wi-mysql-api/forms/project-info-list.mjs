@@ -35,7 +35,13 @@ var pWelcome = document.getElementById( "WelcomeProjectInfo" )
 function fmtProjectListPrimary (aListId, mProjects) {
     var mProjects2 = mProjects.filter( pProject => pProject.ProjectStyle == "Primary")
 //    var mProjects2 = mProjects.filter( function(pProject) {return pProject.ProjectStyle == "Primary"})
-//    mProjects2 = mProjects2.sort( function ( a, b ) { return a.ProjectName > b.ProjectName ? 1 : -1 } )
+    mProjects2 = mProjects2.sort( SortIt )
+    //mProjects2 = mProjects2.sort( function ( c, d ) { return c.ProjectName > d.ProjectName ? 1 : -1 } )
+    function SortIt (a, b) {
+        var aVal1 = String(a.Sort).padStart(3, "0") + a.ProjectName
+        var aVal2 = String(b.Sort).padStart(3, "0") + b.ProjectName
+        return aVal1 > aVal2 ? 1 : -1 
+    }
     var aList = mProjects2.map(fmtProject).join("")
     var pList = document.getElementById(aListId)
     pList.innerHTML = aList
@@ -69,8 +75,8 @@ function fmtProjectListSecondary (aListId, mProjects) {
     var  aBGColor = i % 2 == 1 ? "#f5f5f5" : "#e5e5e5"
     var aHTML = `
         <tr>
-            <td bgColor="whitesmoke" width="5%" height="30px">
-                <img src="../assets/images/pencilBlank.gif">
+            <td bgColor=${ aBGColor } width="5%" height="30px">
+                <img src="../assets/images/check_red.gif">
             </td>
             <td bgColor=${ aBGColor } class="project-name-secondary">
                 ${ pProject.ProjectName }

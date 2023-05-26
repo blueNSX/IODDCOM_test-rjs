@@ -18,7 +18,7 @@
   border-radius: 8px;
 }
 .Section1 {
-  height: 700px; /*was 120px*/
+  height: 1300px; /*was 120px*/
   width: var(--GlobalMaxWidth);
   width: 100%;
   top: 60px;
@@ -42,7 +42,7 @@
 #ProjectNameBanner {
   font-size: 22px;
   color: blue;
-  text-decoration: underline;
+  /* text-decoration: underline; */
   margin: 10px;
 }
 
@@ -51,6 +51,7 @@
 }
 
 .form-setting {
+  height: 1100px;
   width: 650px;
   background-color: whitesmoke;
   box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
@@ -61,7 +62,7 @@
   text-align: center;
   color: #5b6574;
   font-size: 24px;
-  padding: 20px 0px 20px 0px;
+  padding: 20px 0px 0px 0px;
   border-bottom: 1px solid #ECECEC;
 }
 .form-setting form {
@@ -103,7 +104,6 @@
   transition: background-color 0.2s;
   /* border: solid blue 1px; */
 }
-
 
 /*Creates the EYE toggle*/
 #trigger {
@@ -190,7 +190,12 @@ label {
   width: 480px;
   margin-left:60px;
 }
-
+#ProjectURLBanner a {
+  font-size: 14px;
+  color: blue;
+  background-color: #d1e5f4; /* lightblue */
+  padding: 0px 5px 0px 5px;
+}
 /*======================================*/
 
 .client-url-title {
@@ -211,7 +216,12 @@ label {
   width: 480px;
   margin-left:60px;
 }
-
+#ClientURLBanner a {
+  font-size: 14px;
+  color: blue;
+  background-color: #d1e5f4; /* lightblue */
+  padding: 0px 5px 0px 5px;
+}
 /*======================================*/
 
 .ind-loc-info-title {
@@ -274,16 +284,12 @@ label {
   list-style-type: none;
   width: 600px;
   vertical-align: top;
+  padding-bottom: 30px;
 }
-
 #description {
   width: 480px;
   margin-left: 60px;
   height: 150px;
-}
-
-#submit-button {
-  width: 30%;
 }
 /*======================================*/
 
@@ -292,28 +298,42 @@ label {
 }
 
 /*======================================*/
+.collaborator-div{
+  position: relative;
+  width: 1300px;
+}
 .collaborators-title {
-  display: inline-block;
+  display: flex;
   list-style-type: none;
   scroll-behavior: auto;
   height: 20px;
-  width: 70%;
-  padding: 0px 0px 30px 70px;
+  width: 10%;
+  padding: 0px 0px 0px 0px;
 }
 .collaborators {
+  text-align: left;
   list-style-type: none;
-  height: 150px;
+  height: 20px;
 }
 #collaborators {
   width: 480px;
   text-transform: capitalize;
 }
-#submit-button-collaborator {
-  width: 80px;
+#collaboratoradd {
+  width: 220px;
 }
 /*======================================*/
 
+ .submit-btn-div{
+  position: absolute;
+  margin: 830px 0px 0px 0px;
+}
 
+#submit-button {
+  width: 100%;
+}
+
+/*======================================*/
 
 
 #WelcomeMemberInfo {

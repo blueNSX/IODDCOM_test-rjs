@@ -106,6 +106,7 @@
 
       <div class="form-setting">
         <h1>
+          <a href='project-info-list.html' title="Go Back To Project List"><img src="../assets/images/btnBack.gif"></a>
           Project Information<br>  
           <div id="member-form-error">ERROR!</div>
           <div id="WelcomeMemberInfo"></div>
@@ -124,8 +125,9 @@
               <script>//debugger</script>
           </ul>
 
-          <table class="project-url-title"><tr>
-            <td width="35%"><font color="blue"><b>Project Website (URL)</b></font></td>
+          <table class="project-url-title" width="100%"><tr>
+            <td width="90%"><font color="blue"><b>Project Website (URL)</b></font></td>
+            <td width="0%" align="right"><div id="ProjectURLBanner"></div></td>
           </tr></table>
           <ul class="project-url">
               <li><input type="text" name="projecturl" placeholder="Project Website" id="projecturl"></li>
@@ -139,8 +141,9 @@
             <li><input type="text" name="clientname" placeholder="Client Name" id="clientname"></li>
           </ul><br><br>
 
-          <table class="client-url-title"><tr>
-            <td width="45%"><font color="blue"><b>Client's Website (URL)</b></font></td>
+          <table class="client-url-title" width="100%"><tr>
+            <td width="90%"><font color="blue"><b>Client's Website (URL)</b></font></td>
+            <td width="0%" align="right"><div id="ClientURLBanner"></div></td>
           </tr></table>
           <ul class="client-url">
             <li><input type="text" name="clienturl" placeholder="Client Website" id="clienturl"></li>
@@ -171,18 +174,17 @@
           </tr></table>
           <ul class="description-info">
             <li><textarea name="description" placeholder="Project Description" id="description" title="Please enter the project description here" rows="14" cols="10" wrap="soft" style="padding: 10px 10px 10px 15px;"></textarea></li>
-          </ul><br><br><br><br>
-          <input id="submit-button" type="submit" value="Submit">
-        <br>
-        <div><hr></div>
+          </ul>
+          <div class="collaborators-div">
           <table class="collaborators-title">
-            <tr><td colspan="1"><font color="blue"><b>Collaborator(s)</b></font></td><td><font color="red" style='font-size:x-large;'></td></tr>
             <tbody id="collaboratorsform"></tbody>
           </table>
-          <br><br><br><br><br><br>
+        </div>
+        
+          <!-- <div class="submit-btn-div">
+            <table><tr><td><input id="submit-button" type="submit" value="Submit"></td></tr></table>
+          </div> -->
         </form>
-        <br><br>
-        <div><hr></div>
 
       </div>
     </div>

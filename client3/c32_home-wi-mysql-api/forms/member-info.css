@@ -43,7 +43,6 @@
 .req-fields-notice {
   color:blue;
 }
-
 .form-setting {
   width: 650px;
   background-color: whitesmoke;
@@ -218,6 +217,12 @@ label {
   width: 480px;
   margin-left:60px;
 }
+#MemberURLBanner a {
+  font-size: 14px;
+  color: blue;
+  background-color: #d1e5f4; /* lightblue */
+  padding: 0px 5px 0px 5px;
+}
 #co-addr1 {
   width: 480px;
   margin-left:60px;
@@ -296,8 +301,13 @@ label {
 #bio {
   width: 480px;
   margin-left: 60px;
-  height: 120px;
+  height: 200px;
 }
+
+#submit-button {
+  width: 220px;
+}
+
 
 /*======================================*/
 
