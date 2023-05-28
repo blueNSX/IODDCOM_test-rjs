@@ -2,15 +2,15 @@
 ##=========+====================+================================================+
 ##RD      formr_utility-fns.mjs | Utility fns script
 ##RFILE    +====================+=======+===============+======+=================+
-##FD formr_utility-fns_u1.04.mjs|   9077|  4/10/23  8:24|   121| u1-04.30410.0815
-##FD formr_utility-fns_u1.06.mjs|  10088|  4/12/23 16:35|   145| u1-06.30412.1630
-##FD formr_utility-fns_u1.07.mjs|  23008|  4/29/23 10:50|   317| u1-07.30429.1050
-##FD formr_utility-fns_u1.07.mjs|  23908|  4/29/23 16:07|   328| u1-07.30429.1607
-##FD formr_utility-fns_u1.07.mjs|  24150|  5/02/23 18:08|   330| u1-07.30502.1808
-##FD formr_utility-fns_u1.07.mjs|  24210|  5/03/23 09:45|   332| u1-07.30503.0945
-##FD formr_utility-fns_u1.07.mjs|  24408|  5/05/23 15:33|   335| u1-07.30505.1533
-##FD formr_utility-fns_u1.07.mjs|  26596|  5/08/23 17:15|   349| u1-07.30505.1715
-##FD formr_utility-fns_u1.07.mjs|  27716|  5/08/23 11:52|   356| u1-07.30515.1152
+##FD formr_utility-fns_u1.04.mjs|   9077|  4/10/23  8:24|   121| u1-04`30410.0815
+##FD formr_utility-fns_u1.06.mjs|  10088|  4/12/23 16:35|   145| u1-06`30412.1630
+##FD formr_utility-fns_u1.07.mjs|  23008|  4/29/23 10:50|   317| u1-07`30429.1050
+##FD formr_utility-fns_u1.07.mjs|  23908|  4/29/23 16:07|   328| u1-07`30429.1607
+##FD formr_utility-fns_u1.07.mjs|  24150|  5/02/23 18:08|   330| u1-07`30502.1808
+##FD formr_utility-fns_u1.07.mjs|  24210|  5/03/23 09:45|   332| u1-07`30503.0945
+##FD formr_utility-fns_u1.07.mjs|  24408|  5/05/23 15:33|   335| u1-07`30505.1533
+##FD formr_utility-fns_u1.07.mjs|  27716|  5/08/23 11:52|   356| u1-07`30515.1152
+##FD formr_utility-fns_u1.07.mjs|  29323|  5/27/23 16:45|   380| u1-07`30527.1645
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
@@ -53,6 +53,7 @@
 # .(30507.03  5/07/23 RAM  8:00a|  Create and display __appName
 # .(30508.01  5/08/23 RAM  5:15p|  Set aVIR_DIR from Remote_Host in _env
 # .(30515.01  5/15/23 RAM 11:52a|  Remove conflict & align comments
+# .(30527.04  5/27/23 RAM  4:45p|  Send IP, User and/or page to server
                                 |
 ##SRCE     +====================+===============================================+
 #*/
@@ -85,6 +86,28 @@
                 traceR( `utility-fns[1]        Loaded: '${__thisDir}/${__filename}'`, 1 )                   // .(30429.02.1).(30507.03.4 RAM Show path/name of loaded module).(30507.03.5)
                 traceR( `utility-fns[2]        AppName: '${__appName}'`, 1 )                                // .(30429.02.1).(30507.03.4 RAM Show path/name of loaded module).(30507.03.6)
 
+// ------  ---- -----------------------------------------------------------------------------------------
+
+async function  getHeaders( aWhat, nId, aUser ) {                                                           // .(30527.04.6 RAM Beg Write getHeaders)
+
+           var  pHeaders = { };  aWhat = aWhat ? aWhat : 'json'
+          if (!`${nId}`.match( /^[0-9]+$/ )) { n = aUser; aUser = nId; nId = n }
+
+            if (aWhat.match( /json/ )) {
+                pHeaders[ 'Content-Type' ] = 'application/json'                                             // Send JSON request
+                pHeaders[ 'Accept'       ] = 'application/json'                                             // Expect JSON response back
+                }
+            if (aWhat.match( /ip4/ )) {
+                pHeaders[ 'FormR-UserIP' ] =  await (await fetch( 'https://api.ipify.org/' )).text()        // .(30527.04.7)
+                }
+            if (aWhat.match( /user/ )) {
+                pHeaders[ 'FormR-User'   ] = `${ aUser || ' '} (${ nId ? nId : 0})`                         // .(30527.04.8)
+                }
+            if (aWhat.match( /page/ )) {
+                pHeaders[ 'FormR-Page'   ]  =  window.location.href                                         // .(30527.04.9)
+                }
+        return  pHeaders
+                }                                                                                           // .(30527.04.6 End)
 // ------  ---- -----------------------------------------------------------------------------------------
 
 async function  setAPI_URL( pEnv,  aNum ) {                                                                 // .(30410.03.1 RAM Beg Write it).(30410.04.9 RAM Add pEnv arg)
@@ -170,7 +193,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
         } else {
 //     var  pFS     =  await import( 'fs' )                                                                 //#.(30412.01.4)
        var  aFile   = `${ aPath }.env`
-//     var  pFS     =  await import( 'fs/promises' )                                                       // .(30412.01.2 RAM Get pFS above so this function doesn't have to be a async function)
+//     var  pFS     =  await import( 'fs/promises' )                                                        // .(30412.01.2 RAM Get pFS above so this function doesn't have to be a async function)
 //          console.log( `getEnv[2]             Reading local file, '${aFile}'` )
        if (!pFS.existsSync( aFile )) { sayEnvErr( aFile );
     return  process.env }                                     // .(30319.01.1 RAM Do nothing if .env not found).(30322.03.6 RAM Display error)
@@ -336,8 +359,8 @@ async function postFormDataAsJson( aURL, pFormData ) {
          }; // eof sayErr
 //--------  ------  =  -----------------------------------------------------
 
-async function  traceR( aFLNo, aMsg, nSay, pObj ) {                                     // .(30416.02.1 RAM Beg Write traceR)
-//     var  inspect =  (await import( 'util' )).inspect                                 // .(30416.02.x RAM workie?)
+async function  traceR( aFLNo, aMsg, nSay, pObj ) {                                               // .(30416.02.1 RAM Beg Write traceR)
+//     var  inspect =  (await import( 'util' )).inspect                                           // .(30416.02.x RAM workie?)
        if ((nSay ? nSay : aMsg) >= 1) {
             aMsg    =   typeof(aMsg) == 'number' ?  "" :  aMsg
             aMsg    =   typeof(aMsg) == 'object' ?        inspect( aMsg, { depth: 99 } ) : String( aMsg )
@@ -346,12 +369,12 @@ async function  traceR( aFLNo, aMsg, nSay, pObj ) {                             
         var aSay    =  `${aFLNo.padEnd( 19 )}${aMsg.replace( /\n/g, "\n".padEnd( 20 ) ) }`
             console.log( aSay )
             }
-         }; // eof traceR                                                                                   //#.(30416.02.1 RAM End)
+         }; // eof traceR                                                                         // .(30416.02.1 RAM End)
 //--------  ------  =  -----------------------------------------------------
 
 //----------------------------  =  --------------------------------- ------------------
 
-   export { setAPI_URL, getEnv, getEnv_sync, setHTML, __dirname, __appDir,}             // .(30412.01.6).(30416.02.2).(30416.03.2)
-   export { sayErr, aOS, sayMsg, traceR }                                               // .(30417.03.2).(30428.04.2 RAM Export sayMsg)
-   export { handleFormSubmit }                                                          // .(30429.01.1 RAM Export 'it)
-// export { sayMsg, fmtMsg, fmtErr }                                                    //#.(30428.04.3 RAM Export 'em)
+   export { setAPI_URL, getEnv, getEnv_sync, setHTML, __dirname, __appDir }                       // .(30412.01.6).(30416.02.2).(30416.03.2)
+   export { sayErr, aOS, sayMsg, traceR  }                                                        // .(30417.03.2).(30428.04.2 RAM Export sayMsg)
+   export { handleFormSubmit, getHeaders }                                                        // .(30429.01.1 RAM Export 'it).(30527.04.10)
+// export { sayMsg, fmtMsg, fmtErr }                                                              //#.(30428.04.3 RAM Export 'em)
