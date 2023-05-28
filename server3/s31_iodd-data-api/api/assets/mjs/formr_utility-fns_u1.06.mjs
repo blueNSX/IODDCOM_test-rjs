@@ -4,6 +4,8 @@
 ##RFILE    +====================+=======+===============+======+=================+
 ##FD formr_utility-fns_u1.04.mjs|   9077|  4/10/23  8:24|   121| u1-04.30410.0815
 ##FD formr_utility-fns_u1.06.mjs|  10088|  4/12/23 16:35|   145| u1-06.30412.1630
+##FD formr_utility-fns_u1.06.mjs|  13261|  4/17/23 14:10|   171| u1-06.30417.1410
+##FD formr_utility-fns_u1.06.mjs|  15757|  5/27/23 14:55|   204| u1-06.30527.1455
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
@@ -31,6 +33,8 @@
 # .(30417.03  4/17/23 RAM  1:15p|  Move sayErr to formr_utility-fns.mjs
 # .(30417.04  4/17/23 RAM  1:55p|  Add _env on server warning
 # .(30417.05  4/17/23 RAM  2:10p|  Check pEnv.Host_Location
+# .(30526.03  5/26/23 RAM  1:25p|  No blank line in sayErr on leading space
+# .(30527.04  5/27/23 RAM  2:55p|  Define aLogNo for sayErr
                                 |
 ##SRCE     +====================+===============================================+
 #*/
@@ -38,50 +42,55 @@
 
 //      import  fs           from  'fs'                                                                     //#.(30412.01.7)
 
-           var  inspect         =  function( pObj ) { return String( pObj ) }                               // .(30416.02.x )
+       var  inspect         =  function( pObj ) { return String( pObj ) }                                   // .(30416.02.x )
 
-            if (typeof(process)!= 'undefined') {
-           var  pFS             =  await import( 'fs' )                                                     // .(30412.01.7 RAM Get pFS here  so getEnv_sync   doesn't have to be a async function)
-//         var  pFS             =  await import( 'fs/promises' ) { .. }                                     //#.(30412.01.2 RAM Get pFS above so this function doesn't have to be a async function)
-                }                                                                                           // .(30507.03.1 RAM Clearer)
+        if (typeof(process)!= 'undefined') {
 
-//         var  pUtil           =  await import( 'util' ), inspect = pUtil.inspect                          // .(30416.02.x RAM no workie)
+       var  inspect         = (await import( 'util' )).inspect                                              // .(30416.02.x RAM no workie)
+       var  pFS             =  await import( 'fs' )                                                         // .(30412.01.7 RAM Get pFS here  so getEnv_sync   doesn't have to be a async function)
+//     var  pFS             =  await import( 'fs/promises' ) { .. }                                         //#.(30412.01.2 RAM Get pFS above so this function doesn't have to be a async function)
+            global.aLogNo   = '00000'                                                                       // .(30527.04.1)
+        } else {
+            window.aLogNo   = '00000'                                                                       // .(30527.04.2)
+            }                                                                                               // .(30507.03.1 RAM Clearer)
 
-//         var  pMeta           =  import.meta.resolve()
-           var  aURI            =  import.meta.url; // console.log( "aURI", aURI ); process.exit()
-           var  aOS             = (typeof(process) != 'undefined' ) ? (`${process.argv[1]}`.match( /^[a-z]:/i ) ? 'windows' : 'linux' ) : 'browser'
-           var  __filename      =  aURI.replace( /^.+\//, "" )
-           var  __dirname       =  aURI.replace( `/${__filename}`, '' ).replace( 'file:///', aOS == 'linux' ? '/' : '')  // .(30322.05.1 RAM Put '/' back in)
-           var  __appDir        =  __dirname.replace( /\/assets\/mjs\/*/, "" );  // ${__dirname}/../../`                 // .(30416.03.1 RAM Create __appDir)
-//              }
-//              traceR(  __filename,   "Loaded", 1 )
+//     var  pUtil           =  await import( 'util' ), inspect = pUtil.inspect                              // .(30416.02.x RAM no workie)
+
+//     var  pMeta           =  import.meta.resolve()
+       var  aURI            =  import.meta.url; // console.log( "aURI", aURI ); process.exit()
+       var  aOS             = (typeof(process) != 'undefined' ) ? (`${process.argv[1]}`.match( /^[a-z]:/i ) ? 'windows' : 'linux' ) : 'browser'
+       var  __filename      =  aURI.replace( /^.+\//, "" )
+       var  __dirname       =  aURI.replace( `/${__filename}`, '' ).replace( 'file:///', aOS == 'linux' ? '/' : '')  // .(30322.05.1 RAM Put '/' back in)
+       var  __appDir        =  __dirname.replace( /\/assets\/mjs\/*/, "" );  // ${__dirname}/../../`                 // .(30416.03.1 RAM Create __appDir)
+//          }
+//          traceR(  __filename,   "Loaded", 1 )                                                          */
 
 // ------  ---- -----------------------------------------------------------------------------------------
 
 async function  setAPI_URL( pEnv,  aNum ) {                                                                 // .(30410.03.1 RAM Beg Write it).(30410.04.9 RAM Add pEnv arg)
-//              console.log( `module ${aNum} aAPI_URL: '${ typeof(aAPI_URL) !='undefined' ? aAPI_URL : 'undefined' }'` )
-//              console.log( `setAPI_URL[1]  await getEnv()` )
+//          console.log( `module ${aNum} aAPI_URL: '${ typeof(aAPI_URL) !='undefined' ? aAPI_URL : 'undefined' }'` )
+//          console.log( `setAPI_URL[1]  await getEnv()` )
 
-           if (!pEnv) {                                                                                     // .(30412.01.1)
-           var  pEnv     =  await  getEnv(); if (!pEnv) { return }  // this await causes Page Reload error
-                }                                                                                           // .(30412.01.1)
-            if (pEnv.Host_Location) {                                                                       // .(30417.05.1 RAM Check pEnv.Host_Location)       
-//         var  aAPI_URL = `${pEnv.Local_Host}:${pEnv.Server_Port}`
+       if (!pEnv) {                                                                                         // .(30412.01.1)
+       var  pEnv     =  await  getEnv(); if (!pEnv) { return }  // this await causes Page Reload error
+            }                                                                                               // .(30412.01.1)
+        if (pEnv.Host_Location) {                                                                           // .(30417.05.1 RAM Check pEnv.Host_Location)
+//     var  aAPI_URL = `${pEnv.Local_Host}:${pEnv.Server_Port}`
 
-           var  aAPI_URL = `${pEnv.Host_Location == 'remote'
-                         ?    pEnv.API_URL
-                         : `${pEnv.Local_Host}:${pEnv.Server_Port}` }`
+       var  aAPI_URL = `${pEnv.Host_Location == 'remote'
+                     ?    pEnv.API_URL
+                     : `${pEnv.Local_Host}:${pEnv.Server_Port}` }`
 
-            if (typeof(window) != 'undefined') {
-                window.aAPI_URL = aAPI_URL
-                window.setHTML  = setHTML
-            } else {
-                global.aAPI_URL = aAPI_URL
-                global.setHTML  = setHTML
-            }   }                                                                                          // .(30417.05.2)
-//              console.log( `module ${aNum} aAPI_URL: '${ typeof(aAPI_URL) !='undefined' ? aAPI_URL : 'undefined' }'` )
-                console.log( `setAPI_URL[3]  aAPI_URL: '${ typeof(aAPI_URL) !='undefined' ? aAPI_URL : 'undefined' }'` )
-           }; // eof setAPI_URL                                                                              // .(30410.03.1 RAM End)
+        if (typeof(window) != 'undefined') {
+            window.aAPI_URL = aAPI_URL
+            window.setHTML  = setHTML
+        } else {
+            global.aAPI_URL = aAPI_URL
+            global.setHTML  = setHTML
+        }   }                                                                                              // .(30417.05.2)
+//          console.log( `module ${aNum} aAPI_URL: '${ typeof(aAPI_URL) !='undefined' ? aAPI_URL : 'undefined' }'` )
+            console.log( `setAPI_URL[3]  aAPI_URL: '${ typeof(aAPI_URL) !='undefined' ? aAPI_URL : 'undefined' }'` )
+         }; // eof setAPI_URL                                                                              // .(30410.03.1 RAM End)
 //--------  ------  =  -----------------------------------------------------
 
 //       function getEnv( aFile, bNewOnly ) {
@@ -120,7 +129,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
         } else {
 //     var  pFS     =  await import( 'fs' )                                                                 //#.(30412.01.4)
        var  aFile   = `${ aPath }.env`
-//     var  pFS     =  await import( 'fs/promises' )                                                       // .(30412.01.2 RAM Get pFS above so this function doesn't have to be a async function)
+//     var  pFS     =  await import( 'fs/promises' )                                                        // .(30412.01.2 RAM Get pFS above so this function doesn't have to be a async function)
 //          console.log( `getEnv[2]             Reading local file, '${aFile}'` )
        if (!pFS.existsSync( aFile )) { sayEnvErr( aFile );
     return  process.env }                                     // .(30319.01.1 RAM Do nothing if .env not found).(30322.03.6 RAM Display error)
@@ -135,8 +144,8 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
 
        var  mVars   =  aEnvText.split(/[\r\n]/), pVars = { }
             mVars.forEach( aVar => { if (aVar.replace( /^ +/, "" ) > "" && aVar.match( /^ *#/ ) == null ) {
-       var  aKey    =  aVar.replace( /=.*/,  '' ).replace( /[ '"]/g,  '' );                                 // .(30320.05.1 RAM No Quotes or spaces)
-       var  aVal    =  aVar.replace( /.+?=/, '' ).replace( /^[ '"]*/, '' ).replace( /[ '"]*$/, '' );        // .(30320.05.1 RAM No leading Quotes or spaces)
+       var  aKey    =  aVar.replace( /=.*/,    '' ).replace( /[ '"]/g,  '' );                               // .(30320.05.1 RAM No Quotes or spaces)
+       var  aVal    =  aVar.replace( /.+?=/,   '' ).replace( /^[ '"]*/, '' ).replace( /[ '"]*$/, '' );      // .(30320.05.1 RAM No leading Quotes or spaces)
             aVal    =  aVal.replace( / *#.*$/, '' ).replace( /'$/, '' )                                     // .(30412.03.1 RAM Remove trailing #s)
        var  bNum    =  aVal.match( /^ *([0-9]+|true|false|null|undefined) *$/i ) != null                    // .(30322.06.3 RAM Add null and undefined)
             pVars[aKey] = bNum ? (aVal.match(  /false|null|undefined/i ) ? false : (aVal.match( /true/i ) ? true : aVal * 1 )) : aVal } } )   // .(30322.06.4)
@@ -159,22 +168,24 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
             }
           } // eof sayEnvErr                                                                                // .(30328.01.1 End)
 //     ---  ------  =  ---------------------------------------------
-//       }; // eof getEnv                                                                                   //#.(30222.01.3 RAM End).(30412.01.5)
+//       }; // eof sayEnvErr                                                                                //#.(30222.01.3 RAM End).(30412.01.5)
 //--------  ------  =  -----------------------------------------------------
 
-function  sayErr( aMsg ) {                                                                                  // .(30417.03.1 RAM Move to here)                 
-     var aTS       =  (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' ).substring(2)
-     var aCR        =  aMsg.match( /^[ \n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )             // .(30416.01.1)
-         console.log( `${aCR}${aTS}  ${aMsg}` )  
-//          console.trace()                                                        // .(30416.01.2)
+  function  sayErr( aMsg ) {                                                                                // .(30417.03.1 RAM Move to here)
+       var  aTS  = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' )
+            aTS  =`${aLogNo} ${ aTS.substring(9) }`                                                         // .(30527.04.3)
+
+//     var  aCR  =  aMsg.match( /^[ \n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )                //#.(30416.01.1).(30526.03.1 RAM sayErr No blank line on leading space)
+       var  aCR  =  aMsg.match( /^[\n]+/  ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )                // .(30416.01.1).(30526.01.23 RAM Don't check for leading sp)
+            console.log( `${aCR}${aTS}  ${aMsg}` )
+//          console.trace()                                                                                 // .(30416.01.2)
       }; // eof sayErr
 //--------  ------  =  -----------------------------------------------------
 
-async function  traceR( aFLNo, aMsg, nSay, pObj ) {                                                         // .(30416.02.1 RAM Beg Write traceR)
-       var  inspect =  (await import( 'util' )).inspect                                                     // .(30416.02.x RAM no workie)
-            aMsg  = typeof(aMsg) == 'object' ?        inspect( aMsg, { depth: 99 } ) : String( aMsg ) 
-            aMsg += typeof(pObj) == 'object' ? `:\n${ inspect( pObj, { depth: 99 } ) }` : '' 
-            aMsg += typeof(pObj) == 'string' ? `:\n'${ pObj }'` : ( typeof(pObj) != 'object' ? ( pObj ? pObj : '' ) : '' ) 
+  function  traceR( aFLNo, aMsg, nSay, pObj ) {                                                             // .(30416.02.1 RAM Beg Write traceR)
+            aMsg  = typeof(aMsg) == 'object' ?        inspect( aMsg, { depth: 99 } ) : String( aMsg )
+            aMsg += typeof(pObj) == 'object' ? `:\n${ inspect( pObj, { depth: 99 } ) }` : ''
+            aMsg += typeof(pObj) == 'string' ? `:\n'${ pObj }'` : ( typeof(pObj) != 'object' ? ( pObj ? pObj : '' ) : '' )
         if (nSay >= 1) { console.log( `${aFLNo.padEnd( 19 )}${aMsg.replace( /\n/g, "\n".padEnd( 20 ) ) }` ) }
          }; // eof traceR                                                                                   //#.(30416.02.1 RAM End)
 //--------  ------  =  -----------------------------------------------------
@@ -187,7 +198,7 @@ async function  traceR( aFLNo, aMsg, nSay, pObj ) {                             
        var  pDiv      =  $( `#${aDivID}` )
             pDiv.html(   aHTML )
 //          sayMsg(     `setHTML[2]     Included '${aFile}'`, nSay2)
-            }                                                           // .(30401.02.1 End)
+            }                                                                                               // .(30401.02.1 End)
 
-export { setAPI_URL, getEnv, getEnv_sync, setHTML, __dirname, __appDir }             // .(30412.01.6).(30416.02.2).(30416.03.2)
-export { sayErr, aOS, traceR }                                                       // .(30417.03.2)
+export { setAPI_URL, getEnv, getEnv_sync, setHTML, __dirname, __appDir }                                    // .(30412.01.6).(30416.02.2).(30416.03.2)
+export { sayErr, aOS, traceR }                                                                              // .(30417.03.2)
