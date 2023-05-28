@@ -15,34 +15,37 @@
 ##FD formr_server-fns_u1.06.mjs |  46749|  4/13/23 17:00|   665| u1-06.30413.1700
 ##FD formr_server-fns_u1.06.mjs |  55801|  5/11/23 15:45|   730| u1-06`30511.1545
 ##FD formr_server-fns_u1.06.mjs |  56121|  5/15/23 21:05|   732| u1-06`30515.2105
+##FD formr_server-fns_u1.06.mjs |  65820|  5/27/23 19:00|   813| u1-06`30527.1900
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
 #           Copyright (c) 2023 8020Data-formR * Released under
 #           MIT License: http://www.opensource.org/licenses/mit-license.php
 ##FNCS     .--------------------+----------------------------------------------+
-#           putData                                                                 // .(30403.05.0)
+#           putData                                                                     // .(30403.05.0)
 #           getData
-#           getHTML                                                                 // .(30401.02.0)
-#           getStyle                                                                // .(30402.01.0)
-#           getJSON                                                                 // .(30402.01.0)
+#           getHTML                                                                     // .(30401.02.0)
+#           getStyle                                                                    // .(30402.01.0)
+#           getJSON                                                                     // .(30402.01.0)
 #           saySQL
 #           setRoute
 #           chkSQL              | return aSQL from aStr or fmtSQL with WHERE id = pArgs.id if present
 #           sndRecs
-#           sndFile                                                                 // .(30403.04.0)
+#           sndFile                                                                     // .(30403.04.0)
 #           fmtJSON
 #           sndJSON
+#           getIPAddr           |                                                       // .(30526.02.0)
 #           chkArgs
 #           chkArg
-#           chkSQL                                                                  // .(30403.06.0)
+#           chkSQL                                                                      // .(30403.06.0)
 #           fmtArgs
 #           sndHTML
 #           setErr
 #           sndErr
 #           sayErr
+#           logIP                                                                       // .(30526.02.0)
 #           sayMsg
-#           indexObj                                                                 // .(30402.03.0)
+#           indexObj                                                                    // .(30402.03.0)
 #           init
 #           setVar2
 #           setVar1
@@ -93,31 +96,40 @@
 # .(30417.03  4/17/23 RAM  1:15p|  Move sayErr to formr_utility-fns.mjs
 # .(30511.02  5/11/23 RAM  3:45p|  Prevent crash if SELECT nothing if no args
 # .(30515.03  5/15/23 RAM  9:05p|  Don't remove // or -- from SQL if preceeded by a space
+# .(30526.01  5/26/12 RAM  9:00a|  Adjust log spacing
+# .(30526.02  5/26/12 RAM  1:15p|  Add getIPAddr and Display in logIP
+# .(30526.03  5/26/12 RAM  3:30p|  Fix formatting of aRecords
+# .(30527.02  5/27/12 RAM 10:00a|  Add fmtFld4SQL and fix saySQL
+# .(30527.03  5/27/12 RAM 11:22a|  Return 'error' if 0 records deleted
+# .(30527.04  5/27/12 RAM 12:48p|  Add IP and aLogNo Session number to sayMsg
+# .(30526.02  5/27/12 RAM  7:00p|  Get Page and User too for sayMsg log
 
-##SRCE     +====================+===============================================+
+##SRCE =========================+===============================================+========================== #  ===============================  #
 #*/
-//  --------------------------  =   -------------------------------- ------------------ ------------------+ --------------------------
+//  ----------------------------|  -------------------------------- ------------------- ------------------+ --------------------------
 
-   import   mysql            from  'mysql2/promise';
-   import { inspect }        from  'util'                                                                   // .(30328.05.3 RAM Add)
-   import   express          from  'express';
-// import   bodyParser       from  'body-parser';                                                           // .(30424.09.x RAM Use express.json)
-   import   cssjson          from  'cssjson';                                                               // .(30402.02.5)
-   import   cors             from  'cors';
-// import   fs               from  'fs'
+   import   mysql           from  'mysql2/promise';
+   import { inspect }       from  'util'                                                                    // .(30328.05.3 RAM Add)
+   import   express         from  'express';
+// import   bodyParser      from  'body-parser';                                                            // .(30424.09.x RAM Use express.json)
+   import   cssjson         from  'cssjson';                                                                // .(30402.02.5)
+   import   cors            from  'cors';
+// import   fs              from  'fs'
 
    import { getEnv_sync, __dirname, __appDir, traceR, aOS }  from  './formr_utility-fns_u1.06.mjs'          // .(30410.02.1).(30410.03.1 Add setAPI_URL).(30412.02.10).(30416.02.3).(30416.03.3)
    import { sayErr }                                         from  './formr_utility-fns_u1.06.mjs'          // .(30417.03.3)
 
-   var  bQuiet    =  false    // it's global in this module
-       var  aEnv      = '../../.env'
+       var  bQuiet     =  false    // it's global in this module
+       var  aEnv       = '../../.env'
        var  aRemote_Host                                                                                    // .(30322.03.7 RAM Needs to be global to the IODD object)
        var  aAPI_Host                                                                                       // .(30322.03.8 RAM aAPI_Host is needed by setRoute)
 //     var  pApp                                                                                            //#.(30328.03.4 RAM pAPP is needed by setRoute)
-       var  nSay      =  0,  nSay2 = 1
-       var  nCount    =  0
+       var  nSay       =  0,  nSay2 = 1
+       var  nCount     =  0
+//     var  aLogNo     = '00000'                                                                            //#.(30527.04.1)
+       var  mIPs       = { }                                                                                // .(30527.04.4)
 
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
  async function  putData( pDB, aSQL, aDatasetName, pRes ) {                                                 // .(30407.03.1 Beg RAM Write function)
        var  mRecs         =  await putData_( pDB, aSQL, aDatasetName );
@@ -127,26 +139,37 @@
     return  mRecs
             }
          }; // eof putData                                                                                  // .(30407.03.1 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
  async function  putData_( pDB, aSQL, aDatasetName ) {                                                                                              // .(30403.05.1 Beg RAM Write function).(30407.03.2)
-       var  aRecords      = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } record`
-       var  aAction       =  aSQL.match( /INSERT/i ) ? 'inserted' : (aSQL.match( /DELETE/i ) ? 'deleted' : 'updated' )                              // .(30403.05.5 RAM Added deleted)
-       try {
-       var  mRecs         =  await pDB.execute( saySQL( aSQL, 'parse' ) );                                                                          // .(30413.01.1 RAM Parse SQL)
-//     var  mColDefs      =  mCols.map( pRec => { return { Name: pRec.name, Type: pRec.type, Len: pRec.columnLength, Decs: pRec.decimals } } )
-       var  nID           =  aSQL.match( /INSERT/i ) ? mRecs[0].insertId : 0, aRecords                                                              // .(30406.01.1 RAM Return InsertedId)
+//     var  aRecords   = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } record`                                                        //#.(30526.03.1)
 
-        if (aDatasetName) {  aRecords = `${aRecords}${ (mRecs[0].affectedRows == 1) ? '' : 's' } ${ nID ? `, ${nID}` : '' }` }                      // .(30406.01.2)
-                 sayMsg( `${ saySQL( aSQL ) }\n     *  ${ `${mRecs[0].affectedRows}` } ${ aRecords  }, ${aAction}`.replace( /\n/g, '\n           ') );
-    return  [ "success", `${ mRecs[0].affectedRows } ${ aRecords }, ${aAction}`, { affectedRows: mRecs[0].affectedRows , affectedId: nID } ]        // .(30406.01.3)
+       var  aAction    =  aSQL.match( /INSERT/i ) ? 'inserted' : (aSQL.match( /DELETE/i ) ? 'deleted' : 'updated' )                                 // .(30403.05.5 RAM Added deleted)
+       try {
+       var  mRecs      =  await pDB.execute( saySQL( aSQL, 'parse' ) );                                                                             // .(30413.01.1 RAM Parse SQL).(30527.02.6 RAM Don't fmt for say, rather clean for execute)
+//     var  mRecs      =  await pDB.execute( saySQL( aSQL ) );                                                                                      //#.(30413.01.2 RAM Parse SQL).(30527.02.6 RAM Do fmt to say, don't parse which it didn't anyway)
+
+//     var  mColDefs   =  mCols.map( pRec => { return { Name: pRec.name, Type: pRec.type, Len: pRec.columnLength, Decs: pRec.decimals } } )
+       var  nID        =  aSQL.match( /INSERT/i ) ? mRecs[0].insertId : 0, aRecords                                                                 // .(30406.01.1 RAM Return InsertedId)
+
+       var  nRecs      =  mRecs[0].affectedRows                                                                                                     // .(30526.03.2)
+       var  aRecords   = `${ ('* ' + nRecs).padStart(nRecs == 1 ? 5 : 4) } record${ nRecs == 1 ? '' : 's' }`                                        // .(30526.03.3 RAM Add space for singular).(30526.03.3 RAM Don't, pad it with 4, or 5)
+//      if (aDatasetName) {  aRecords = `${aRecords}${ (mRecs[0].affectedRows == 1) ? '' : 's' } ${ nID ? `, ${nID},` : '' }` }                     //#.(30406.01.2).(30526.03.4)
+        if (aDatasetName) {  aRecords = `${aRecords} for '${aDatasetName}'${ nID ? ` (${nID})` : '' }` }                                            // .(30406.01.2).(30526.03.4)
+
+//               sayMsg( `${ saySQL( aSQL ) }\n    *  ${ `${mRecs[0].affectedRows}` } ${ aRecords }, ${aAction}`.replace( /\n/g, '\n           ')); //#.(30526.03.5)
+                 sayMsg( `${ saySQL( aSQL ) }\n  ${ aRecords }, ${aAction}`.replace( /\n/g, '\n           ') );                                     // .(30526.03.5)
+//  return ["success",  ` ${ mRecs[0].affectedRows } ${ aRecords }, ${aAction}`, { affectedRows: mRecs[0].affectedRows , affectedId: nID } ]        //#.(30406.01.3).(30526.03.6)
+       var  aSuccess   =   ( aSQL.match( /DELETE/i ) && nRecs == 0 ) ? 'warning' : 'success'                                                        // .(30527.03.1 RAM Return 'warning' if deleted 0 records)
+    return [aSuccess,    `${ aRecords.substring(4) }, ${aAction}`, { affectedRows: nRecs , affectedId: nID } ]                                      // .(30406.01.3).(30526.03.6).(30527.03.2)
+
         } catch( pError ) {
                  sayErr(    `*** Error:  ${pError.message}.\n${   saySQL( aSQL, 31 ) }\n` );
     return  [ "error",          `Error:  ${pError.message}.  <br>
                                           &nbsp; &nbsp; &nbsp; ${ saySQL( aSQL     ) }` ]
             }
          }; // eof putData_                                                                                                                         // .(30403.05.1 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
  async function  getData( pDB, aSQL, aDatasetName, pRes ) {                                                                                         // .(30407.03.3 Beg RAM Write function)
        var  mRecs         =  await getData_( pDB, aSQL, aDatasetName );
@@ -159,20 +182,28 @@
     return (mRecs[0] == 'nodata') ? [] : mRecs                                                                                                      // .(30407.03.4 RAM Return [] if no data)
             }
          }; // eof getData                                                                                                                          // .(30407.03.3 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
  async function  getData_( pDB, aSQL, aDatasetName ) {                                                                                              // .(30402.05.17).(30407.03.5)
-       var  aRecords   = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } record`                                                        // .(30402.05.20)
+//     var  aRecords   = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } record`                                                        // .(30402.05.20).(30526.03.7 RAM Not needed)
        try {
-       var [mRecs, mCols] =  await pDB.execute( saySQL( aSQL, 'parse' ) );                                                                          // .(30413.01.2 RAM Parse SQL)
+       var [mRecs, mCols] =  await pDB.execute( saySQL( aSQL, 'parse' ) );                                                                          //#.(30413.01.2 RAM Parse SQL).(30527.02.7 RAM Don't fmt for say, rather clean for execute)
+//     var [mRecs, mCols] =  await pDB.execute( saySQL( aSQL ) );                                                                                   // .(30413.01.2 RAM Parse SQL).(30527.02.7 RAM Do fmt for sayMsg, don't parse which it didn't anyway)
+
        var  mColDefs      =  mCols.map( pRec => { return { Name: pRec.name, Type: pRec.type, Len: pRec.columnLength, Decs: pRec.decimals } } )
         if (mRecs.length == 0) {
-                 sayErr(    `*** NoData: No ${ aRecords }s returned.\n${ saySQL( aSQL, 31 ) }` );                                                   // .(30402.05.21).(30407.03.5)
-    return  [ "nodata",         `NoData: No ${ aRecords }s returned.<br>                                                                            // .(30407.03.6)
+                 sayErr(    ` *** NoData:  No ${ aRecords }s returned.\n${ saySQL( aSQL, 31 ) }` );                                                 // .(30402.05.21).(30407.03.5).(30526.01.01)
+    return  [ "nodata",          `NoData:  No ${ aRecords }s returned.<br>                                                                          // .(30407.03.6).(30526.01.02)
                                                  &nbsp; &nbsp; &nbsp; ${ saySQL( aSQL     ) }` ] // .replace( /"/g, '\\"' ) ];                      // .(30328.04.2).(30402.05.11 RAM To be sent as HTML)
-     } else { if (aDatasetName) {  var aRecords = `${aRecords}${ (mRecs.length == 1) ? '' : 's' }`                                                  // .(30402.05.18)
-//                sayMsg( `${ saySQL( aSQL ) }\n       * ${ `${mRecs.length}`.padStart(3) } ${aRecords} found`.replace( /\n/g, '\n           ') ); } //#.(30402.05.19)
-                  sayMsg( `${ saySQL( aSQL ) }\n     *  ${  `${mRecs.length}` } ${ aRecords       }, returned`.replace( /\n/g, '\n           ') ); } // .(30402.05.23)
+     } else {
+       var  nRecs         =  mRecs.length                                                                                                           // .(30526.03.8)
+       var  aRecords      = `${ ('* ' + nRecs).padStart(nRecs == 1 ? 5 : 4) } record${ nRecs == 1 ? '' : 's' }`                                     // .(30526.03.9 RAM Added space for singular).(30526.03.9 RAM Don't, pad it with 4, 05)
+//      if (aDatasetName) {  var aRecords = `${aRecords}${ (mRecs.length == 1) ? '' : 's' }`                                                        //#.(30402.05.18).(30526.03.10)
+            aRecords      = (aDatasetName) ? `${aRecords} for '${aDatasetName}'` : aRecords                                                         // .(30406.01.2).(30526.03.10)
+
+//               sayMsg( `${ saySQL( aSQL ) }\n       * ${ `${mRecs.length}`.padStart(3) } ${aRecords} found`.replace( /\n/g, '\n           ') ); } //#.(30402.05.19)
+//               sayMsg( `${ saySQL( aSQL ) }\n     *  ${  `${nRecs}` } ${ aRecords       }, returned`.replace( /\n/g, '\n           ') ); }        //#.(30402.05.23).(30526.03.11)
+                 sayMsg( `${ saySQL( aSQL ) }\n  ${ aRecords }, returned`.replace( /\n/g, '\n           ') );                                       // .(30526.03.11)
     return  mRecs
             }
         } catch( pError ) {
@@ -181,30 +212,55 @@
                                           &nbsp; &nbsp; &nbsp; ${ saySQL( aSQL     ) }` ] // .replace( /"/g, '\\"' ) ];                             // .(30328.04.2).(30402.05.12 RAM To be sent as HTML)
             }
          }; // eof getData
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
- async function  getHTML( aFile, aDivID ) {                                             // .(30401.02.1 Beg RAM Add function)
+//function  sndRecs( pRes, mRecs, aSQL, aDatasetName, aOnRouteFnc ) {                                       // .(30331.01.3).(30407.03.x)
+  function  sndRecs( mRecs, aSQL, aDatasetName, pRes, aOnRouteFnc ) {                                       // .(30407.03.x)
+       var  aRecords   = (aDatasetName ? aDatasetName.replace( /^\//, "" ) + " " : "" ) + 'records'         // .(30526.03.12 RAM Keep??)
 
-       var  pJSON     =  await fetchFile( aFile, false )                                // .(30402.02.1 RAM Use fetchFile)
-        if (aDivID) {
-       var  pDiv      =  $( `#${aDivID}` )
-            pDiv.html(   pJSON.text )
-//          traceR(     `setHTML[2]     Included HTML file, '${aFile}'`,  nSay2)        //#.(30402.05.1)
-            sayMsg(     `HTML file, '${aFile}', included` )                             // .(30402.05.1)
+        if (String(mRecs[0]).match(/error/ )) {
+            aJSON      = `{ "error": "${ mRecs[1].replace( /[ \n]+$/, '' ) }" }`                            // .(30526.03.13 RAM S.B double-quotes not tics: \')
         } else {
-//          traceR(     `setHTML[3]     Retreived HTML file, '${aFile}'`, nSay2)        //#.(30402.05.2)
-            sayMsg(     `HTML file, '${aFile}', retreived` )                            // .(30402.05.2)
+        if (mRecs.length > 0 || pRes.bSndNoData) {
+//          aRecords   = (mRecs.length != 1) ? aRecords : aRecords.replace( /s$/, "" ).replace(  /ies$/, 'y' )                                      // .(30402.05.25).(30526.03.14 RAM Don't keep??)
+//               sayMsg( `${ saySQL( aSQL    ) }\n       * ${ `${mRecs.length}`.padStart(3) } ${aRecords} found`.replace( /\n/g, '\n           ')); //#.(30328.04.4).(30402.05.24)
+     // //  ??   sayMsg( `${ saySQL( aSQL    ) }\n     *  ${  `${mRecs.length}` } ${  aRecords      }, returned`.replace( /\n/g, '\n           ')); // .(30328.04.4).(30402.05.24)
+//     var  pRecs      =  mRecs; if (aDatasetName) { pRecs = {}; pRecs[aRecords]     = mRecs }              //#.(30404.01.2)
+       var  pRecs      =  mRecs; if (aDatasetName) { pRecs = {}; pRecs[aDatasetName.replace( /^\//, "" )] = mRecs }  // .(30404.01.2 RAM Use aDatasetName, not Records)
+       var  aJSON      =  fmtJSON( pRecs, aSQL )
+//               sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc :'routeHandler'}', executed`); //#.(30331.01.4).(30526.01.09)
+        } else {
+//                        sayErr( `${ saySQL( aSQL    ) }\n ** No ${aRecords} found` );                     // .(30328.04.6).(30402.05.15 RAM Not the same as GetData).(30407.03.x RAM Now done in getData)
+       var  aJSON      =  JSON.stringify( {  "warning":   ` ** No ${aRecords} found` } )                    // .(30402.05.16)
+         }  }
+//      if (pRes) {       sndJSON( pRes, aJSON, aRecords ) }                                                // .(30407.03.x RAM getData may not pass pRes )
+                 sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc :'routeHandler'}', executed`);          // .(30331.01.4).(30526.01.10)
+                          sndJSON( pRes, aJSON, aRecords )                                                  // .(30407.03.x RAM getData nice try, need to send []  )
+         }; // eof sndRecs
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
+
+ async function  getHTML( aFile, aDivID ) {                                                                 // .(30401.02.1 Beg RAM Add function)
+
+       var  pJSON      =  await fetchFile( aFile, false )                                                   // .(30402.02.1 RAM Use fetchFile)
+        if (aDivID) {
+       var  pDiv       =  $( `#${aDivID}` )
+            pDiv.html(    pJSON.text )
+//               traceR( `setHTML[2]     Included HTML file, '${aFile}'`,  nSay2)                           //#.(30402.05.1)
+                 sayMsg( `HTML file,  '${aFile}', included` )                                               // .(30402.05.1).(30526.01.03)
+        } else {
+//               traceR( `setHTML[3]     Retreived HTML file, '${aFile}'`, nSay2)                           //#.(30402.05.2)
+                 sayMsg( `HTML file,  '${aFile}', retreived` )                                              // .(30402.05.2).(30526.01.04)
     return  pJSON.text
             }
-         }; // eof getHTML                                                              // .(30401.02.1 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+         }; // eof getHTML                                                                                  // .(30401.02.1 End)
+//  ------  ---- ----- =  ------|  ---------------------------------- ----------------- ------------------+
 
  async function  getStyles( aFile, mStyles, aDivID ) {                                  // .(30402.02.2 Beg RAM Add function)
 //     var {toCSS, toJSON} = await import( 'cssjson' );
 //     var  toJSON     =  await import( 'cssjson' ).toJSON;
 //     var  toJSON     =  await import( 'cssjson' ).toJSON;
 //     var  cssjson    =  await import( 'cssjson' );
-        if (typeof(cssjson) == 'undefined') { sayErr( "\n** Module, 'cssjson', not loaded\n" ); return "" }   // .(30415.04.1 RAM)
+        if (typeof(cssjson) == 'undefined') { sayErr( "\n** Module, 'cssjson', not loaded\n" ); return "" } // .(30415.04.1 RAM)
 
        var  toJSON     =  cssjson.toJSON;
        var  toCSS      =  cssjson.toCSS;
@@ -214,68 +270,53 @@
         if (aDivID) {
        var  pSheet     =  $( `#${aDivID}` )
             pSheet.setAttribute( 'href', `${aFile}` )
-            traceR(      "getStyles[1]", "Included CSS file",          nSay3, aFile  )  //#.(30402.05.3)
-            sayMsg(     ` CSS file,  '${aFile}', included` )                            // .(30402.05.3)
+                 traceR( "getStyles[1]", "Included CSS file",          nSay3, aFile  )  //#.(30402.05.3)
+                 sayMsg(` CSS  File,  '${aFile}', included` )                           // .(30402.05.3).(30526.01.05)
         } else {
-            traceR(      "getStyles[2]", "Fetching StyleSheet",        nSay3, aFile  )  //#.(30402.05.4)
+                 traceR( "getStyles[2]", "Fetching StyleSheet",        nSay3, aFile  )  //#.(30402.05.4)
        var  aSheet     = (await fetchFile( aFile, false )).text
-            traceR(      "getStyles[3]", "Fetched: aSheet",            nSay3, aSheet )  //#.(30402.05.4)
+                 traceR( "getStyles[3]", "Fetched: aSheet",            nSay3, aSheet )  //#.(30402.05.4)
        if (mStyles.length == 0) { return  aSheet }                                      // .(30420.04.1 RAM Opps.)
        var  pJSON      =  toJSON( aSheet ), pStyles = {}, aCSS = ''                     // .(30415.04.2)
-            traceR(      "getStyles[4]", "Convered aSheet into pJSON", nSay3, pJSON  )  //#.(30402.05.4)
+                 traceR( "getStyles[4]", "Convered aSheet into pJSON", nSay3, pJSON  )  //#.(30402.05.4)
 //          pJSON.children['*'].attributes
 //          pJSON.children['login'].attributes
 //          pJSON.children['login form'].attributes
 //          pJSON.children['.login form input[type="password"], .login form input[type="text"]'].attributes
 
-//     var  aStyles   =  indexObj( pStyles.children, mStyles )
+//     var  aStyles    =  indexObj( pStyles.children, mStyles )
 //          mStyles.forEach( aStyle => { pStyles[ aStyle ] =  pJSON.children[aStyle].attributes } )
-//          pStyles   =   pJSON
+//          pStyles    =   pJSON
 
             mStyles.forEach( aStyle => {
-                if (pJSON.children[aStyle]) {                                           // .(30420.02.1 RAM Check if style exists)
-                    pStyles[ aStyle ] = pJSON.children[aStyle]                          //   .children and .attributes
-                } else {                                                                // .(30420.02.2 Beg)
-                    traceR(      "getStyles[5]", `** Style, '${aStyle}', not found`, 1 )
-                    }                                                                   // .(30420.02.2 End)
-                } )
-            pStyles   = { children: pStyles, attributes: { } }
-        var aFound    =`${Object.keys( pStyles.children ).length} of ${mStyles.length}` // .(30420.02.3)
-            traceR(      "getStyles[5]", `Selected ${aFound} mStyles from pJSON into pStyles`, nSay3, pStyles )  //#.(30402.05.4)
+             if (pJSON.children[aStyle]) {                                              // .(30420.02.1 RAM Check if style exists)
+                 pStyles[ aStyle ] = pJSON.children[aStyle]                             //   .children and .attributes
+             } else {                                                                   // .(30420.02.2 Beg)
+                 traceR( "getStyles[5]", `** Style, '${aStyle}', not found`, 1 )
+                   }                                                                    // .(30420.02.2 End)
+                 } )
+            pStyles    = { children: pStyles, attributes: { } }
+        var aFound     =`${Object.keys( pStyles.children ).length} of ${mStyles.length}`// .(30420.02.3)
+                 traceR( "getStyles[5]", `Selected ${aFound} mStyles from pJSON into pStyles`, nSay3, pStyles )  //#.(30402.05.4)
     try {                                                                               // .(30415.04.3)
-            traceR(      "getStyles[6]", "Converting pStyles to aCSS", nSay3 )          //#.(30402.05.4)
-       var  aCSS      =   toCSS( pStyles )
-            traceR(      "getStyles[7]", "Converted: aCSS", nSay3, aCSS )
-            sayMsg(      `CSS file,  '${aFile}', retreived` )                           // .(30402.05.4)
-        } catch(pErr) {  sayErr( `\n** CSS file,  '${aFile}', failed to load.${ `\n${pErr.message}`.replace( /\n/g, `${ "\n".padEnd(20) }** ` ) }` )  // .(30415.04.4)
-            traceR(      "getStyles[8]", "** Failed to convert pStyles", nSay3 ) }
+                 traceR( "getStyles[6]", "Converting pStyles to aCSS", nSay3 )          //#.(30402.05.4)
+       var  aCSS       =  toCSS( pStyles )
+                 traceR( "getStyles[7]", "Converted: aCSS", nSay3, aCSS )
+                 sayMsg( `CSS  File,  '${aFile}', retreived` )                          // .(30402.05.4).(30526.01.06)
+        } catch(pErr) {   sayErr( `\n  ** CSS File,  '${aFile}', failed to load.${ `\n${pErr.message}`.replace( /\n/g, `${ "\n".padEnd(20) }** ` ) }` )  // .(30415.04.4).(30526.01.07)
+                 traceR( "getStyles[8]", "** Failed to convert pStyles", nSay3 ) }
     return  aCSS
             } // eif fetch CSS file
          }; // eof getStyles                                                            // .(30402.02.2 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
  async  function  getJSON( aFile ) {                                                    // .(30402.02.3 Beg RAM Add function)
-       var  pJSON     =  await fetchFile( aFile, false )
-//          traceR(     `getJSON[1]     Retreived JSON '${aFile}'`, nSay2)              //#.(30402.05.5)
-            sayMsg(     `JSON file, '${aFile}', retreived` )                            // .(30402.05.5)
+       var  pJSON      =  await fetchFile( aFile, false )
+//               traceR( `getJSON[1]     Retreived JSON '${aFile}'`, nSay2)             //#.(30402.05.5)
+                 sayMsg( `JSON file,  '${aFile}', retreived` )                          // .(30402.05.5)
     return  pJSON
          }; // eof getJSON                                                              // .(30402.02.3 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
-
-  function  saySQL( aSQL, nFill ) {                                                                         // .(30328.04.3 Beg RAM Add)
-       var  nSQL = 'SQL';  aSQL = aSQL.replace( / [\/-]{2}.*/g, '' )                                        // .(30413.01.3 RAM Remove comments: // or --).(30515.03.1 RAM Only if prefixed by a space)
-        if (aSQL.match( /^ *SQL[0-9]+/)) {
-       var  nSQL = aSQL.match( /^ *(SQL[0-9]+)/ )[1]
-            aSQL = aSQL.replace( new RegExp( `${nSQL}[ :\n]+` ), '' )
-            }
-        if (nFill == 'parse') { return aSQL }                                                               // .(30413.01.4 End)
-       var  aFill = `\n`.padEnd( nFill ? nFill + 6 : 6 ); aSQL = aSQL.replace( /^ +/, "" )                  // .(30402.05.22 RAM Remove leading spaces)
-//     var  aStr  = (aSQL || '').replace( /\n           /g, aFill ).replace( /^[\n]+/, '' ).replace( /[ \n]+$/, '' )
-       var  aStr  = (aSQL || '').replace( /\n         /g,   aFill ).replace( /^[\n]+/, '' ).replace( /[ \n]+$/, '' )
-//  return `${aFill.substring(6)}${aStr}`                                                                   //#.(30413.01.5)
-    return `${nSQL}: ${aFill.substring(6)}${aStr}`                                                          // .(30413.01.5)
-         }; // eof saySQL                                                                                   // .(30328.04.3 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
 //function  setRoute(  pApp, aMethod,  aRoute_, onRoute,  pValidArgs_, fmtSQL_ ) {                          //#.(30328.03.1 RAM Move to this script).(30328.03.5 RAM Need onRoute too).(30401.02.1)
   function  setRoute(  pApp, aMethod,  aRoute_, onRoute_, pValidArgs_, fmtSQL_ ) {                          // .(30401.02.1 RAM Rework it a bit)
@@ -294,9 +335,20 @@
 //    case 'patch' : pApp.patch(  aRoute, xController ); break
         default    : null
             }
-            sayMsg( aMethod, `${aAPI_Host}${aRoute_}` )                                                     // .(30414.02.1 RAM Add ${aAPI_Host})
+                 sayMsg(  aMethod, `${aAPI_Host}${aRoute_}` )                                               // .(30414.02.1 RAM Add ${aAPI_Host})
             } // eof setRoute
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
+
+  function  chkSQL( fmtSQL, pArgs ) {                                                                       // .(30403.06.4 RAM Beg Write chkSQL )
+     try {                                                                                                  // .(30511.02.3 RAM If fmtSQL bombs)
+       var  aSQL        =  typeof( fmtSQL ) == 'string'  ? fmtSQL : fmtSQL( pArgs )
+     } catch( pErr ) {    sayMsg( " *** fmtSQL: Error"); return '' }                                        // .(30511.02.4 RAM Return ""?).(30526.01.08)
+        if (pArgs.id) {                                                                                     // .(30511.02.5 RAM Add to id = pArgs.id, if ...)
+            aSQL        =  aSQL.match( /id *=/i ) ? aSQL                                                    // .(30403.06.2 RAM Kludge: Don't add if id = is present)
+                        : `${aSQL} ${ aSQL.match( /WHERE/i ) ? 'AND' : 'WHERE' } id = ${pArgs.id}` }        // .(30408.01.1 RAM Check if WHERE exists)
+    return  aSQL
+            } // eof chkSQL                                                                                 // .(30403.06.4 End)
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function chkSQLargs( pValidArgs, fmtSQL_) {                                                               // .(30328.05.2 Beg RAM Write chkSQLargs)
       var  fmtSQL      = (typeof(fmtSQL_) != 'undefined') ? fmtSQL_ : '' // pValidArgs || ''
@@ -309,67 +361,61 @@
 //         console.log( `pValidArgs: ${ inspect( pValidArgs, { depth: 99 } ) }, fmtSQL: '${ inspect(fmtSQL, {depth:99})}'` )
            pValidArgs = (Object.keys( pValidArgs ).length > 0) ? pValidArgs : { id: /[0-9]+/ }              // .(30403.06.1 RAM Add default ?? )
   return { pValidArgs: pValidArgs, fmtSQL : fmtSQL }                                                        // .(30328.05.4 RAM Opps)
-
          }; // eof chkSQLArgs                                                                               // .(30328.05.2 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
-  function chkSQL( fmtSQL, pArgs ) {                                                                        // .(30403.06.4 RAM Beg Write chkSQL )
-     try {                                                                                                  // .(30511.02.3 RAM If fmtSQL bombs)
-       var aSQL      =  typeof( fmtSQL ) == 'string'  ? fmtSQL : fmtSQL( pArgs )
-     } catch( pErr ) {  sayMsg( "*** fmtSQL: Error"); return '' }                                            // .(30511.02.4 RAM Return ""?)
-       if (pArgs.id) {                                                                                      // .(30511.02.5 RAM Add to id = pArgs.id, if ...)
-           aSQL      =  aSQL.match( /id *=/i ) ? aSQL                                                       // .(30403.06.2 RAM Kludge: Don't add if present)
-                     : `${aSQL} ${ aSQL.match( /WHERE/i ) ? 'AND' : 'WHERE' } id = ${pArgs.id}` }           // .(30408.01.1 RAM Check if WHERE exists)
-    return aSQL
-           }                                                                                                // .(30403.06.4 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+  function fmtFld4SQL( aFld, aVal_, nFill ) {                                                               // .(30527.02.8 Beg RAM Write fmtFld4SQL)
+        if (aFld == 'Id') { return null }                                                                   //#.(30525.03.12 RAM Was: MemberNo)
+//          aFld =  `, ${aFld} ='${ pVars[ aFld ] }'`.padStart( 25 )                                        //#.(30525.02.3)
+//          aFld =  `,  ${aFld.trim()} = '${ pVars[ aFld ].trim() }'`                                       // .(30525.02.3  RAM padStart: no workie)
+       var  aVal =   aVal_.match( /^'/ )         ?  aVal_ : `'${ aVal_.replace( /'/g, "''" ) }'`            // .(30527.02.9  RAM No quotes   for leading, double'em otherwise)
+            aVal =   aVal_.match( /^ *[0-9]+$/ ) ?  aVal_ : aVal                                            // .(30527.02.10  RAM No quotes   for a number )
+            aVal =   aVal_.match( /^=/ )         ?  aVal_.substring(1) : aVal                               // .(30527.02.11 RAM No quotes   for leading =)
+            aVal =   aVal_.match( /^#/ )         ? `STR_TO_DATE( '${ aVal_.substr(1) }', '%Y-%m-%d'          )` : aVal // .(30527.02.12 RAM A Date      for leading #)
+            aVal =   aVal_.match( /^@/ )         ? `STR_TO_DATE( '${ aVal_.substr(1) }', '%Y-%m-%d %H:%i:%s' )` : aVal // .(30527.02.13 RAM A Timestamp for leading @)
+            aFld =  `,  ${aFld.trim()} = ${ aVal.trim() }`
+    return `${''.padEnd( nFill ? nFill : 25 )}${ aFld.trim() }`
+            } // eof fmtFld4SQL                                                                             //#.(30527.02.8 End)
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
-//function  sndRecs( pRes, mRecs, aSQL, aDatasetName, aOnRouteFnc ) {                                       // .(30331.01.3).(30407.03.x)
-  function  sndRecs( mRecs, aSQL, aDatasetName, pRes, aOnRouteFnc ) {                                       // .(30407.03.x)
-       var  aRecords   = (aDatasetName ? aDatasetName.replace( /^\//, "" ) + " " : "" ) + 'records'
-        if (String(mRecs[0]).match(/error/ )) {
-            aJSON      =                 `{ "error": \`${ mRecs[1].replace( /[ \n]+$/, '' ) }\` }`
-        } else {
-        if (mRecs.length > 0 || pRes.bSndNoData) {
-            aRecords   = (mRecs.length != 1) ? aRecords : aRecords.replace( /s$/, "" ).replace(  /ies$/, 'y' )                            // .(30402.05.25)
- //                       sayMsg( `${ saySQL( aSQL    ) }\n       * ${ `${mRecs.length}`.padStart(3) } ${aRecords} found`.replace( /\n/g, '\n           ') ); //#.(30328.04.4).(30402.05.24)
-     // //  ??            sayMsg( `${ saySQL( aSQL    ) }\n     *  ${  `${mRecs.length}` } ${  aRecords      }, returned`.replace( /\n/g, '\n           ') ); // .(30328.04.4).(30402.05.24)
-//     var  pRecs      =  mRecs; if (aDatasetName) { pRecs = {}; pRecs[aRecords]     = mRecs }              //#.(30404.01.2)
-       var  pRecs      =  mRecs; if (aDatasetName) { pRecs = {}; pRecs[aDatasetName.replace( /^\//, "" )] = mRecs }  // .(30404.01.2 RAM Use aDatasetName, not Records)
-       var  aJSON      =  fmtJSON( pRecs, aSQL )
-//                        sayMsg( `Handler,   '${aOnRouteFnc ? aOnRouteFnc : 'routeHandler'}', executed` ); // .(30331.01.4)
-        } else {
-//                        sayErr( `${ saySQL( aSQL    ) }\n ** No ${aRecords} found` );                     // .(30328.04.6).(30402.05.15 RAM Not the same as GetData).(30407.03.x RAM Now done in getData)
-       var  aJSON      =  JSON.stringify( {  "warning":   ` ** No ${aRecords} found` } )                    // .(30402.05.16)
-         }  }
-//      if (pRes) {       sndJSON( pRes, aJSON, aRecords ) }                                                // .(30407.03.x RAM getData may not pass pRes )
-                          sayMsg( `Handler,   '${aOnRouteFnc ? aOnRouteFnc : 'routeHandler'}', executed` ); // .(30331.01.4)
-                          sndJSON( pRes, aJSON, aRecords )                                                  // .(30407.03.x RAM getData nice try, need to send []  )
-         }; // eof sndRecs
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+  function  saySQL( aSQL, nFill ) {                                                                         // .(30328.04.3 Beg RAM Add)
+       var  nSQL = 'SQL';  aSQL = aSQL.replace( / [\/-]{2}.*/g, '' )                                        // .(30413.01.3 RAM Remove comments: // or --).(30515.03.1 RAM Only if prefixed by a space)
+            aSQL = aSQL.replace( /^[ \n]+/, "" )                                                            // .(30527.02.14 RAM Remove leading spaces or \n)
+        if (aSQL.match( /^ *SQL[0-9]+/)) {
+       var  nSQL = aSQL.match( /^ *(SQL[0-9]+)/ )[1]
+            aSQL = aSQL.replace( new RegExp( `${nSQL}[ :\n]+` ), '' )
+            }
+        if (nFill == 'parse') { return aSQL }                                                               // .(30413.01.4 End)
+       var  aFill = `\n`.padEnd( nFill ? nFill + 6 : 6 ); aSQL = aSQL.replace( /^ +/, "" )                  // .(30402.05.22 RAM Remove leading spaces)
+//     var  aStr  = (aSQL || '').replace( /\n           /g, aFill ).replace( /^[\n]+/, '' ).replace( /[ \n]+$/, '' )
+       var  aStr  = (aSQL || '').replace( /\n         /g,   aFill ).replace( /^[\n]+/, '' ).replace( /[ \n]+$/, '' )
+//  return `${aFill.substring(6)}${aStr}`                                                                   //#.(30413.01.5)
+    return `${nSQL + ( nSQL.match( /[0-9]/ ) ? '' :'1' )}: ${aFill.substring(6)}${aStr}`                    // .(30413.01.5).(30527.01.1 RAM Add '1' if not there)
+         }; // eof saySQL                                                                                   // .(30328.04.3 End)
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  sndFile( pRes, aFile, aDatasetName, aOnRouteFnc ) {                                             // .(30403.04.1 Beg RAM Write function)
        try {
 //                        pRes.sendFile( `${__dirname}/../../${aFile.replace( /^\.\//, '' )}` )
 //                        pRes.sendFile( `/../../${aFile.replace( /^\.\//, '' )}` )
                           pRes.sendFile(  aFile.replace( /^\.\//, '' ), { root: __appDir } )                // .(30416.02.3).(30416.03.4 RAM Was: `${__dirname}/../../`)
-                          sayMsg( `Handler,    '${aOnRouteFnc ? aOnRouteFnc : 'routeHandler'}', executed` );
-                          sayMsg( `File,       '${ aFile }', sent` );
-        } catch( pErr ) {  aMsg = `File: '${ aFile }'\n  *** Error: ${pError.message}`                      // 'Forbidden' not caught
-                          sayErr(  aMsg );
-    return           `{ "error": ${aMsg} }` }
+                 sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc :'routeHandler'}', executed`); // .(30526.01.11)
+                 sayMsg( `File,       '${aFile}', sent` );
+        } catch( pErr ) { aMsg = `File:       '${aFile}'\n  *** Error: ${pError.message}`                   // .(30526.01.12) 'Forbidden' not caught.
+                 sayErr(  aMsg );
+    return  `{ "error": ${aMsg} }` }
          }; // eof fmtJSON                                                                                  // .(30403.04.1 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  fmtJSON( pJSON, aSQL ) {
        try {
     return  JSON.stringify( pJSON )
         } catch( pError ) {
-                         sayErr( `${ aSQL ? aSQL + '\n' : '' }*** Error: ${pError.message}` );
-    return                                      `{ "error": \`*** Error: ${pError.message}\` }`
+                 sayErr( `${ aSQL ? aSQL + '\n' : '' } *** Error:  ${pError.message}` );                    // .(30526.01.13)
+    return                              `{ "error": \` *** Error:  ${pError.message}\` }`                   // .(30526.01.14)
             }
          }; // eof fmtJSON
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  sndJSON( pRes, aJSON, aDatasetName ) {
             pRes.setHeader( 'Content-Type', 'application/json' );
@@ -377,15 +423,16 @@
             pRes.send(  aJSON )
             pRes.end();
         if (aJSON.match( /{ "error": /)) { return }
-        if (aDatasetName) { sayMsg( `JSON ${aDatasetName}, sent\n` ) }
+        if (aDatasetName) {
+                 sayMsg( `JSON Object, '${aDatasetName.replace(/^\//, '')}', sent\n` ) }                    // .(30526.01.15)
 
          }; // eof sndJSON
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  chkArgs( pReq, pRes, pValidArgs ) {
-         if (Object.keys( pReq.body).length == 0 && pReq.method != 'GET') {                                 // .(30424.09.x RAM Beg)
-                          sndErr( pRes, '** Request Body/Query is empty' )
-                          sayErr(       '** Request Body/Query is empty\n' )                                // .(30402.05.7)
+         if (Object.keys(  pReq.body).length == 0 && pReq.method != 'GET') {                                // .(30424.09.x RAM Beg)
+                           sndErr( pRes,   '** Request Body/Query is empty' )                               // .(30526.01.16)
+                           sayErr(       '  ** Request Body/Query is empty\n' )                             // .(30402.05.7).(30526.01.17)
     return  null
             }                                                                                               // .(30429.09.x End)
        var  pArgs_ = { ...pReq.body, ...pReq.query }, mErrArgs = []                                         // .(30403.02.3 RAM pReq.query overrides pReq.body)
@@ -402,11 +449,11 @@
             mErrArgs   =  pValidArgs.required ? [ [ 'Required', 'yes' ] ] : [ ]                             // .(30403.02.5 RAM Are any args required? What if not. fmtSQL must handle it)
          }  }
         if (mErrArgs.length == 0) {
-    return  pArgs                   // pReq.query; all? or nothing; could be {} if no args given                     // .(30403.02.6)
+    return  pArgs                   // pReq.query; all? or nothing; could be {} if no args given                       // .(30403.02.6)
             }
-                          sndErr( pRes, `** Invalid Arguments`,    mErrArgs.map( mArg => fmtArg( mArg ) ) )          // .(30425.01.1 RAM Add fmtArg)
-       var  aMsg       =                `** Invalid Arguments: '${ mErrArgs.map( mArg => fmtArg( mArg ) ).join() }'` // .(30402.05.6).(30425.01.2)
-                          sayErr( `${aMsg}\n` )                                                                      // .(30402.05.7)
+                          sndErr( pRes, `  ** Invalid Arguments`,    mErrArgs.map( mArg => fmtArg( mArg ) ) )          // .(30425.01.1 RAM Add fmtArg).(30526.01.18)
+       var  aMsg       =                `  ** Invalid Arguments: '${ mErrArgs.map( mArg => fmtArg( mArg ) ).join() }'` // .(30402.05.6).(30425.01.2).(30526.01.19)
+                          sayErr( `${aMsg}\n` )                                                                        // .(30402.05.7)
     return  null
 //          ----------------------------------
 
@@ -426,7 +473,7 @@
             } // eof chkArg
 //          ----------------------------------
          }; // eof chkArgs
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  fmtArgs( pArgs ) {
        var  mArgs =  Object.keys( pArgs ).map( aKey => { return [ aKey, pArgs[ aKey ] ] } )
@@ -434,16 +481,16 @@
     return  aArgs
 
          }; // eof fmtArgs
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  sndHTML( pRes, aHTML, aURI, aOnRouteFnc ) {                                                     // .(30331.01.4)
-                          sayMsg( `Handler,   '${aOnRouteFnc ? aOnRouteFnc : 'onRoute'}', executed` );      // .(30331.01.6)
+                 sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc : 'onRoute'}', executed` );             // .(30331.01.6).(30526.01.20)
                           pRes.send( aHTML )
         if (typeof(aURI) != 'undefined') {                                                                  // .(30414.03.1).(30415.02.1)
-                          sayMsg( `HTML Page, '${aAPI_Host}${aURI}', sent\n` ) }                            // .(30415.03.1)
+                          sayMsg( `HTML Page,  '${aAPI_Host}${aURI}', sent\n` ) }                           // .(30415.03.1).(30526.01.21)
 
          }; // eof sndHTML
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  setErr( pApp, aMsg, s ) {
 
@@ -453,7 +500,7 @@
             } )
                           sayMsg( `${aMsg}${ s || '' }, set` )
          }; // eof setErr
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  sndErr( pRes, aMsg, mItems ) {
 //          pRes.setHeader( 'Content-Type', 'text/html' );                                                  // .(30424.09.x RAM ??? Should it be json?)
@@ -466,7 +513,7 @@
 //                        sayErr( `${aMsg}\n` )                                                             //#.(30402.05.9 RAM Remove)
             }                                                                                               // .(30424.09.x)
          }; // eof sndErr
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 /*
   function  sayErr( aMsg ) {                                                                                //#.(30417.03.4)
 
@@ -476,27 +523,61 @@
 //          console.trace()                                                        // .(30416.01.2)
 
          }; // eof sayErr
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 */
-  function  sayMsg( pReq, aMethod, aRoute ) {
+  function  getIPAddr( pReq, pDB ) {                                                                        // .(30526.02.1 RAM Beg Add getIPAddr)
+//               sayMsg( `IPAddr is: ${pReq.ip}` )
+
+       var  aIPAddr4   =  pReq.ip ? pReq.ip : (pReq.ips && pReq.ips[0]) || '::1'
+       var  mIPs       = (pReq.headers['formr-userip'   ] ||
+                          pReq.headers['x-real-ip'      ] ||
+                          pReq.headers['x-forwarded-for'] ||
+                          pReq.connection.remoteAddress   || ''    // aka pReq.ip
+                          ).split(',');
+       var  aIPAddr4   =  mIPs[0].trim();                        // .(30428.03.1 RAM Missing pReq.ip)
+            aIPAddr4   =  aIPAddr4.replace( /::1/, '127.0.0.1' ).replace( /^::ffff:/, '')                   // .(30406.03.1)
+
+       var  aPage      = (pReq.headers['formr-page'] || pReq.get('Referrer') || '').split(",")[0].trim()
+       var  aUser      =  pReq.headers['formr-user'] || ''
+
+   return [ aIPAddr4, aPage, aUser ]                                                                        // .(30526.02.16)
+            }                                                                                               // .(30526.02.1 End)
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
+
+  function  logIP( pReq, pDB, aWhen ) {                                                                     // .(30526.02.2 Beg RAM Add logIP)
+       var  aIP        =  getIPAddr( pReq );
+       var  aUser = aIP[2], aPage = aIP[1]; aIP = aIP[0]                                                    // .(30526.02.17 RAM Get aUser and Page too)
+       if (!mIPs[ aIP ]) {                                                                                  // .(30527.04.5 RAM Beg )
+       var  aLogNo     = (Object.keys( mIPs ).length + 1).toString().padStart( 5, '0' )
+       var  aTS        = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' )
+       var  aUser      =  aUser.padEnd(30)
+            mIPs[ aIP ]= `${aLogNo} ${aTS.substring(2,8)} ${aIP.padStart(15)}    ${aUser} ${aPage}`         // .(30527.04.6 RAM Put aLogNo aTS aIP aUser into mIPs)
+            }
+            aLogNo     =  mIPs[ aIP ].substring(0,5)
+        if (process) { global.aLogNo = aLogNo } else { window.aLogNo = aLogNo }                             // .(30527.04.5 End)
+            console.log( mIPs[ aIP ] )                                                                      // .(30527.04.7)
+            }                                                                                               // .(30526.02.2 End)
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
+
+  function  sayMsg( pReq, aMethod, aRoute, aWhen ) {
         if (bQuiet) { return }
 
-       if (typeof(aRoute) == 'undefined') { aRoute = aMethod; aMethod = pReq; pReq = null }                 // .(30414.03.3 RAM It could be '').(30415.02.2)
-
+        if (typeof(aRoute) == 'undefined'   ) { aRoute = aMethod; aMethod = pReq; pReq = null }             // .(30414.03.3 RAM It could be '').(30415.02.2)
         if (pReq) {
             pReq.args  =  fmtArgs( pReq.query )  // save for ending sayMsg
-       var  aMsg       = `${ aMethod.toUpperCase() } Route, '${aAPI_Host}${aRoute}`                         // .(30415.03.2)
-            aMsg       = `${aMsg}${pReq.args}', recieved`
+       var  aMsg       = `${ aMethod.toUpperCase().padEnd(4) } Route, '${aAPI_Host}${aRoute}`               // .(30415.03.2).(30526.01.22 RAM Pad method)
+            aMsg       = `${ aMsg }${ pReq.args }', recieved`
         } else {
-       var  aMsg       = `${ aMethod.toUpperCase() } Route, '${aRoute}'`                                    // .(30415.03.3 RAM aRoute, set has ${aAPI_Host})
+       var  aMsg       = `${ aMethod.toUpperCase().padEnd(4) } Route, '${aRoute}'`                          // .(30415.03.3 RAM aRoute, set has ${aAPI_Host}).(30526.01.23)
             aMsg       =  typeof(aRoute) != 'undefined' ? `${aMsg}', set` : aMethod                         // .(30414.03.1 RAM aMethod == aMsg if aRoute is not defined
             }
-        var aTS        = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' ).substring(2)
+        var aTS        = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' )
+            aTS        = `${ aLogNo } ${ aTS.substring(9) }`                                                    // .(30527.04.4)
         var aCR        =  aMsg.match( /^[ \n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )          // .(30416.01.3)
-            console.log( `${aCR}${aTS}  ${aMsg}` )                                                          // .(30416.01.4)
+            console.log( `${ aCR }${ aTS }  ${ aMsg }` )                                                    // .(30416.01.4)
 
          }; // eof sayMsg
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  indexObj( pObj, mItems ) {                                                                      // .(30402.03.1 Beg RAM Add)
 //      var pOut = {}, i, n = Array.isArray( mItems ) ? mItems.length : 0; if (!n) { return pObj }
@@ -505,15 +586,14 @@
     return  pOut;
 
          }; // eof indexObj                                                                                 // .(30402.03.1 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
-
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
    function init( pApp, pDB_Config, bQuiet_, aAPI_ ) {                                                      // .(30410.03.3 RAM async).(30412.02.1)
 
             pApp.use( cors( { origin: '*' } ) );
-            pApp.use( express.urlencoded( { extended: true  } ) )                                            // .(30403.02.2 RAM Needed for form body vars)
-//          pApp.use( express.urlencoded( { extended: false } ) )                                            // .(30424.09.1 RAM Set to false)
-            pApp.use( express.json() );                                                                      // .(30424.09.2 RAM Instead of bodyParser.json() )
+            pApp.use( express.urlencoded( { extended: true  } ) )                                           // .(30403.02.2 RAM Needed for form body vars)
+//          pApp.use( express.urlencoded( { extended: false } ) )                                           // .(30424.09.1 RAM Set to false)
+            pApp.use( express.json() );                                                                     // .(30424.09.2 RAM Instead of bodyParser.json() )
 
 //          ---------  =  ----------------------------------------------------------
 
@@ -534,15 +614,15 @@
        var  pDB        =  mysql.createPool( pDB_Config )                                                    //
 
                           console.log( "" )
-                          sayMsg( `USE Database: '${ pDB_Config.database }'` )                              // .(30323.03.1)
+                          sayMsg( `USE  Database: '${ pDB_Config.database }'` )                             // .(30323.03.1).(30526.01.24)
 
 //          ---------  =  ----------------------------------------------------------
 
         pEnv.API_URL   =  aAPI_ ? aAPI_ : pEnv.API_URL;                                                     // .(30412.02.2)
 //     var  aAPI_URL   =  setVar1( 'API_URL',     '/api2' );                     // console.log( `aAPI_URL:     '${aAPI_URL}'`     ); // process.exit() // .(30410.03.5)
-//     var  aAPI_URL   =  await setAPI_URL( process.env )                                                  // .(30410.04.2 Use it).(30410.04.9 RAM Add pEnv arg)
-//     var  aAPI_URL   =        setAPI_URL( process.env )                                                  // .(30410.04.2 Use it).(30410.04.9 RAM Add pEnv arg).(30412.02.3 RAM Can't be a promise)
-       var  aAPI_URL   = `${pEnv.Host_Location == 'remote'                                                 // .(30412.02.4)
+//     var  aAPI_URL   =  await setAPI_URL( process.env )                                                   // .(30410.04.2 Use it).(30410.04.9 RAM Add pEnv arg)
+//     var  aAPI_URL   =        setAPI_URL( process.env )                                                   // .(30410.04.2 Use it).(30410.04.9 RAM Add pEnv arg).(30412.02.3 RAM Can't be a promise)
+       var  aAPI_URL   = `${pEnv.Host_Location == 'remote'                                                  // .(30412.02.4)
                        ? `/${pEnv.API_URL.replace( /^\//, '' )}`
                        : `${pEnv.Local_Host}:${pEnv.Server_Port}` }`
 
@@ -571,7 +651,7 @@
      return typeof(process.env[aVar2]) != 'undefined' ? process.env[aVar2] : ( typeof( aVal ) != 'undefined' ? aVal : null )  // .(30322.06.2)
             }
          }; // eof init
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
 // function start( pApp, nPort, aAPI_Host ) {     // must be last
    function start( pApp, nPort            ) {                                                               // .(30412.02.7 RAM Remove aAPI_Host)
@@ -582,7 +662,7 @@
 
             pApp.get(    '/favicon.*', function( pReq, pRes ) {
                           pRes.sendFile( `${__dirname}/${pReq.url}` ) } )                                   // .(30318.01.1 RAM Or else it's a bad route)
-                 setErr(  pApp, 'Bad Route', 's' ) // Other Uses?
+                 setErr(  pApp, 'Bad  Route', 's' ) // Other Uses?                                          // .(30526.01.25)
 
             pApp.listen( nPort );                                                                           // .(30213.02.2 RAM Change real port from 3000 to 3002).(30213.02.4)
         if (aAPI_Host == '') {                                                                              // .(30214.03.11)
@@ -596,7 +676,7 @@
             __filepath = `${__dirname.replace( /assets\/mjs/, "" )}/${__filepath }`                         // .(30315.01.2)
             console.log(   `    Server is running in: ${__filepath}\n` )                                    // .(30214.03.10 RAM Display root dir).(30315.01.3)
 
-       var  bLocal     =  aAPI_Host == '', aLocation = ''                                                   // .(30315.02.1 RAM Beg Check if running locally)
+       var  bLocal     =  aAPI_Host == '',  aLocation = ''                                                  // .(30315.02.1 RAM Beg Check if running locally)
         if (aOS == 'windows' && !bLocal) {  aLocation = 'local'  }
         if (aOS == 'linux'   &&  bLocal) {  aLocation = 'remote' }
         if (aLocation) {
@@ -605,27 +685,27 @@
             }                                                                                               // .(30315.02.1 End)
 
          }; // eof start
-//--------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
 //function  getEnv( aFile, bNewOnly ) {                                                                     //#.(30410.02.2 moved to formr_utility-fns_u1.06.mjs)
 
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 /*
 async  function  readFile( aFile, bJSON ) {
        var  bNode = (typeof(process) != 'undefined')
 
-        if (bNode) {       // in NodeJS
+        if (bNode) {   // in NodeJS
         if (aFile.match( /^(http|local|127)/ )) {
-       var  pResponse  =   await node_fetch( `${aFile}` );
+       var  pResponse  = await node_fetch( `${aFile}` );
     return  await (bJSON ? pResponse.json() : pResponse.text() )
-        } else {           // eif remote file
-       var  aResponse  =   node_readFile( `${__dirname }${aFile}`, 'ASCII' );
+        } else {       // eif remote file
+       var  aResponse  =  node_readFile( `${__dirname }${aFile}`, 'ASCII' );
     return (bJSON ? aResponse : JSON.parse( aResponse )
-            }              // eif local file
+            }          // eif local file
 
-        } else {           // in browser
-       var  aPath      =   window.location.href.replace( /[^\/]+$/, '')
-       var  pResponse  =   await node_fetch( `${aPath}${aFile}` );
+        } else {       // in browser
+       var  aPath      =  window.location.href.replace( /[^\/]+$/, '')
+       var  pResponse  =  await node_fetch( `${aPath}${aFile}` );
     return  await (bJSON ? pResponse.json() : pResponse.text() )
             }
 //  ------  ------------------  =   -------------------------------- ------------------ ------------------+
@@ -658,7 +738,7 @@ async  function  readFile( aFile, bJSON ) {
                      mode       : 'no-cors',
                      method     : "get"
                      } ) */
-        } else { // ----------  =  ------------------------------
+        } else { // ----------  =  --------------------------------
 
              if (aURL.match( /^(http|localhost|127\.0)/i )) {     // node http://       // .(30402.01.2 RAM Add localhost and 127.0.0.1)
             try {
@@ -668,7 +748,7 @@ async  function  readFile( aFile, bJSON ) {
              } catch( pErr ) {     return onError( pErrr, pResponse ) }
                  }
               }
-//         ----  -------------  =  ------------------------------
+//         ----  -------------  =  --------------------------------
 //       ------  -------------  =  ----------------------------------------
 
 //    if (typeof( document ) == 'object' || aURL.match( /http/i )) {
@@ -682,7 +762,7 @@ async  function  readFile( aFile, bJSON ) {
         } else {
             var  pJSON          =  { }; pJSON.text = await pResponse.text( )
                  } // eif text
-//         ----  -------------  =  ------------------------------
+//         ----  -------------  =  --------------------------------
          return  pJSON
 //       ------  -------------  =  ----------------------------------------
 
@@ -707,13 +787,13 @@ async  function  readFile( aFile, bJSON ) {
                  }
              } catch( pErr ) {     return onError( pErr, { status: 404, url: aFile } ) }
 
-//         ----  -------------  =  ------------------------------
+//         ----  -------------  =  --------------------------------
          return  pJSON
 //       ------  -------------  =  ----------------------------------------
                  } // eif Node && local file
-//       ------  -------------  =  ----------------------------------------
+//--------  ---- -------------  =  ---------------------------------------------------
 
-  function onError( pErr, pResponse ) {
+  function  onError( pErr, pResponse ) {
              if (pResponse && pResponse.status == 404) {
                  pErr.message   =  `Bad URL: '${pResponse.url}'`
                  }
@@ -722,11 +802,12 @@ async  function  readFile( aFile, bJSON ) {
           return pJSON          = { "error": ` *** Invalid JSON file. Error: ${pErr.message}` }
                  }
 //       ------  -------------  =  ----------------------------------------
-         }; // eof fetchFile                                                            // .(30402.01.1 End)
-//  ------  ------------------  =   -------------------------------- ------------------ ------------------+
+         }; // eof fetchFile                                                                                // .(30402.01.1 End)
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
-   export { putData, getData,   sndRecs,  fmtJSON,  sndJSON,  chkArgs,  fmtArgs }               // .(30403.05.2 RAM Add putData)
-   export { sndHTML, sndErr,    setErr,   setRoute, sayMsg,   init,     start,  traceR }        // .(30328.03.2).(30416.02.4 RAM Add traceR)
-   export { getHTML, getStyles, getJSON,  sndFile,  indexObj, chkSQL, __dirname , __appDir}     // .(30402.02.4 RAM).(30402.03.2).(30403.04.1).(30403.06.5).(30410.01.x).(30416.03.6)
+    export { putData, getData,   sndRecs,  fmtJSON,  sndJSON,  chkArgs,  fmtArgs }                          // .(30403.05.2 RAM Add putData)
+    export { sndHTML, sndErr,    setErr,   setRoute, sayMsg,   init,     start,      traceR }               // .(30328.03.2).(30416.02.4 RAM Add traceR)
+    export { getHTML, getStyles, getJSON,  sndFile,  indexObj, chkSQL, __dirname , __appDir }               // .(30402.02.4 RAM).(30402.03.2).(30403.04.1).(30403.06.5).(30410.01.x).(30416.03.6)
+    export { getIPAddr,  logIP,  fmtFld4SQL }                                                               // .(30526.02.3).(30527.02.15)
 
-//  --------------------------  =   -------------------------------- ------------------ ------------------+ --------------------------
+//  --------------------------  |  -------------------------------- ------------------- ------------------+ --------------------------
