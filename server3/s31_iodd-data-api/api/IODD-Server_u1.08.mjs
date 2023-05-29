@@ -14,6 +14,7 @@
 ##FD      IODD-Server_u1.08.mjs |  75467|  5/25/23 16:08|  1160| u1-08`30525.1608
 ##FD      IODD-Server_u1.08.mjs |  76787|  5/25/23 21:30|  1171| u1-08`30525.2130
 ##FD      IODD-Server_u1.08.mjs |  79131|  5/27/23 16:10|  1200| u1-08`30527.1610
+##FD      IODD-Server_u1.08.mjs |  81217|  5/29/23 12:23|  1218| u1-08`30529.1223
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file modifies the Login Button
 ##LIC      .--------------------+----------------------------------------------+
@@ -99,6 +100,7 @@
 # .(30528.03  5/28/12 RAM  2:00p|  Check for valid Email, Cleanup SQL
 # .(30528.04  5/28/12 RAM  3:00p|  Add Abort to sayMsg, Forgot to sayMsg
 # .(30528.05  5/28/12 RAM  6:00p|  Add say('Done', "handler") and sayMsg('End')
+# .(30529.01  5/29/12 RAM 12:22p|  Fix spacing for saySQL on Error
 
 ##PRGM     +====================+===============================================+
 ##ID                            |
@@ -709,7 +711,7 @@ this.Member_postRoute = function( ) {                                           
                                        aFld =  `,  ${aFld.trim()} = '${ pVars[ aFld ].trim() }'`            // .(30525.02.3 RAM padStart: no workie)
                                return `${''.padEnd(23)}${aFld}`
                                        } */                                                                 //#.(30527.02.5 End)
-       var  updateFld       =  function( aFld ) { return fmtFld4SQL(  aFld,  pVars[  aFld ], 22 ) }         // .(30527.02.5 RAM Use fmtFld4SQL)
+       var  updateFld       =  function( aFld ) { return fmtFld4SQL(  aFld,  pVars[  aFld ], 25 ) }         // .(30529.01.7 RAM Was: 22).(30527.02.5 RAM Use fmtFld4SQL)
        var  aUpdateFlds     =  Object.keys( pVars ).map( updateFld ).filter( aFld => aFld ).join('\n')      // .(30525.02.4 RAM Beg Loop thru only those present)
 
        var  aSQL = `UPDATE  members

@@ -16,6 +16,7 @@
 ##FD formr_server-fns_u1.06.mjs |  55801|  5/11/23 15:45|   730| u1-06`30511.1545
 ##FD formr_server-fns_u1.06.mjs |  56121|  5/15/23 21:05|   732| u1-06`30515.2105
 ##FD formr_server-fns_u1.06.mjs |  65820|  5/27/23 19:00|   813| u1-06`30527.1900
+##FD formr_server-fns_u1.06.mjs |  75099|  5/29/23 12:22|   894| u1-06`30529.1222
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
@@ -107,6 +108,7 @@
 # .(30528.02  5/28/23 RAM  1:30p|  Add '+' or '-' to aLogNo
 # .(30528.04  5/28/12 RAM  3:00p|  Add Abort to sayMsg instead of sayErr??
 # .(30528.05  5/28/12 RAM  7:45p|  No need for sndHTML to say "handler executed"
+# .(30529.01  5/29/12 RAM 12:22p|  Fix spacing for saySQL on Error
 
 ##SRCE =========================+===============================================+========================== #  ===============================  #
 #*/
@@ -169,10 +171,10 @@
        var  aSuccess   =   ( aSQL.match( /DELETE/i ) && nRecs == 0 ) ? 'warning' : 'success'                                                        // .(30527.03.1 RAM Return 'warning' if deleted 0 records)
     return [aSuccess,    `${ aRecords.substring(4) }, ${aAction}`, { affectedRows: nRecs , affectedId: nID } ]                                      // .(30406.01.3).(30526.03.6).(30527.03.2)
 
-        } catch( pError ) {
-                 sayErr(    `*** Error:  ${pError.message}.\n${   saySQL( aSQL, 31 ) }\n` );
+        } catch( pError ) {  var aFill = '\n'.padEnd( 18 )                                                                                          // .(30529.01.1)
+                 sayErr(   ` *** Error:  ${pError.message}.${aFill}${ saySQL( aSQL, -1 ) }\n` );                                                    // .(30529.01.2 RAM Fix SQL error fmt, 31 is not used, but 2 should be)
     return  [ "error",          `Error:  ${pError.message}.  <br>
-                                          &nbsp; &nbsp; &nbsp; ${ saySQL( aSQL     ) }` ]
+                                          &nbsp; &nbsp; &nbsp; ${     saySQL( aSQL    ) }` ]
             }
          }; // eof putData_                                                                                                                         // .(30403.05.1 End)
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
@@ -215,10 +217,10 @@
                  sayMsg(     saySQL( aSQL,  0,  `${ aRecords }, returned` ) )                                                                       // .(30528.01.3).(30526.03.11)
     return  mRecs
             }
-        } catch( pError ) {
-                 sayErr(    `*** Error:  ${pError.message}.\n${   saySQL( aSQL, 31 ) }\n` );
+        } catch( pError ) {  var aFill = '\n'.padEnd( 18 )                                                                                          // .(30529.01.3)
+                 sayErr(   ` *** Error:  ${pError.message}.${aFill}${ saySQL( aSQL, -1 ) }\n` );                                                    // .(30529.01.4)
     return  [ "error",          `Error:  ${pError.message}.  <br>
-                                          &nbsp; &nbsp; &nbsp; ${ saySQL( aSQL     ) }` ] // .replace( /"/g, '\\"' ) ];                             // .(30328.04.2).(30402.05.12 RAM To be sent as HTML)
+                                          &nbsp; &nbsp; &nbsp; ${     saySQL( aSQL     ) }` ] // .replace( /"/g, '\\"' ) ];                         // .(30328.04.2).(30402.05.12 RAM To be sent as HTML)
             }
          }; // eof getData
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
@@ -475,8 +477,9 @@
     return  pArgs                   // pReq.query; all? or nothing; could be {} if no args given                           // .(30403.02.6)
             }
                           sndErr( pRes, `  ** Invalid Arguments`,    mErrArgs.map( mArg => fmtArg( mArg ) ) )              // .(30425.01.1 RAM Add fmtArg).(30526.01.18)
-       var  aMsg       =                `  ** Invalid Arguments: '${ mErrArgs.map( mArg => fmtArg( mArg ) ).join() }'`     // .(30402.05.6).(30425.01.2).(30526.01.19)
-                          sayErr( `${aMsg}\n` )                                                                            // .(30402.05.7)
+       var  aMsg       =                `  ** Invalid Arguments: '${ mErrArgs.map( mArg => fmtArg( mArg ) ).join(", ") }'` // .(30402.05.6).(30425.01.2).(30526.01.19)
+//                        sayErr( `${aMsg}` ); sayMsg( 'Done', fncName(3) )                                 //#.(30529.01.6 RAM No \n, call sayMsg( 'Done', '') instead).(30402.05.7)
+                          sayMsg( 'Abort', aMsg, fncName(3) )                                               // .(30529.01.6 RAM Call sayMsg( 'Abort' ) instead).(30402.05.7)
     return  null
 //          ----------------------------------
 
@@ -657,6 +660,14 @@
     return  pOut;
 
          }; // eof indexObj                                                                                 // .(30402.03.1 End)
+//  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
+
+  function  fncName( n ) {                                                                                  // .(30529.01.6 Beg RAM Write fncName)
+       var  mStack = (new Error).stack.split("\n"); // console.log(mStack)
+//     var  aRow   =  mStack[ n ? n : 2 ] || ''
+       var  mFName = (mStack[ n ? n : 1] || '').match( /at (.+) \(/ )
+    return  mFName ?  mFName[1] : ""
+        }                                                                                                   // .(30529.01.6 End)
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
    function init( pApp, pDB_Config, bQuiet_, aAPI_ ) {                                                      // .(30410.03.3 RAM async).(30412.02.1)
