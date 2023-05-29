@@ -105,6 +105,7 @@
 # .(30526.02  5/27/12 RAM  7:00p|  Get Page and User too for sayMsg log
 # .(30528.01  5/28/12 RAM 12:55p|  Change 'records' to 'recs' and pass to sayMsg
 # .(30528.02  5/28/23 RAM  1:30p|  Add '+' or '-' to aLogNo
+# .(30528.04  5/28/12 RAM  3:00p|  Add Abort to sayMsg instead of sayErr??
 
 ##SRCE =========================+===============================================+========================== #  ===============================  #
 #*/
@@ -237,10 +238,10 @@
        var  aJSON      =  fmtJSON( pRecs, aSQL )
 //               sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc :'routeHandler'}', executed`); //#.(30331.01.4).(30526.01.09)
         } else {
-//                        sayErr( `${ saySQL( aSQL    ) }\n ** No ${aRecords} found` );                     // .(30328.04.6).(30402.05.15 RAM Not the same as GetData).(30407.03.x RAM Now done in getData)
+//                        sayErr( `${ saySQL( aSQL    ) }\n ** No ${aRecords} found` );                     //#.(30328.04.6).(30402.05.15 RAM Not the same as GetData).(30407.03.9 RAM Now done in getData)
        var  aJSON      =  JSON.stringify( {  "warning":   ` ** No ${aRecords} found` } )                    // .(30402.05.16)
          }  }
-//      if (pRes) {       sndJSON( pRes, aJSON, aRecords ) }                                                // .(30407.03.10 RAM getData may not pass pRes )
+//      if (pRes) {       sndJSON( pRes, aJSON, aRecords ) }                                                //#.(30407.03.10 RAM getData may not pass pRes )
                  sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc :'routeHandler'}', executed`);          // .(30331.01.4).(30526.01.10)
                           sndJSON( pRes, aJSON, aRecords )                                                  // .(30407.03.10 RAM getData nice try, need to send []  )
          }; // eof sndRecs
@@ -444,7 +445,7 @@
             pRes.end();
         if (aJSON.match( /{ "error": /)) { return }
         if (aDatasetName) {
-                 sayMsg( `JSON Object, '${aDatasetName.replace(/^\//, '')}', sent\n` ) }                    // .(30526.01.15)
+                 sayMsg( `JSON Object, '${aDatasetName.replace(/^\//, '')}', sent` ) }                      // .(30528.04.4 RAM No \n).(30526.01.15)
 
          }; // eof sndJSON
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
@@ -504,10 +505,10 @@
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  sndHTML( pRes, aHTML, aURI, aOnRouteFnc ) {                                                     // .(30331.01.4)
-                 sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc : 'onRoute'}', executed` );             // .(30331.01.6).(30526.01.20)
+//               sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc : 'onRoute'}', executed` );             // .(30528.04.5 RAM Let sayMsg( 'Done') doit).(30331.01.6).(30526.01.20)
                           pRes.send( aHTML )
         if (typeof(aURI) != 'undefined') {                                                                  // .(30414.03.1).(30415.02.1)
-                          sayMsg( `HTML Page,  '${aAPI_Host}${aURI}', sent\n` ) }                           // .(30415.03.1).(30526.01.21)
+                          sayMsg( `HTML Page,  '${aAPI_Host}${aURI}', sent` ) }                             // .(30528.04.6 RAM No \n).(30415.03.1).(30526.01.21)
 
          }; // eof sndHTML
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
@@ -580,23 +581,69 @@
             }                                                                                               // .(30526.02.2 End)
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
-  function  sayMsg( pReq, aMethod, aRoute, aWhen ) {
+  function  sayMsg( pReq, aMethod_, aRoute, aWhen ) {
+//      if (bQuiet) { return }
+
+       var  aMsg       = (typeof(aMethod_) != 'undefined') ? aMethod_ : pReq                                // .(30528.04.7)
+       var  aEndMsg    = ''
+//      if (typeof(aRoute) == 'undefined') { aRoute = aMethod; aMethod = pReq; pReq = null }                //#.(30528.04.8).(30414.03.3 RAM It could be '').(30415.02.2)
+//      if (typeof(pReq) == 'object') {                                                                     //#.(30528.04.8).(30414.03.3 RAM It could be '').(30415.02.2)
+//          aRoute     =  aMethod_; aMethod = 'set'; pReq = 'set';                                          //#.(30528.04.8)
+//          }                                                                                               //#.(30528.04.8)
+//      if (pReq) {                                                                                         //#.(30528.04.8)
+        if (typeof(pReq) == 'string') {                                                                     // .(30528.04.8)
+
+       var  aMethod    =  pReq.trim().substring(0,6).toLowerCase()                                          // .(30528.04.9)
+     switch(aMethod) {                                                                                      // .(30528.04.10 RAM Beg Use switch stateement)
+
+      case 'use':                                                                                           // .(30528.04.11 RAM Use Database)
+            aMsg       = `Use ${aMsg}`; break
+
+//    case 'set':                                                                                           //#.(30528.04.12)
+//          aMsg       = `${aMsg}', set`; break                                                             //#.(30528.04.12 RAM For inital route set only)
+
+      case 'get':
+      case 'post':
+      case 'put':
+      case 'delete':
+            aRoute     =  aRoute ? aRoute : aMethod_                                                        // .(30528.04.13 RAM Geez Louise)
+            aMsg       = `${ aMethod.toUpperCase().padEnd(4) } Route, '${aAPI_Host}${aRoute}, set`; break   // .(30415.03.2).(30526.01.22 RAM Pad method)
+
+      case 'abort':                                                                                         //#.(30528.04.14 RAM Abort.  What about sayErr)
+//          aMsg       = `${aMsg}'                                                                          // .(30528.04.14 RAM The reason why)
+       var  aHandler   =  aRoute
+            aEndMsg    = `Handler      '${ aHandler ? aHandler :'routeHandler'}', aborted\n`;  break
+
+      case 'done':                                                                                          // .(30528.04.15 RAM In case sndJSON or sndHTML didn't do it)
+       var  aHandler   =  aRoute ? aRoute : aMsg                                                            // .(30528.04.16 RAM Geez Louise)
+            aMsg       = `Handler      '${ aHandler ? aHandler :'routeHandler'}', executed\n`; break        // .(30528.04.17 RAM Send the Carriage Return)
+
+      case 'end':                                                                                           // .(30528.04.18 RAM Last resort, for sndRecs)
+//          aMsg       = `\n`; break
+            console.log( "" ); return;
+
+      default:
+//          aMsg       = `${aMsg}'
+            }                                                                                               // .(30528.04.19 End pReq == string)
+
         if (bQuiet) { return }
-
-        if (typeof(aRoute) == 'undefined'   ) { aRoute = aMethod; aMethod = pReq; pReq = null }             // .(30414.03.3 RAM It could be '').(30415.02.2)
-        if (pReq) {
-            pReq.args  =  fmtArgs( pReq.query )  // save for ending sayMsg
-       var  aMsg       = `${ aMethod.toUpperCase().padEnd(4) } Route, '${aAPI_Host}${aRoute}`               // .(30415.03.2).(30526.01.22 RAM Pad method)
-            aMsg       = `${ aMsg }${ pReq.args }', recieved`
+/*
+       var  aMsg       = `${ aMethod.toUpperCase().padEnd(4) } Route, '${aRoute}'`                          //#.(30528.04.20).(30415.03.3 RAM aRoute, set has ${aAPI_Host}).(30526.01.23)
+            aMsg       =  typeof(aRoute) == 'undefined' ? aMsg1 : `${aMsg}', set`                           //#.(30528.04.20 RAM Use aMsg1).(30414.03.1 RAM aMethod == aMsg if aRoute is not defined)
+*/
         } else {
-       var  aMsg       = `${ aMethod.toUpperCase().padEnd(4) } Route, '${aRoute}'`                          // .(30415.03.3 RAM aRoute, set has ${aAPI_Host}).(30526.01.23)
-            aMsg       =  typeof(aRoute) != 'undefined' ? `${aMsg}', set` : aMethod                         // .(30414.03.1 RAM aMethod == aMsg if aRoute is not defined
+            pReq.args  =  fmtArgs( pReq.query )                                                             // .(30528.04.21 RAM For Excuted Route).(30414.03.3 RAM save for ending sayMsg)
+       var  aMsg       = `${ aMethod_.toUpperCase().padEnd(4) } Route, '${aAPI_Host}${aRoute}`              // .(30528.04.22 RAM Use aMethod_).(30415.03.2).(30526.01.22 RAM Pad method)
+            aMsg       = `${ aMsg }${ pReq.args }', recieved`
             }
-        var aTS        = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' )
-            aTS        = `${ aLogNo } ${ aTS.substring(9) }`                                                    // .(30527.04.4)
-        var aCR        =  aMsg.match( /^[ \n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )          // .(30416.01.3)
-            console.log( `${ aCR }${ aTS }  ${ aMsg }` )                                                    // .(30416.01.4)
 
+        var aTS        = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' )
+            aTS        = `${ aLogNo }${ aTS.substring(9) }`                                                 // .(30528.02.9 RAM Add '+' or '-' to aLogNo).(30527.04.4)
+        var aCR        =  aMsg.match( /^[\n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )           // .(30528.04.23 RAM Ignore leading space: /^[ \n]+/).(30416.01.3)
+            console.log( `${ aCR }${ aTS }  ${ aMsg }` )                                                    // .(30416.01.4)
+        if (aEndMsg) {                                                                                      // .(30528.04.24)
+            console.log( `${ aTS.replace( /[+-]/, "*" ) }  ${ aEndMsg }` )                                  // .(30528.04.25
+            }                                                                                               // .(30528.04.26)
          }; // eof sayMsg
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
@@ -635,7 +682,7 @@
        var  pDB        =  mysql.createPool( pDB_Config )                                                    //
 
                           console.log( "" )
-                          sayMsg( `USE  Database: '${ pDB_Config.database }'` )                             // .(30323.03.1).(30526.01.24)
+                          sayMsg( 'USE', `Database: '${ pDB_Config.database }'` )                           // .(30528.04.27 RAM Add Use too).(30323.03.1).(30526.01.24)
 
 //          ---------  =  ----------------------------------------------------------
 

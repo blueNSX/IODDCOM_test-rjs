@@ -97,6 +97,7 @@
 # .(30526.02  5/26/12 RAM  1:35p|  Use getIPAddr and logIP
 # .(30527.02  5/27/12 RAM  4:10p|  Use fmtFld4SQL
 # .(30528.03  5/28/12 RAM  2:00p|  Check for valid Email, Cleanup SQL
+# .(30528.04  5/28/12 RAM  3:00p|  Add Abort to sayMsg, Forgot to sayMsg
 
 ##PRGM     +====================+===============================================+
 ##ID                            |
@@ -1109,6 +1110,7 @@ this.User_postRoute  =  function( ) {                                           
         if (mRecs1.length != 0) {
        var  mMsg      =  [ ` ** The user, '${mRecs1[0].UserName }', currently exists` ]
                                sndJSON( pRes, JSON.stringify( { error: mMsg  } ), 'user' )
+                               sayMsg( 'ABORT', mMsg[0], 'User_postRoute_Handler' )     // .(30528.04.3 RAM Switch args).(30528.04.2 RAM Add abort).(30528.04.1 RAM Forgot to say)
         } else { // no error
        var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );
 
