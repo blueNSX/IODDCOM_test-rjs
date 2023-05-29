@@ -104,6 +104,7 @@
 # .(30527.04  5/27/12 RAM 12:48p|  Add IP and aLogNo Session number to sayMsg
 # .(30526.02  5/27/12 RAM  7:00p|  Get Page and User too for sayMsg log
 # .(30528.01  5/28/12 RAM 12:55p|  Change 'records' to 'recs' and pass to sayMsg
+# .(30528.02  5/28/23 RAM  1:30p|  Add '+' or '-' to aLogNo
 
 ##SRCE =========================+===============================================+========================== #  ===============================  #
 #*/
@@ -143,7 +144,7 @@
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
  async function  putData_( pDB, aSQL, aDatasetName ) {                                                                                              // .(30403.05.1 Beg RAM Write function).(30407.03.2)
-       var  aRecords   = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } rec`                                                           // .(30528.01.1 RAM Needed).(30526.03.1)
+       var  aRecords   = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } rec`                                                           // .(30528.01.1 RAM Is needed).(30526.03.1)
 
        var  aAction    =  aSQL.match( /INSERT/i ) ? 'inserted' : (aSQL.match( /DELETE/i ) ? 'deleted' : 'updated' )                                 // .(30403.05.5 RAM Added deleted)
        try {
@@ -239,9 +240,9 @@
 //                        sayErr( `${ saySQL( aSQL    ) }\n ** No ${aRecords} found` );                     // .(30328.04.6).(30402.05.15 RAM Not the same as GetData).(30407.03.x RAM Now done in getData)
        var  aJSON      =  JSON.stringify( {  "warning":   ` ** No ${aRecords} found` } )                    // .(30402.05.16)
          }  }
-//      if (pRes) {       sndJSON( pRes, aJSON, aRecords ) }                                                // .(30407.03.x RAM getData may not pass pRes )
+//      if (pRes) {       sndJSON( pRes, aJSON, aRecords ) }                                                // .(30407.03.10 RAM getData may not pass pRes )
                  sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc :'routeHandler'}', executed`);          // .(30331.01.4).(30526.01.10)
-                          sndJSON( pRes, aJSON, aRecords )                                                  // .(30407.03.x RAM getData nice try, need to send []  )
+                          sndJSON( pRes, aJSON, aRecords )                                                  // .(30407.03.10 RAM getData nice try, need to send []  )
          }; // eof sndRecs
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
@@ -435,7 +436,9 @@
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  sndJSON( pRes, aJSON, aDatasetName ) {
+
             pRes.setHeader( 'Content-Type', 'application/json' );
+
         if (typeof(aJSON) == 'object') { aJSON = JSON.stringify( aJSON ) }                                  // .(30424.09.x)
             pRes.send(  aJSON )
             pRes.end();
@@ -563,14 +566,15 @@
 
   function  logIP( pReq, pDB, aWhen ) {                                                                     // .(30526.02.2 Beg RAM Add logIP)
        var  aIP        =  getIPAddr( pReq );
-       var  aUser = aIP[2], aPage = aIP[1]; aIP = aIP[0]                                                    // .(30526.02.17 RAM Get aUser and Page too)
+       var  aUser      =  aIP[2], aPage = aIP[1]; aIP = aIP[0]                                              // .(30526.02.17 RAM Get aUser and Page too)
+       var  aUWT       =  pReq.method == 'GET' ? "-" : "+"                                                  // .(30528.02.5 RAM Unit of Work type)
        if (!mIPs[ aIP ]) {                                                                                  // .(30527.04.5 RAM Beg )
-       var  aLogNo     = (Object.keys( mIPs ).length + 1).toString().padStart( 5, '0' )
+       var  aLogNo     = (Object.keys( mIPs ).length + 1).toString().padStart( 5, '0' ) + aUWT              // .(30528.02.6)
        var  aTS        = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' )
        var  aUser      =  aUser.padEnd(30)
-            mIPs[ aIP ]= `${aLogNo} ${aTS.substring(2,8)} ${aIP.padStart(15)}    ${aUser} ${aPage}`         // .(30527.04.6 RAM Put aLogNo aTS aIP aUser into mIPs)
+            mIPs[ aIP ]= `${aLogNo}${aTS.substring(2,8)} ${aIP.padStart(15)}    ${aUser} ${aPage}`          // .(30528.02.7).(30527.04.6 RAM Put aLogNo aTS aIP aUser into mIPs)
             }
-            aLogNo     =  mIPs[ aIP ].substring(0,5)
+            aLogNo     =  mIPs[ aIP ].substring(0,6)                                                        // .(30528.02.8 RAM Was 5)
         if (process) { global.aLogNo = aLogNo } else { window.aLogNo = aLogNo }                             // .(30527.04.5 End)
             console.log( mIPs[ aIP ] )                                                                      // .(30527.04.7)
             }                                                                                               // .(30526.02.2 End)
@@ -617,7 +621,7 @@
        var  aEnv_Dir   =  __appDir; // `${__dirname}/../..`                                                 // .(30322.03.1 Beg RAM Set different var).(30416.03.5)
 
 //          process.env=  await getEnv( `${aEnv_Dir}/.env` )                                                // .(30222.01.2 RAM Get it myself).(30322.03.1 End).(30410.03.4 RAM await)
-            process.env=  getEnv_sync( `${aEnv_Dir}/.env` ); var pEnv = process.env                         // .(30222.01.2 RAM Get it myself).(30322.03.1 End).(30412.01.9 RAM no await)
+            process.env=  getEnv_sync(  `${aEnv_Dir}/.env` ); var pEnv = process.env                        // .(30222.01.2 RAM Get it myself).(30322.03.1 End).(30412.01.9 RAM no await)
 
             bQuiet     =  setVar1( 'Quiet', bQuiet_, true )   // Override value in .env
             bQuiet     =  bQuiet ?  true :  false;            // console.log( `bQuiet:        ${bQuiet}`   );  process.exit()
@@ -636,10 +640,10 @@
 //          ---------  =  ----------------------------------------------------------
 
         pEnv.API_URL   =  aAPI_ ? aAPI_ : pEnv.API_URL;                                                     // .(30412.02.2)
-//     var  aAPI_URL   =  setVar1( 'API_URL',     '/api2' );                     // console.log( `aAPI_URL:     '${aAPI_URL}'`     ); // process.exit() // .(30410.03.5)
-//     var  aAPI_URL   =  await setAPI_URL( process.env )                                                   // .(30410.04.2 Use it).(30410.04.9 RAM Add pEnv arg)
-//     var  aAPI_URL   =        setAPI_URL( process.env )                                                   // .(30410.04.2 Use it).(30410.04.9 RAM Add pEnv arg).(30412.02.3 RAM Can't be a promise)
-       var  aAPI_URL   = `${pEnv.Host_Location == 'remote'                                                  // .(30412.02.4)
+//     var  aAPI_URL   =  setVar1( 'API_URL',     '/api2' );// console.log( `aAPI_URL:     '${aAPI_URL}'`); //#.(30410.03.5)process.exit() //
+//     var  aAPI_URL   =  await setAPI_URL( process.env )                                                   //#.(30410.04.2 Use it).(30410.04.9 RAM Add pEnv arg)
+//     var  aAPI_URL   =        setAPI_URL( process.env )                                                   //#.(30410.04.2 Use it).(30410.04.9 RAM Add pEnv arg).(30412.02.3 RAM Can't be a promise)
+       var  aAPI_URL   = `${pEnv.Host_Location == 'remote'                                                  //#.(30412.02.4)
                        ? `/${pEnv.API_URL.replace( /^\//, '' )}`
                        : `${pEnv.Local_Host}:${pEnv.Server_Port}` }`
 

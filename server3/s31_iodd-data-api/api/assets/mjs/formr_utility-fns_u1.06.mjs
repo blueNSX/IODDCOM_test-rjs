@@ -6,6 +6,7 @@
 ##FD formr_utility-fns_u1.06.mjs|  10088|  4/12/23 16:35|   145| u1-06.30412.1630
 ##FD formr_utility-fns_u1.06.mjs|  13261|  4/17/23 14:10|   171| u1-06.30417.1410
 ##FD formr_utility-fns_u1.06.mjs|  15757|  5/27/23 14:55|   204| u1-06.30527.1455
+##FD formr_utility-fns_u1.06.mjs|  15970|  5/28/23 13:30|   206| u1-06.30528.1330
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
@@ -35,6 +36,7 @@
 # .(30417.05  4/17/23 RAM  2:10p|  Check pEnv.Host_Location
 # .(30526.03  5/26/23 RAM  1:25p|  No blank line in sayErr on leading space
 # .(30527.04  5/27/23 RAM  2:55p|  Define aLogNo for sayErr
+# .(30528.02  5/28/23 RAM  1:30p|  Initialize aLogNo with trailing space
                                 |
 ##SRCE     +====================+===============================================+
 #*/
@@ -49,9 +51,9 @@
        var  inspect         = (await import( 'util' )).inspect                                              // .(30416.02.x RAM no workie)
        var  pFS             =  await import( 'fs' )                                                         // .(30412.01.7 RAM Get pFS here  so getEnv_sync   doesn't have to be a async function)
 //     var  pFS             =  await import( 'fs/promises' ) { .. }                                         //#.(30412.01.2 RAM Get pFS above so this function doesn't have to be a async function)
-            global.aLogNo   = '00000'                                                                       // .(30527.04.1)
+            global.aLogNo   = '00000 '                                                                      // .(30528.02.1).(30527.04.1)
         } else {
-            window.aLogNo   = '00000'                                                                       // .(30527.04.2)
+            window.aLogNo   = '00000 '                                                                      // .(30528.02.2).(30527.04.2)
             }                                                                                               // .(30507.03.1 RAM Clearer)
 
 //     var  pUtil           =  await import( 'util' ), inspect = pUtil.inspect                              // .(30416.02.x RAM no workie)
@@ -173,7 +175,7 @@ async function  setAPI_URL( pEnv,  aNum ) {                                     
 
   function  sayErr( aMsg ) {                                                                                // .(30417.03.1 RAM Move to here)
        var  aTS  = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' )
-            aTS  =`${aLogNo} ${ aTS.substring(9) }`                                                         // .(30527.04.3)
+            aTS  =`${aLogNo.substring( 0, 5 )}*${ aTS.substring(9) }`                                       // .(30528.02.3 RAM Add '*' aLogNo).(30527.04.3)
 
 //     var  aCR  =  aMsg.match( /^[ \n]+/ ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )                //#.(30416.01.1).(30526.03.1 RAM sayErr No blank line on leading space)
        var  aCR  =  aMsg.match( /^[\n]+/  ) ? "\n" : ""; aMsg = aMsg.replace( /^[\n]+/, "" )                // .(30416.01.1).(30526.01.23 RAM Don't check for leading sp)
