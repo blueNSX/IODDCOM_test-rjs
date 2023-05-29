@@ -103,6 +103,7 @@
 # .(30527.03  5/27/12 RAM 11:22a|  Return 'error' if 0 records deleted
 # .(30527.04  5/27/12 RAM 12:48p|  Add IP and aLogNo Session number to sayMsg
 # .(30526.02  5/27/12 RAM  7:00p|  Get Page and User too for sayMsg log
+# .(30528.01  5/28/12 RAM 12:55p|  Change 'records' to 'recs' and pass to sayMsg
 
 ##SRCE =========================+===============================================+========================== #  ===============================  #
 #*/
@@ -142,7 +143,7 @@
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
  async function  putData_( pDB, aSQL, aDatasetName ) {                                                                                              // .(30403.05.1 Beg RAM Write function).(30407.03.2)
-//     var  aRecords   = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } record`                                                        //#.(30526.03.1)
+       var  aRecords   = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } rec`                                                           // .(30528.01.1 RAM Needed).(30526.03.1)
 
        var  aAction    =  aSQL.match( /INSERT/i ) ? 'inserted' : (aSQL.match( /DELETE/i ) ? 'deleted' : 'updated' )                                 // .(30403.05.5 RAM Added deleted)
        try {
@@ -153,12 +154,14 @@
        var  nID        =  aSQL.match( /INSERT/i ) ? mRecs[0].insertId : 0, aRecords                                                                 // .(30406.01.1 RAM Return InsertedId)
 
        var  nRecs      =  mRecs[0].affectedRows                                                                                                     // .(30526.03.2)
-       var  aRecords   = `${ ('* ' + nRecs).padStart(nRecs == 1 ? 5 : 4) } record${ nRecs == 1 ? '' : 's' }`                                        // .(30526.03.3 RAM Add space for singular).(30526.03.3 RAM Don't, pad it with 4, or 5)
+       var  aRecords   = `${ ('* ' + nRecs).padStart(nRecs == 1 ? 5 : 4) } rec${ nRecs == 1 ? '' : 's' }`                                           // .(30528.01.1).(30526.03.15 RAM Was: 'records')..(30526.03.3 RAM Add space for singular).(30526.03.3 RAM Don't, pad it with 4, or 5)
 //      if (aDatasetName) {  aRecords = `${aRecords}${ (mRecs[0].affectedRows == 1) ? '' : 's' } ${ nID ? `, ${nID},` : '' }` }                     //#.(30406.01.2).(30526.03.4)
         if (aDatasetName) {  aRecords = `${aRecords} for '${aDatasetName}'${ nID ? ` (${nID})` : '' }` }                                            // .(30406.01.2).(30526.03.4)
 
 //               sayMsg( `${ saySQL( aSQL ) }\n    *  ${ `${mRecs[0].affectedRows}` } ${ aRecords }, ${aAction}`.replace( /\n/g, '\n           ')); //#.(30526.03.5)
-                 sayMsg( `${ saySQL( aSQL ) }\n  ${ aRecords }, ${aAction}`.replace( /\n/g, '\n           ') );                                     // .(30526.03.5)
+//               sayMsg( `${ saySQL( aSQL ) }\n  ${ aRecords }, ${aAction}`.replace( /\n/g, '\n           ') );                                     //#.(30526.03.5).(30528.01.1)
+                 sayMsg(     saySQL( aSQL,  0,  `${ aRecords }, ${aAction}` ) )                                                                     // .(30528.01.1).(30526.03.5)
+
 //  return ["success",  ` ${ mRecs[0].affectedRows } ${ aRecords }, ${aAction}`, { affectedRows: mRecs[0].affectedRows , affectedId: nID } ]        //#.(30406.01.3).(30526.03.6)
        var  aSuccess   =   ( aSQL.match( /DELETE/i ) && nRecs == 0 ) ? 'warning' : 'success'                                                        // .(30527.03.1 RAM Return 'warning' if deleted 0 records)
     return [aSuccess,    `${ aRecords.substring(4) }, ${aAction}`, { affectedRows: nRecs , affectedId: nID } ]                                      // .(30406.01.3).(30526.03.6).(30527.03.2)
@@ -185,25 +188,28 @@
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
  async function  getData_( pDB, aSQL, aDatasetName ) {                                                                                              // .(30402.05.17).(30407.03.5)
-//     var  aRecords   = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } record`                                                        // .(30402.05.20).(30526.03.7 RAM Not needed)
+       var  aRecords   = `${ aDatasetName ? aDatasetName.replace( /^\//, "" ) : '' } rec`                                                           // .(30528.01.2 RAM Is needed).(30402.05.20).(30526.03.7 RAM Not needed).(30526.03.7 RAM it is for sayErr)
        try {
        var [mRecs, mCols] =  await pDB.execute( saySQL( aSQL, 'parse' ) );                                                                          //#.(30413.01.2 RAM Parse SQL).(30527.02.7 RAM Don't fmt for say, rather clean for execute)
 //     var [mRecs, mCols] =  await pDB.execute( saySQL( aSQL ) );                                                                                   // .(30413.01.2 RAM Parse SQL).(30527.02.7 RAM Do fmt for sayMsg, don't parse which it didn't anyway)
 
        var  mColDefs      =  mCols.map( pRec => { return { Name: pRec.name, Type: pRec.type, Len: pRec.columnLength, Decs: pRec.decimals } } )
         if (mRecs.length == 0) {
-                 sayErr(    ` *** NoData:  No ${ aRecords }s returned.\n${ saySQL( aSQL, 31 ) }` );                                                 // .(30402.05.21).(30407.03.5).(30526.01.01)
-    return  [ "nodata",          `NoData:  No ${ aRecords }s returned.<br>                                                                          // .(30407.03.6).(30526.01.02)
+//               sayErr(    ` *** NoData:  No ${ aRecords }s returned.\n${ saySQL( aSQL, 31 ) }` );                                                 //#.(30402.05.21).(30407.03.6).(30526.01.01).(30528.01.2)
+                 sayErr(     saySQL( aSQL,  0, `  ** NoData:  No ${ aRecords }s returned` ) );                                                      // .(30528.01.2).(30402.05.21).(30407.03.6).(30526.01.01)
+
+    return  [ "nodata",          `NoData:  No ${ aRecords }s returned.<br>                                                                          // .(30407.03.7).(30526.01.02)
                                                  &nbsp; &nbsp; &nbsp; ${ saySQL( aSQL     ) }` ] // .replace( /"/g, '\\"' ) ];                      // .(30328.04.2).(30402.05.11 RAM To be sent as HTML)
      } else {
        var  nRecs         =  mRecs.length                                                                                                           // .(30526.03.8)
-       var  aRecords      = `${ ('* ' + nRecs).padStart(nRecs == 1 ? 5 : 4) } record${ nRecs == 1 ? '' : 's' }`                                     // .(30526.03.9 RAM Added space for singular).(30526.03.9 RAM Don't, pad it with 4, 05)
+       var  aRecords      = `${ ('* ' + nRecs).padStart(nRecs == 1 ? 5 : 4) } rec${ nRecs == 1 ? '' : 's' }`                                        // .(30528.01.2).(30526.03.16).(30526.03.9 RAM Added space for singular).(30526.03.9 RAM Don't, pad it with 4, 05)
 //      if (aDatasetName) {  var aRecords = `${aRecords}${ (mRecs.length == 1) ? '' : 's' }`                                                        //#.(30402.05.18).(30526.03.10)
             aRecords      = (aDatasetName) ? `${aRecords} for '${aDatasetName}'` : aRecords                                                         // .(30406.01.2).(30526.03.10)
-
+//          aRecords      = `${ aLogNo}${ aTS.substring( 9, 19 ) }${aRecords}`                                                                      //#.(30528.01.3 RAM Add aLogNo)
 //               sayMsg( `${ saySQL( aSQL ) }\n       * ${ `${mRecs.length}`.padStart(3) } ${aRecords} found`.replace( /\n/g, '\n           ') ); } //#.(30402.05.19)
 //               sayMsg( `${ saySQL( aSQL ) }\n     *  ${  `${nRecs}` } ${ aRecords       }, returned`.replace( /\n/g, '\n           ') ); }        //#.(30402.05.23).(30526.03.11)
-                 sayMsg( `${ saySQL( aSQL ) }\n  ${ aRecords }, returned`.replace( /\n/g, '\n           ') );                                       // .(30526.03.11)
+//               sayMsg( `${ saySQL( aSQL ) }\n  ${ aRecords }, returned`.replace( /\n/g, '\n           ') );                                       //#.(30526.03.11).(30528.01.3)
+                 sayMsg(     saySQL( aSQL,  0,  `${ aRecords }, returned` ) )                                                                       // .(30528.01.3).(30526.03.11)
     return  mRecs
             }
         } catch( pError ) {
@@ -214,8 +220,8 @@
          }; // eof getData
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
-//function  sndRecs( pRes, mRecs, aSQL, aDatasetName, aOnRouteFnc ) {                                       // .(30331.01.3).(30407.03.x)
-  function  sndRecs( mRecs, aSQL, aDatasetName, pRes, aOnRouteFnc ) {                                       // .(30407.03.x)
+//function  sndRecs( pRes, mRecs, aSQL, aDatasetName, aOnRouteFnc ) {                                       // .(30331.01.3).(30407.03.8)
+  function  sndRecs( mRecs, aSQL, aDatasetName, pRes, aOnRouteFnc ) {                                       // .(30407.03.8)
        var  aRecords   = (aDatasetName ? aDatasetName.replace( /^\//, "" ) + " " : "" ) + 'records'         // .(30526.03.12 RAM Keep??)
 
         if (String(mRecs[0]).match(/error/ )) {
@@ -255,7 +261,7 @@
          }; // eof getHTML                                                                                  // .(30401.02.1 End)
 //  ------  ---- ----- =  ------|  ---------------------------------- ----------------- ------------------+
 
- async function  getStyles( aFile, mStyles, aDivID ) {                                  // .(30402.02.2 Beg RAM Add function)
+ async function  getStyles( aFile, mStyles, aDivID ) {                                                      // .(30402.02.2 Beg RAM Add function)
 //     var {toCSS, toJSON} = await import( 'cssjson' );
 //     var  toJSON     =  await import( 'cssjson' ).toJSON;
 //     var  toJSON     =  await import( 'cssjson' ).toJSON;
@@ -264,21 +270,22 @@
 
        var  toJSON     =  cssjson.toJSON;
        var  toCSS      =  cssjson.toCSS;
-       var  nSay3      =  process.env.Log_Styles == true                                // .(30417.02.3)
+       var  nSay3      =  process.env.Log_Styles == true                                                    // .(30417.02.3)
 
        if (!Array.isArray(mStyles)) { aDivID = mStyles }
         if (aDivID) {
        var  pSheet     =  $( `#${aDivID}` )
             pSheet.setAttribute( 'href', `${aFile}` )
-                 traceR( "getStyles[1]", "Included CSS file",          nSay3, aFile  )  //#.(30402.05.3)
-                 sayMsg(` CSS  File,  '${aFile}', included` )                           // .(30402.05.3).(30526.01.05)
+                 traceR( "getStyles[1]", "Included CSS file",              nSay3, aFile  )                  //#.(30402.05.3)
+                 traceR( "getStyles[1]", "Included CSS file",              nSay3, aFile  )                  //#.(30402.05.3)
+                 sayMsg(` CSS  File,  '${aFile}', included` )                                               // .(30402.05.3).(30526.01.05)
         } else {
-                 traceR( "getStyles[2]", "Fetching StyleSheet",        nSay3, aFile  )  //#.(30402.05.4)
+                 traceR( "getStyles[2]", "Fetching StyleSheet",            nSay3, aFile  )                  //#.(30402.05.4)
        var  aSheet     = (await fetchFile( aFile, false )).text
-                 traceR( "getStyles[3]", "Fetched: aSheet",            nSay3, aSheet )  //#.(30402.05.4)
-       if (mStyles.length == 0) { return  aSheet }                                      // .(30420.04.1 RAM Opps.)
-       var  pJSON      =  toJSON( aSheet ), pStyles = {}, aCSS = ''                     // .(30415.04.2)
-                 traceR( "getStyles[4]", "Convered aSheet into pJSON", nSay3, pJSON  )  //#.(30402.05.4)
+                 traceR( "getStyles[3]", "Fetched: aSheet",                nSay3, aSheet )                  //#.(30402.05.4)
+       if (mStyles.length == 0) { return  aSheet }                                                          // .(30420.04.1 RAM Opps.)
+       var  pJSON      =  toJSON( aSheet ), pStyles = {}, aCSS = ''                                         // .(30415.04.2)
+                 traceR( "getStyles[4]", "Convered aSheet into pJSON",     nSay3, pJSON  )                  //#.(30402.05.4)
 //          pJSON.children['*'].attributes
 //          pJSON.children['login'].attributes
 //          pJSON.children['login form'].attributes
@@ -289,33 +296,33 @@
 //          pStyles    =   pJSON
 
             mStyles.forEach( aStyle => {
-             if (pJSON.children[aStyle]) {                                              // .(30420.02.1 RAM Check if style exists)
-                 pStyles[ aStyle ] = pJSON.children[aStyle]                             //   .children and .attributes
-             } else {                                                                   // .(30420.02.2 Beg)
+             if (pJSON.children[aStyle]) {                                                                  // .(30420.02.1 RAM Check if style exists)
+                 pStyles[ aStyle ] = pJSON.children[aStyle]  // .children and .attributes
+             } else {                                                                                       // .(30420.02.2 Beg)
                  traceR( "getStyles[5]", `** Style, '${aStyle}', not found`, 1 )
-                   }                                                                    // .(30420.02.2 End)
+                   }                                                                                        // .(30420.02.2 End)
                  } )
             pStyles    = { children: pStyles, attributes: { } }
-        var aFound     =`${Object.keys( pStyles.children ).length} of ${mStyles.length}`// .(30420.02.3)
+        var aFound     =`${Object.keys( pStyles.children ).length} of ${mStyles.length}`                    // .(30420.02.3)
                  traceR( "getStyles[5]", `Selected ${aFound} mStyles from pJSON into pStyles`, nSay3, pStyles )  //#.(30402.05.4)
-    try {                                                                               // .(30415.04.3)
-                 traceR( "getStyles[6]", "Converting pStyles to aCSS", nSay3 )          //#.(30402.05.4)
+    try {                                                                                                   // .(30415.04.3)
+                 traceR( "getStyles[6]", "Converting pStyles to aCSS", nSay3 )                              //#.(30402.05.4)
        var  aCSS       =  toCSS( pStyles )
                  traceR( "getStyles[7]", "Converted: aCSS", nSay3, aCSS )
-                 sayMsg( `CSS  File,  '${aFile}', retreived` )                          // .(30402.05.4).(30526.01.06)
+                 sayMsg( `CSS  File,  '${aFile}', retreived` )                                              // .(30402.05.4).(30526.01.06)
         } catch(pErr) {   sayErr( `\n  ** CSS File,  '${aFile}', failed to load.${ `\n${pErr.message}`.replace( /\n/g, `${ "\n".padEnd(20) }** ` ) }` )  // .(30415.04.4).(30526.01.07)
                  traceR( "getStyles[8]", "** Failed to convert pStyles", nSay3 ) }
     return  aCSS
             } // eif fetch CSS file
-         }; // eof getStyles                                                            // .(30402.02.2 End)
+         }; // eof getStyles                                                                                // .(30402.02.2 End)
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
- async  function  getJSON( aFile ) {                                                    // .(30402.02.3 Beg RAM Add function)
+ async  function  getJSON( aFile ) {                                                                        // .(30402.02.3 Beg RAM Add function)
        var  pJSON      =  await fetchFile( aFile, false )
-//               traceR( `getJSON[1]     Retreived JSON '${aFile}'`, nSay2)             //#.(30402.05.5)
-                 sayMsg( `JSON file,  '${aFile}', retreived` )                          // .(30402.05.5)
+//               traceR( `getJSON[1]     Retreived JSON '${aFile}'`, nSay2)                                 //#.(30402.05.5)
+                 sayMsg( `JSON file,  '${aFile}', retreived` )                                              // .(30402.05.5)
     return  pJSON
-         }; // eof getJSON                                                              // .(30402.02.3 End)
+         }; // eof getJSON                                                                                  // .(30402.02.3 End)
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
 //function  setRoute(  pApp, aMethod,  aRoute_, onRoute,  pValidArgs_, fmtSQL_ ) {                          //#.(30328.03.1 RAM Move to this script).(30328.03.5 RAM Need onRoute too).(30401.02.1)
@@ -382,15 +389,25 @@
        var  nSQL = 'SQL';  aSQL = aSQL.replace( / [\/-]{2}.*/g, '' )                                        // .(30413.01.3 RAM Remove comments: // or --).(30515.03.1 RAM Only if prefixed by a space)
             aSQL = aSQL.replace( /^[ \n]+/, "" )                                                            // .(30527.02.14 RAM Remove leading spaces or \n)
         if (aSQL.match( /^ *SQL[0-9]+/)) {
-       var  nSQL = aSQL.match( /^ *(SQL[0-9]+)/ )[1]
-            aSQL = aSQL.replace( new RegExp( `${nSQL}[ :\n]+` ), '' )
+       var  nSQL  = aSQL.match( /^ *(SQL[0-9]+)/ )[1]
+            aSQL  = aSQL.replace( new RegExp( `${nSQL}[ :\n]+` ), '' )
             }
         if (nFill == 'parse') { return aSQL }                                                               // .(30413.01.4 End)
-       var  aFill = `\n`.padEnd( nFill ? nFill + 6 : 6 ); aSQL = aSQL.replace( /^ +/, "" )                  // .(30402.05.22 RAM Remove leading spaces)
+       var  aTS   = (new Date).toISOString().replace( /[Z:-]/g, '' ).replace( /T/, '.' )                    // .(30528.01.5)
+            aTS   = `${ aLogNo }${ aTS.substring(9) }`                                                      // .(30528.02.4 RAM Add '+' or '-' to aLogNo).(30528.01.6).(30527.04.4)
+//     var  aFill = `\n`.padEnd( nFill ? nFill + 6 : 6 ); aSQL = aSQL.replace( /^ +/, "" )                  //#.(30402.05.22 RAM Remove leading spaces).(30528.01.7)
+//          aFill =  aFill.replace( /\n/g, `\n${aTS}` )                                                     //#.(30528.01.7 RAM Add TS and aLogNo)
+       var  aFill = `\n${ aTS.padEnd( aTS.length + 7 + (nFill ? nFill : 0) ) }`                             // .(30529.01.5).(30528.01.7 RAM Use only aLoNo and aTS plus 7 spaces)
+//     var  aFill = `\n`.padEnd( nFill ? nFill + 6 : 5 ); aSQL = aSQL.replace( /^ +/, "" )                  //#.(30528.01.8 RAM Change nFill from 6 to 10).(30402.05.22 RAM Remove leading spaces)
 //     var  aStr  = (aSQL || '').replace( /\n           /g, aFill ).replace( /^[\n]+/, '' ).replace( /[ \n]+$/, '' )
-       var  aStr  = (aSQL || '').replace( /\n         /g,   aFill ).replace( /^[\n]+/, '' ).replace( /[ \n]+$/, '' )
+//          aStr  = (aSQL || '').replace( /^[\n]+/, '' ).replace( /[ \n]+$/, '' )                           //#.(30528.01.8 RAM  Add a space).(30528.01.9)
+       var  aStr  =  aSQL.replace( new RegExp( '\n'.padEnd( 20 ), 'g' ), aFill )                            // .(30528.01.9 RAM New fill )
 //  return `${aFill.substring(6)}${aStr}`                                                                   //#.(30413.01.5)
-    return `${nSQL + ( nSQL.match( /[0-9]/ ) ? '' :'1' )}: ${aFill.substring(6)}${aStr}`                    // .(30413.01.5).(30527.01.1 RAM Add '1' if not there)
+//          aSQL  = `${ nSQL + ( nSQL.match( /[0-9]/ ) ? '' : '1' )}: ${aFill.substring(6)}${aStr}`         //#.(30413.01.5).(30527.01.1 RAM Add '1' if not there).(30528.01.10)
+            aSQL  = `${ nSQL + ( nSQL.match( /[0-9]/ ) ? '' : '1' ) }: ${aStr}`                             // .(30528.01.10).(30413.01.5).(30527.01.1 RAM Add '1' if not there)
+            aSQL  =  aSQL.replace( / SELECT \*/, 'SELECT *' )                                               // .(30528.01.11 RAM Remote leading space for SELECT *)
+            aRecs =  aRecs ? `${ aRecs.match( / NoData/i ) ? "  " + aRecs : aRecs }` : ''                   // .(30528.01.12)
+    return  aSQL  + (aRecs ? `\n${aTS}${aRecs}` : '')                                                       // .(30528.01.13)
          }; // eof saySQL                                                                                   // .(30328.04.3 End)
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
@@ -449,11 +466,11 @@
             mErrArgs   =  pValidArgs.required ? [ [ 'Required', 'yes' ] ] : [ ]                             // .(30403.02.5 RAM Are any args required? What if not. fmtSQL must handle it)
          }  }
         if (mErrArgs.length == 0) {
-    return  pArgs                   // pReq.query; all? or nothing; could be {} if no args given                       // .(30403.02.6)
+    return  pArgs                   // pReq.query; all? or nothing; could be {} if no args given                           // .(30403.02.6)
             }
-                          sndErr( pRes, `  ** Invalid Arguments`,    mErrArgs.map( mArg => fmtArg( mArg ) ) )          // .(30425.01.1 RAM Add fmtArg).(30526.01.18)
-       var  aMsg       =                `  ** Invalid Arguments: '${ mErrArgs.map( mArg => fmtArg( mArg ) ).join() }'` // .(30402.05.6).(30425.01.2).(30526.01.19)
-                          sayErr( `${aMsg}\n` )                                                                        // .(30402.05.7)
+                          sndErr( pRes, `  ** Invalid Arguments`,    mErrArgs.map( mArg => fmtArg( mArg ) ) )              // .(30425.01.1 RAM Add fmtArg).(30526.01.18)
+       var  aMsg       =                `  ** Invalid Arguments: '${ mErrArgs.map( mArg => fmtArg( mArg ) ).join() }'`     // .(30402.05.6).(30425.01.2).(30526.01.19)
+                          sayErr( `${aMsg}\n` )                                                                            // .(30402.05.7)
     return  null
 //          ----------------------------------
 
