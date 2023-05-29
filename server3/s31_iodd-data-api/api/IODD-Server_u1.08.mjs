@@ -96,6 +96,7 @@
 # .(30525.03  5/25/23 RAM  9:30p|  Gotta still accept memberno, not mid
 # .(30526.02  5/26/12 RAM  1:35p|  Use getIPAddr and logIP
 # .(30527.02  5/27/12 RAM  4:10p|  Use fmtFld4SQL
+# .(30528.03  5/28/12 RAM  2:00p|  Check for valid Email, Cleanup SQL
 
 ##PRGM     +====================+===============================================+
 ##ID                            |
@@ -225,8 +226,8 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
 
 //          ------------------  =  ---------------------------------
 
-//          function Root_getRoute_Handler( aMethod, pReq, pRes, aRoute, pValidArgs ) { .. }
-     async  function Root_getRoute_Handler( pReq, pRes ) {
+//          function  Root_getRoute_Handler( aMethod, pReq, pRes, aRoute, pValidArgs ) { .. }
+     async  function  Root_getRoute_Handler( pReq, pRes ) {
 
        var  aRootRoute= aRoute.substring( aAPI_Host ? 1 : 0 )                                               // .(30414.02.2)
 
@@ -366,7 +367,7 @@ this.Login_getForm  = function( ) {     // Send back HTML form with route = '/lo
 
             setRoute( pApp, 'get', '/login_form', Login_getForm_Handler )
 
-     async  function Login_getForm_Handler( aMethod, pReq, pRes, aRoute ) {
+     async  function  Login_getForm_Handler( aMethod, pReq, pRes, aRoute ) {
 
                                logIP(   pReq, pDB, `GET  Route, '/login_form'` )                            //.(30526.02.6 RAM Use logIP)
                                sayMsg(  pReq, aMethod, aRoute )
@@ -411,7 +412,7 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
 
 //     ---  ------------------  =  ---------------------------------
 
-     async  function Login_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
+     async  function  Login_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
 
        var { fmtSQL1, fmtSQL2, fmtSQL3, fmtSQL4, fmtSQL5 } = Login_fmtSQLfns                                // .(30404.04.1).(30406.01.7).(30407.02.1)
 
@@ -449,17 +450,17 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
 
             pArgs.userid = pArgs.userid ? pArgs.userid : pArgs.username                                     // .(30525.06.12)
                                                                                                             // .(30405.04.1 RAM PIN vs Password and 'yes' vs 'Y')
-    return `SQL1: SELECT * FROM login_view2                                                                 -- .(30413.01.5 RAM Parse SQL with SQLn:)
-                   WHERE  Email   = '${ pArgs.userid }'                                                     -- .(30525.06.3 RAM Was: username)
-                     AND  PIN     = '${ pArgs.password }'
-                     AND  Active  = 'yes'`
+    return `SQL1:   SELECT * FROM login_view2                                                               -- .(30413.01.5 RAM Parse SQL with SQLn:)
+                     WHERE  Email   = '${ pArgs.userid }'                                                   -- .(30525.06.3 RAM Was: username)
+                       AND  PIN     = '${ pArgs.password }'
+                       AND  Active  = 'yes'`
             } // eof fmtSQL1
 //     ---  ------------------  =  ---------------------------------
 
          ,  fmtSQL2 : function( pData ) {                                                                   // .(30404.04.4)
 
 //  return `DELETE FROM login  WHERE MemberId = ${pData.Id}`                                                //#.(30407.02.2)
-    return `SQL2: DELETE  FROM login  WHERE MemberNo = ${pData.MemberNo}`                                   // .(30407.02.3)
+    return `SQL2:   DELETE  FROM login  WHERE MemberNo = ${pData.MemberNo}`                                   // .(30407.02.3)
             } // eof fmtSQL2
 //     ---  ------------------  =  ---------------------------------
 
@@ -478,16 +479,16 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
 //                VALUES
 //                     (  ${pData.Id }, '${pData.LastName}', '${pData.IPAddress4 }', '${ pData.LastPageVisited }'
 //                                                                                                          // .(30405.04.2 RAM Change IPAddress4 to IPv4Address)
-       var  aSQL = `SQL3:                                                                                    -- .(30406.03.4 RAM Add IPAddress4 to SQL).(30407.02.5)
-                  INSERT  INTO login
-                       (  MemberNo, FullName, IPv4Address, LastPageVisited, LogInDateTime, LogOutDateTime, CreatedAt, UpdatedAt )
-                  VALUES
-                       (  ${pData.MemberNo }, '${pData.FullName}', '${pData.IPAddress4 }', '${ pData.LastPageVisited }'
-                       ,  STR_TO_DATE(  '${pData.LogInDateTime}' , '%Y-%m-%d %H:%i:%s' )
-                       ,                 ${pData.LogOutDateTime}
-                       ,  STR_TO_DATE(  '${pData.CreatedAt}'     , '%Y-%m-%d %H:%i:%s' )
-                       ,  STR_TO_DATE(  '${pData.UpdatedAt}'     , '%Y-%m-%d %H:%i:%s' )
-                          ); `
+       var  aSQL = `SQL3:                                                                                   -- .(30406.03.4 RAM Add IPAddress4 to SQL).(30407.02.5)
+                    INSERT  INTO login
+                         (  MemberNo, FullName, IPv4Address, LastPageVisited, LogInDateTime, LogOutDateTime, CreatedAt, UpdatedAt )
+                    VALUES
+                         (  ${pData.MemberNo }, '${pData.FullName}', '${pData.IPAddress4 }', '${ pData.LastPageVisited }'
+                         ,  STR_TO_DATE(  '${pData.LogInDateTime}' , '%Y-%m-%d %H:%i:%s' )
+                         ,                 ${pData.LogOutDateTime}
+                         ,  STR_TO_DATE(  '${pData.CreatedAt}'     , '%Y-%m-%d %H:%i:%s' )
+                         ,  STR_TO_DATE(  '${pData.UpdatedAt}'     , '%Y-%m-%d %H:%i:%s' )
+                            ); `
     return  aSQL
             } // eof fmtSQL3
 //     ---  ------------------  =  ---------------------------------
@@ -498,26 +499,26 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
 //                SELECT  Id, MemberNo, LastName, IPv4Address, LastPageVisited, LogInDateTime, CreatedAt, UpdatedAt//#.(30405.04.3)
 //                  FROM  login WHERE id = ${pData.Id};`
                                                                                                             // .(30406.03.5).(30407.02.7).(30405.04.3)
-    return `SQL4: INSERT  INTO login_log
-                  SELECT  Id, MemberNo, FullName, IPv4Address, LastPageVisited, LogInDateTime, CreatedAt, UpdatedAt
-                    FROM  login WHERE id = ${pData.Id};`
+    return `SQL4:   INSERT  INTO login_log
+                    SELECT  Id, MemberNo, FullName, IPv4Address, LastPageVisited, LogInDateTime, CreatedAt, UpdatedAt
+                      FROM  login WHERE id = ${pData.Id};`
 
             }  // eof fmtSQL4                                                                               // .(30406.01.6 End)
 //     ---  ------------------  =  ---------------------------------
 
          ,  fmtSQL5( pData ) {                                                                              // .(30406.01.6 Beg RAM Write function)
                                                                                                             // .(30407.02.8).(30405.04.4)
-    return `SQL5: UPDATE  members
-                     SET  IsLoggedIn    = 'Y', IPv4Address = '${pData.IPv4Address}'
-                       ,  LogInDateTime =  STR_TO_DATE( '${pData.LogInDateTime}', '%Y-%m-%d %H:%i:%s' )
-                   WHERE  MemberNo = ${pData.MemberNo}`
+    return `SQL5:   UPDATE  members
+                       SET  IsLoggedIn    = 'Y', IPv4Address = '${pData.IPv4Address}'
+                         ,  LogInDateTime =  STR_TO_DATE( '${pData.LogInDateTime}', '%Y-%m-%d %H:%i:%s' )
+                     WHERE  MemberNo = ${pData.MemberNo}`
 
             }  // eof fmtSQL5                                                                               // .(30407.02.9)
 //     ---  ------------------  =  ---------------------------------
          }; // eoo Login_fmtSQLfns                                                                          // .(30404.04.6)
 //--------  ------------------  =  --------------------------------- ------------------
 
-     async function Login_fmtHTML( pData, aErr ) {                                                          // .(30403.01.5 Beg Move to shared async function ).(.30403.05.1)
+     async  function  Login_fmtHTML( pData, aErr ) {                                                        // .(30403.01.5 Beg Move to shared async function ).(.30403.05.1)
 
        var  mStyles    =
                       [ '.Section1Title', '.login', '.login form', '.login h1' , '.login form label'
@@ -567,7 +568,7 @@ this.Meetings_getRoute = function( ) {
 
 //     ---  ------------------  =  ---------------------------------
 
-     async  function Meetings_getRoute_Handler ( aMethod, pReq, pRes, aRoute, pValidArgs, fmtSQL ) {
+     async  function  Meetings_getRoute_Handler ( aMethod, pReq, pRes, aRoute, pValidArgs, fmtSQL ) {
 
                                logIP(   pReq, pDB, `GET  Route, '/meetings'` )                              // .(30526.02.9 RAM Use logIP)
                                sayMsg(  pReq, aMethod, aRoute )
@@ -644,18 +645,20 @@ this.Member_postRoute = function( ) {                                           
 
             setRoute( pApp, 'post', '/member', Member_postRoute_Handler, pValidArgs )
 
-     async  function Member_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
+     async  function  Member_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
 
                                logIP(   pReq, pDB, `POST Route, '/member'` )                                // .(30526.02.10 RAM Use logIP)
                                sayMsg(  pReq, aMethod, aRoute )
 
 //     var  pArgs      =       chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
 //     var  pArgs      =                pReq.body.map( aFld => pValidArgs[ aFld ][0] )
-       var  pArgs      = { };  Object.keys( pReq.body ).forEach( aFld => { if (pValidArgs[ aFld ]) {   pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
+       var  pArgs      = { };  Object.keys( pReq.body ).forEach( function( aFld ) {
+        if (pValidArgs[ aFld ]) {pArgs[ pValidArgs[ aFld ][0] ] = pReq.body[ aFld ] } } )
 
        var  mRecs1     = await putData( pDB,  fmtSQL1( pArgs ), aRoute );
 //      if (mRecs1.error)    { sndErr(  pRes, mRecs1.error   ); return }                                    //#.(30515.03.22 RAM return no workie, CUZ mRecs1.error is an error)
-        if (mRecs1[0] == 'error') { sndErr(  pRes, mRecs1[1] ); return }                                    // .(30515.03.22 RAM Would mRecs1[0].error be better)
+        if (mRecs1[0] == 'error') {                                                                         // .(30515.03.22 RAM Would mRecs1[0].error be better)
+                               sndErr(  pRes, mRecs1[1]      ); return }
 
 //     var  mRecs2     =   [ { MemberNo:mRecs1[2].affectedId, Count: mRecs1[2].affectedRows, ... }          // .(30515.03.23 RAM Why is affectedId = 0)
 //     var  mRecs2     =   [ { MemberNo:pArgs.MemberNo,  Count: mRecs1[2].affectedRows, ... }               //#.(30525.03.11)
@@ -703,8 +706,8 @@ this.Member_postRoute = function( ) {                                           
        var  aUpdateFlds     =  Object.keys( pVars ).map( updateFld ).filter( aFld => aFld ).join('\n')      // .(30525.02.4 RAM Beg Loop thru only those present)
 
        var  aSQL = `UPDATE  members
-                    SET  ${ aUpdateFlds.substring( 25 ) }
-                  WHERE  Id = ${ pVars.Id.toString().trim( ) }                                              -- .(30525.09.2 RAM Added .toString)
+                       SET  ${ aUpdateFlds.substring( 28 ) }                                                -- .(30529.01.8 RAM Was: 25)
+                     WHERE  Id = ${ (pVars.Id || '').trim( ) }                                              -- .(30525.09.2 RAM Added .toString)
                      `                                                                                      // .(30525.02.4 End)
 /*     var  aSQL = `UPDATE  members                                                                         //#.(30525.02.4 Beg RAM Revised)
 --                     SET  TitleName       = '${ pVars.TitleName       }'
@@ -820,7 +823,7 @@ this.Project_postRoute = function( ) {                                          
 
             setRoute( pApp, 'post', '/projects', Project_postRoute_Handler, pValidArgs )
 
-     async  function Project_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
+     async  function  Project_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
 
                                logIP(   pReq, pDB, `POST Route, '/projects'` )          // .(30526.02.11 RAM Use logIP)
                                sayMsg(  pReq, aMethod, aRoute )
@@ -872,7 +875,7 @@ this.ProjectsList_getRoute = function( ) {                                      
 //     var  aSQL = `SELECT * FROM iodd.form_projects_dropdown WHERE  ProjectId = ${ pArgs.id || -1 }`
     return  aSQL
             }
-            setRoute( pApp, 'get', '/projects_list',    JSON_getRoute_Handler, pValidArgs, ( pArgs ) => {return fmtSQL(pArgs)})
+            setRoute( pApp, 'get', '/projects_list',    JSON_getRoute_Handler,  pValidArgs,  (pArgs) => {return fmtSQL(pArgs)})
 
          }; // eof ProjectsList_getRoute                                                // .(30511.03.4 End)
 //--------  ------------------  =  --------------------------------- ------------------
@@ -912,6 +915,7 @@ this.ProjectCollaborators_getRoute = function( ) {
                          , mid:  /[0-9]+/ }
             pValidArgs[ "action" ] = /([Dd]elete|[Ii]nsert)/                            // .(30525.07.1 RAM ToDo: Allow anycase)
 
+                               sayMsg( 'get', aRoute )
 //     ---  ------------------  =  ---------------------------------
 
        pApp.get( `${aAPI_Host}${aRoute}`, async function( pReq, pRes ) {
@@ -930,8 +934,6 @@ this.ProjectCollaborators_getRoute = function( ) {
                                sndRecs( mRecs, aSQL, aRoute, pRes, aHandler )           // .(30407.03.9)
 
             } ) // eof pApp.get( /project_collaborators )
-
-                               sayMsg( 'get', aRoute )
 //     ---  ------------------  =  ---------------------------------
 
   function  fmtSQL( pArgs ) {
@@ -942,9 +944,9 @@ this.ProjectCollaborators_getRoute = function( ) {
         if (aAction == "") {                                                            // .(30524.01.7)
        var  aSQL = `
                     SELECT  Distinct *
-                    FROM  members_projects_view
+                      FROM  members_projects_view
 ${ nId ?
-'                   WHERE  ProjectId = ' + nId : '' }
+'                     WHERE  ProjectId = ' + nId : '' }
                    `
             }                                                                           // .(30524.01.8 Beg RAM Add Insert and Delete)
         if (aAction == "delete") {
@@ -991,7 +993,7 @@ this.ProjectCollaborators_postRoute = function( ) {                             
 
             setRoute( pApp, 'post', '/project_collaborators', ProjectCollaborators_postRoute_Handler, pValidArgs )
 
-     async  function ProjectCollaborators_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
+     async  function  ProjectCollaborators_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
 
                                logIP(   pReq, pDB, `POST Route, '/project_collaborators'` ) // .(30526.02.13 RAM Use logIP)
                                sayMsg(  pReq, aMethod, aRoute )
@@ -1085,7 +1087,7 @@ this.Users_getRoute = function( ) {                                             
 this.User_postRoute  =  function( ) {                                                   // .(30328.05.1 Beg RAM Add addUser)
 
        var  aRoute = `/user`
-       var  pValidArgs =  { userid   : /[a-zA-Z0-9]+/                                   // .(30525.06.5)
+       var  pValidArgs =  { userid   : /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+/               // .(30528.03.1 RAM Check for valid email).(30525.06.5)
                           , username : /[a-zA-Z0-9]+/                                   // .(30525.06.13 RAM Put it back)
                           , password : /[a-zA-Z0-9]{4,}/
                             }
@@ -1095,7 +1097,7 @@ this.User_postRoute  =  function( ) {                                           
 
 //     ---  ------------------  =  ---------------------------------
 
-     async  function User_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
+     async  function  User_postRoute_Handler( aMethod, pReq, pRes, aRoute ) {
 
                                logIP(   pReq, pDB, `POST Route, '/user'` )              // .(30526.02.14 RAM Add 'begin')
                                sayMsg(  pReq, aMethod, aRoute )
@@ -1105,7 +1107,7 @@ this.User_postRoute  =  function( ) {                                           
 
        var  mRecs1    =  await getData( pDB,  fmtSQL1( pArgs ), aRoute, pRes );
         if (mRecs1.length != 0) {
-       var  mMsg      =  [ `*** The user, ${mRecs1[0].UserName }, currently exists` ]
+       var  mMsg      =  [ ` ** The user, '${mRecs1[0].UserName }', currently exists` ]
                                sndJSON( pRes, JSON.stringify( { error: mMsg  } ), 'user' )
         } else { // no error
        var  mRecs2    =  await putData( pDB,  fmtSQL2( pArgs ), aRoute );
@@ -1135,13 +1137,13 @@ this.User_postRoute  =  function( ) {                                           
 
             return `INSERT  INTO  users
                          (  UserName, Email, Password, PasswordDate, Role, Active, MemberNo )
-                  VALUES ( '${ pArgs.userid }'
+                   VALUES( '${ pArgs.userid }'
                          , '${ pArgs.userid }@gmail.com'                                -- .(30525.06.9)
                          , '${ pArgs.password }'                                        -- .(30525.06.10)
-                         ,     STR_TO_DATE( '${ aDay }' , '%Y-%m-%d' )
-                         ,    'Admin'
-                         ,    'Y'
-                         ,     9
+                         ,  STR_TO_DATE( '${ aDay }' , '%Y-%m-%d' )
+                         , 'Admin'
+                         , 'Y'
+                         ,  9
                             ) `
 
             }; // eof fmtSQL2
@@ -1155,7 +1157,7 @@ this.User_postRoute  =  function( ) {                                           
 //= json_getroute ==================================================
 //-(JSON_getRoute_Handler)------------------------------------------
 
-     async  function JSON_getRoute_Handler( aMethod, pReq, pRes, aRoute, pValidArgs, fmtSQL ) {
+     async  function  JSON_getRoute_Handler( aMethod, pReq, pRes, aRoute, pValidArgs, fmtSQL ) {
 
                                logIP(   pReq, pDB, `GET  Route, '/${aRoute}'` )         // .(30526.02.15 RAM Use logIP)
                                sayMsg(  pReq, aMethod, aRoute )
