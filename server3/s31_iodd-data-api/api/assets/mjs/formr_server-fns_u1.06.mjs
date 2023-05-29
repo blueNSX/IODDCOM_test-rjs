@@ -106,6 +106,7 @@
 # .(30528.01  5/28/12 RAM 12:55p|  Change 'records' to 'recs' and pass to sayMsg
 # .(30528.02  5/28/23 RAM  1:30p|  Add '+' or '-' to aLogNo
 # .(30528.04  5/28/12 RAM  3:00p|  Add Abort to sayMsg instead of sayErr??
+# .(30528.05  5/28/12 RAM  7:45p|  No need for sndHTML to say "handler executed"
 
 ##SRCE =========================+===============================================+========================== #  ===============================  #
 #*/
@@ -222,7 +223,7 @@
          }; // eof getData
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
-//function  sndRecs( pRes, mRecs, aSQL, aDatasetName, aOnRouteFnc ) {                                       // .(30331.01.3).(30407.03.8)
+//function  sndRecs( pRes, mRecs, aSQL, aDatasetName, aOnRouteFnc ) {                                       //#.(30331.01.3).(30407.03.8)
   function  sndRecs( mRecs, aSQL, aDatasetName, pRes, aOnRouteFnc ) {                                       // .(30407.03.8)
        var  aRecords   = (aDatasetName ? aDatasetName.replace( /^\//, "" ) + " " : "" ) + 'records'         // .(30526.03.12 RAM Keep??)
 
@@ -242,8 +243,9 @@
        var  aJSON      =  JSON.stringify( {  "warning":   ` ** No ${aRecords} found` } )                    // .(30402.05.16)
          }  }
 //      if (pRes) {       sndJSON( pRes, aJSON, aRecords ) }                                                //#.(30407.03.10 RAM getData may not pass pRes )
-                 sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc :'routeHandler'}', executed`);          // .(30331.01.4).(30526.01.10)
+//               sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc :'routeHandler'}', executed`);          //#.(30331.01.4).(30526.01.10).(30528.05.1)
                           sndJSON( pRes, aJSON, aRecords )                                                  // .(30407.03.10 RAM getData nice try, need to send []  )
+                 sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc :'routeHandler'}', executed`);          // .(30528.05.1 RAM Move it here).(30331.01.4).(30526.01.10)
          }; // eof sndRecs
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
@@ -504,7 +506,8 @@
          }; // eof fmtArgs
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
-  function  sndHTML( pRes, aHTML, aURI, aOnRouteFnc ) {                                                     // .(30331.01.4)
+//function  sndHTML( pRes, aHTML, aURI, aOnRouteFnc ) { ... }                                               //#.(30528.05.2)
+  function  sndHTML( pRes, aHTML, aURI ) {                                                                  // .(30528.05.2 RAM Remove Handler)(30331.01.4)
 //               sayMsg( `Handler,     '${aOnRouteFnc ? aOnRouteFnc : 'onRoute'}', executed` );             // .(30528.04.5 RAM Let sayMsg( 'Done') doit).(30331.01.6).(30526.01.20)
                           pRes.send( aHTML )
         if (typeof(aURI) != 'undefined') {                                                                  // .(30414.03.1).(30415.02.1)

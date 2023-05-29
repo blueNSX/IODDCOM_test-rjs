@@ -98,6 +98,7 @@
 # .(30527.02  5/27/12 RAM  4:10p|  Use fmtFld4SQL
 # .(30528.03  5/28/12 RAM  2:00p|  Check for valid Email, Cleanup SQL
 # .(30528.04  5/28/12 RAM  3:00p|  Add Abort to sayMsg, Forgot to sayMsg
+# .(30528.05  5/28/12 RAM  6:00p|  Add say('Done', "handler") and sayMsg('End')
 
 ##PRGM     +====================+===============================================+
 ##ID                            |
@@ -237,7 +238,8 @@ this.Root_getRoute  = function( aRoute_,  pValidArgs ) {
 
        var  pArgs      =       chkArgs( pReq, pRes, pValidArgs ); if (!pArgs) { return }
        var  aHTML      =       fmtHTML( pArgs.name || '' )
-                               sndHTML( pRes, aHTML, `${aRootRoute}${pReq.args}`, "Root_getRoute_Handler" ) // .(30331.01.1).(30414.02.3)
+                               sndHTML( pRes, aHTML, `${aRootRoute}${pReq.args}`)                           // .(30528.05.2 RAM Remove Handler).(30331.01.1).(30414.02.3)
+                               sayMsg( 'Done',         "Root_getRoute_Handler"   )                          // .(30528.05.3)
 
             } // eof Root_getRoute_Handler
 //          ------------------  =  ---------------------------------
@@ -349,7 +351,7 @@ this.Login_getRoute  = function( ) {    // Send back JSON                       
 
             setRoute( pApp, 'get', '/login', Login_getRoute_Handler, pValidArgs, `SELECT * FROM login_view`  )
 
-     async  function Login_getRoute_Handler( aMethod, pReq, pRes, aRoute, pValidArgs, fmtSQL ) {
+     async  function  Login_getRoute_Handler( aMethod, pReq, pRes, aRoute, pValidArgs, fmtSQL ) {
 
             pRes.bSndNoData = true                                                                          // .(30407.03.1 RAM Don't send Error msg)
             JSON_getRoute_Handler(aMethod, pReq, pRes, aRoute, pValidArgs, fmtSQL )                         // .(30407.03.2 RAM Send Error msg)
@@ -383,7 +385,8 @@ this.Login_getForm  = function( ) {     // Send back HTML form with route = '/lo
 //     var  aHTML     =  fmtHTML( mRecs[0], await fmtStyles( ) )                                            // .(30402.04.1)
 
        var  aHTML     =  await fmtHTML( mRecs[0] )                                                          // .(30403.01.1)
-                               sndHTML( pRes, aHTML, `${aRoute}${pReq.args}`, "Login_getForm_Handler" )     // .(30331.01.1).(30404.02.4)
+                               sndHTML( pRes, aHTML, `${aRoute}${pReq.args}`  )                             // .(30528.05.4 RAM Remove Handler).(30331.01.1).(30404.02.4)
+                               sayMsg( 'Done',        "Login_getForm_Handler" )                             // .(30528.05.5)
 
             } // eof Login_getForm_Handler
 //     ---  ------------------  =  ---------------------------------
@@ -440,6 +443,7 @@ this.Login_postRoute = function( ) {    // Send back JSON if found, otherwise se
 
                                sndJSON( pRes, JSON.stringify( { login: mRecs1 } ) , 'login' )               // .(30404.02.7)
                          }
+                               sayMsg( 'Done', 'Login_postRoute_Handler' )                                  // .(30528.05.6)
             } // eof Login_postRoute_Handler
 //     ---  ------------------  =  ---------------------------------
          }; // eof Login_postRoute
@@ -578,7 +582,8 @@ this.Meetings_getRoute = function( ) {
        var  aSQL       =       chkSQL(  fmtSQL, pArgs )                                                     // .(30403.06.6).(30407.03.6)
 //     var  mRecs      = await getData( pDB,   aSQL ); if (mRecs[0] == 'error') { sndErr( pRes, mRecs[1] ); return }
        var  mRecs      = await getData( pDB,   aSQL, aRoute, pRes ); if (mRecs[0] == 'error') { sndErr( pRes, mRecs[1] ); return }
-                              sndRecs( mRecs, aSQL, aRoute, pRes, "Meetings_getRoute_Handler" )            // .(30331.02.2).(30407.03.7)
+                               sndRecs( mRecs, aSQL, aRoute, pRes, "Meetings_getRoute_Handler" )            // .(30331.02.2).(30407.03.7)
+                               sayMsg( 'End' )                                                              // .(30528.05.7)
 
             } // eof Meetings_getRoute_Handler
 //     ---  ------------------  =  ---------------------------------
@@ -669,6 +674,7 @@ this.Member_postRoute = function( ) {                                           
        var  mRecs2     = await getData( pDB,  fmtSQL2( mRecs2[0] ), aRoute );
 
                                sndJSON( pRes, JSON.stringify( { member: mRecs2 } ), aRoute )
+                               sayMsg( 'Done', "Member_postRoute_Handler" )                                 // .(30528.05.8)
          }; // eof Member_postRoute_Handler
 //     ---  ------------------  =  ---------------------------------
 
@@ -841,6 +847,7 @@ this.Project_postRoute = function( ) {                                          
 
         var  mRecs2    = await getData( pDB,  `SELECT * FROM projects WHERE ProjectId = ${pArgs.ProjectId}`, aRoute );
                                sndJSON( pRes, JSON.stringify( { project: mRecs2 } ), aRoute )
+                               sayMsg( 'Done', "Project_postRoute_Handler" )            // .(30528.05.9)
 
             }; // eof Project_postRoute_Handler
 //     ---  ------------------  =  ---------------------------------
@@ -933,6 +940,7 @@ this.ProjectCollaborators_getRoute = function( ) {
        var  mRecs      = await putData( pDB,   aSQL, aRoute )
             mRecs      = mRecs }
                                sndRecs( mRecs, aSQL, aRoute, pRes, aHandler )           // .(30407.03.9)
+                               sayMsg( 'End')                                           // .(30528.05.10)
 
             } ) // eof pApp.get( /project_collaborators )
 //     ---  ------------------  =  ---------------------------------
@@ -1018,6 +1026,7 @@ this.ProjectCollaborators_postRoute = function( ) {                             
        var  mRecs3    =  await getData( pDB,  fmtSQL3( pArgs.mpid ), aRoute );          // .(30515.04.4 RAM Add fmtSQL3())
 
                                sndJSON( pRes, JSON.stringify( { project_collaborators: mRecs3 } ), aRoute )
+                               sayMsg( 'Done', "ProjectCollaborators_postRoute_Handler")// .(30528.05.11)
 
          }; // eof ProjectCollaborators_postRoute_Handler
 //     ---  ------------------  =  ---------------------------------
@@ -1118,6 +1127,7 @@ this.User_postRoute  =  function( ) {                                           
                              , UserName: pArgs.userid, Password: pArgs.password }       // .(30525.06.7 RAM Use userid, not userid)
                                ]
                                sndJSON( pRes, JSON.stringify( { user: mRecs2 } ), 'user' )
+                               sayMsg( 'Done', "User_postRoute_Handler" )               // .(30528.05.12)
             }
 //     ---  ------------------  =  ---------------------------------
 
@@ -1170,6 +1180,8 @@ this.User_postRoute  =  function( ) {                                           
 //     var  mRecs     =  await getData( pDB,   aSQL, aRoute, pRes ); if (mRecs[0] == 'error') { sndErr( pRes, mRecs[1] ); return } // .(30407.03.11)
        var  mRecs     =  await getData( pDB,   aSQL, aRoute, pRes );  if (!mRecs) { return }                                       // .(30511.02.9 RAM Error may be sent already).(30407.03.12)
                                sndRecs( mRecs, aSQL, aRoute, pRes, "JSON_getRoute_Handler" )                                       // .(30407.03.13 RAM Moved pRes arg)
+
+                               sayMsg( 'End' )                                          // .(30528.05.13)
 
          }; // eof JSON_getRoute_Handler
 //--------  ------------------  =  --------------------------------- ------------------
