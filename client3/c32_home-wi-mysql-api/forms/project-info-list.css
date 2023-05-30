@@ -52,16 +52,7 @@
   width: 610px;
   text-align: right;
 }
-.new-project-span a {
-  text-decoration: none;
-  font-size: 22px;
-  color: blue;
-}
-.new-collaborator-span a {
-  text-decoration: none;
-  font-size: 22px;
-  color: black;
-}
+
 .main-table {
   width: 85%;
   margin-left: 50px;

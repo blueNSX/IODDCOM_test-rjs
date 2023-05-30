@@ -3,7 +3,7 @@
 aTests='live in Browser'
 //     aTests='test1 fetch iodd.com/client3/c33_home-wi-mysql-api'
 //     aTests='test1 fetch formr.net/home'
-//       aTests='test2 fetch /members'
+//     aTests='test2 fetch /members'
 
   var  aHeadRow = `<tr class="head-row"><td>Date</td><td>Email</td><td>Phone / Mobile</td></tr>`
 
@@ -51,7 +51,9 @@ function  fmtMeetings( pJSON ) {
 //     ---  -------  =  -----------------------------------
 
   function  fmtMeeting( pMeeting, i ) {
-
+     $( "#MeetingDateBanner" ).html(pMeeting.strMeetingDate)
+     // $( ".next-meeting-date" ).html(pMeeting.strMeetingDate)
+     
        var  aClass = i % 2 == 1 ? "row-even" : "row-odd"
 //     var  aClass = "class=row-" + ( i % 2 ? "even" : "odd" )
 //     var  aClass = ( `class="row-even"` )

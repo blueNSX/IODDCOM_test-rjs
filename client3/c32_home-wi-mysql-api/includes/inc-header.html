@@ -14,6 +14,9 @@
     <!-- <script src="../assets/js/login.js"></script>  -->
     <script type="module">
         setHTML( 'inc-dropdown', '../includes/inc-dropdown.html' );   
+        // import { fmtMeeting } from '../assets/js/meetings.js'      // .(30515.06.1 RAM Get setAPI_URL)
+        // import { setAPI_URL, setHTML } from '../assets/mjs/formr_utility-fns_u1.07.mjs'      // .(30515.06.1 RAM Get setAPI_URL)
+        // await setAPI_URL()
     </script>
     <!--  Header -->
     <div class="Header">
@@ -62,7 +65,7 @@
                             <!-- include dropdown -->
                             <div id="inc-dropdown"></div>
                         </td>
-                        <td class="HeaderNavListItemCTA"><a href="../meetings/meetings.html" title="CLICK For The Next Meeting Information">Meeting <span class="next-meeting-date"></span></a></td>
+                        <td class="HeaderNavListItemCTA"><a href="../meetings/meetings.html" title="CLICK For The Next Meeting Information">Meeting <span id="MeetingDateBanner" class="next-meeting-date"></span></a></td>
                         <!-- <td class="HeaderNavListItemLogin" id="id2"><a href="login/login.html" class="ToolTip"><span class="ToolTipHide"></span></a></td> -->
                         <td id="login-inits"><a href="../login/login.html?Id=0" title=""><span id="log"></span></a></td>
                         <td class="HeaderTrailingSpacer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>

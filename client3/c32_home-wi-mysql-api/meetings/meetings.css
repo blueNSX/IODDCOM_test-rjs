@@ -28,7 +28,7 @@ body {
     padding-top: 40px;
 }
 .Section1Paragraph {
-    display: none;
+    /* display: none; */
 }
 .Section2 {
     top: 65px; /*orig 65*/
@@ -134,7 +134,7 @@ td.desc {
     padding: 40px 60px 20px 60px;
     text-align: justify;
     width: 80%;
-    padding: 10px 10px 10px 15px;
+    padding: 10px;
     border: solid 3px blue;
     vertical-align: middle;
     /* border-radius: 10%; */
@@ -238,11 +238,11 @@ and (max-width: 736px)
     }
     
     .desc {
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 600;
         color: blue;
-        padding: 15px;
-        text-align: justify;
+        padding: 10px;
+        text-align: left;
         width: 40%;
         border: solid 2px blue;
         vertical-align: middle;
@@ -290,7 +290,7 @@ The @media MAX-width query properties
         width: 30px;
     }
     .Section1 {
-        height: 180px;
+        height: 150px;
         top: 70px;
     }
     .Section1Title {
@@ -298,6 +298,9 @@ The @media MAX-width query properties
         font-size: 20px;
         text-align: left;
         padding: 30px 0px 0px 20px;
+    }
+    .Section1Paragraph {
+       display: none;
     }
     .Section2 {
         display: block;
@@ -341,8 +344,8 @@ The @media MAX-width query properties
     .head-email,
     .head-phone,
     .head-agenda {
-        padding-left: 10px;
-        font-size: 17px;
+        margin-left: -10px;
+        font-size: 16px;
         font-weight: 800;
         width: 30%;
         text-align: right;
@@ -355,7 +358,7 @@ The @media MAX-width query properties
     .phone,
     .agenda {
         padding-left: 10px;
-        font-size: 17px;
+        font-size: 16px;
         font-weight: 500;
         width: 80%;
         text-align: left;
@@ -366,7 +369,7 @@ The @media MAX-width query properties
     }
     
     .desc {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
         color: blue;
         padding: 10px 10px 10px 10px;
