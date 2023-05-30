@@ -603,7 +603,7 @@
      switch(aMethod) {                                                                                      // .(30528.04.10 RAM Beg Use switch stateement)
 
       case 'use':                                                                                           // .(30528.04.11 RAM Use Database)
-            aMsg       = `Use ${aMsg}`; break
+            aMsg       = `USE  ${aMsg}`; break
 
 //    case 'set':                                                                                           //#.(30528.04.12)
 //          aMsg       = `${aMsg}', set`; break                                                             //#.(30528.04.12 RAM For inital route set only)
@@ -755,7 +755,7 @@
 //     var  __filepath =  process.argv[1]                                                                   //#.(30315.01.1)
        var  __filepath =  new Error().stack.match( /IODD-Server_u.+\.mjs/ )[0]                              // .(30315.01.1 RAM get correct running server file)
 //     var  __filepath =  new Error().stack.match( /C:.+api\/IODD-Server_u.+\.mjs/ )[0]                     //#.(30315.01.2)
-            __filepath = `${__dirname.replace( /assets\/mjs/, "" )}/${__filepath }`                         // .(30315.01.2)
+            __filepath = `${__dirname.replace( /assets\/mjs\//, "" )}/${__filepath }`                       // .(30315.01.2).(30329.02.1 RAM Remove doubling of //s)
             console.log(   `    Server is running in: ${__filepath}\n` )                                    // .(30214.03.10 RAM Display root dir).(30315.01.3)
 
        var  bLocal     =  aAPI_Host == '',  aLocation = ''                                                  // .(30315.02.1 RAM Beg Check if running locally)
