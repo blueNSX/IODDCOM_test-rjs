@@ -1,3 +1,5 @@
+        import { getHeaders} from  '../assets/mjs/formr_utility-fns_u1.07.mjs'  
+
  async function onMemberForm_Submit( pEvent ) {
 
             pEvent.preventDefault();
@@ -37,14 +39,20 @@
 
         var pEntries  =   new FormData( pForm );
         var pData     =   Object.fromEntries( pEntries.entries() );
+        var pHeaders  =   await getHeaders( 'json,user,ip4,page', `${pData['first-name']} ${pData['last-name']}`, id )
 
         var pFetchCfg =
              { method : 'POST'
              , mode   : "cors"                                      // Or: n-cors, *cors, same-origin
-             , headers:
+/*           , headers:
                 { "Content-Type": "application/json"                // Send JSON request
                 , "Accept"      : "application/json"                // Expect JSON response back
-                   }
+                , "FormR-User"  : "unknown"                         // .(30527.04.6) 
+                , "FormR-UserIP": "???"                             // .(30527.04.8) 
+                , "FormR-Page"  :  window.location.href             // .(30527.04.8) 
+                  }
+*///         , headers: await getHeaders( 'json,page,user', id )    // .(30527.04.8)          
+             , headers: pHeaders                                    // .(30527.04.8)          
              , body: JSON.stringify( pData )
                };
 
@@ -136,8 +144,6 @@
 //--------  ---------------------------------------------------------
 
   function  setMemberForm( pMember, pForm ) {
-            var MemberURLBanner = `<a href=${pMember.WebSite} title='Open Company Web Site' target='_blank'>${pMember.WebSite}</a>`
-            if (pMember.WebSite) { $( "#MemberURLBanner" ).html(MemberURLBanner) }
 
             pForm.memberno.value           	=  pMember.MemberNo +'' // .(30515.03.21 RAM Add hidden field)  
             pForm['first-name'].value   	=  pMember.FirstName    // .(30515.03.13 RAM Was firstname) 
