@@ -1,6 +1,4 @@
 
-        $("#MeetingDateBanner").html("Next Meeting")
-
         // function setCookie(cname, cvalue, exdays) {
         //     var d = new Date();
         //     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -158,17 +156,36 @@
 
         //  ------------------------------------------------------------
 
-        //  ------------------------------------------------------------
-        // For the includes
 
-        async  function  setHTML( aDivID, aFile ) {                         // .(30401.02.1 Beg RAM Add function)
-            var aPath     =  window.location.href.replace( /[^/]+$/, '')
-        //                   console.log( `${aPath}/includes/inc-header-home.html` ) 
-            var response  =  await fetch( `${aPath}${aFile}` );
-            var aHTML     =  await response.text()
-            var pDiv      =  $( `#${aDivID}` ) 
-                pDiv.html(   aHTML )
-        //      sayMsg(     `setHTML[2]     Included '${aFile}’`, nSay2)
-            }                                                           // .(30401.02.1 End)
-        //  ------------------------------------------------------------        //  ------------------------------------------------------------
+//RJS trial
+    //-----Fetch meetings data -----------------------------------------/
+            import { setAPI_URL } from '../assets/mjs/formr_utility-fns_u1.07.mjs' // .(30415.02.1 RAM Avoid CORS error).(30430.03.1).(30505.01.1 RJS Import here)(30507.01.5 RAM No Import).(30507.02.5 RAM Use Import)        
+                            //debugger 
+                            console.log( "members.html[1]       Loading 1st module script" )    
+        
+                            await setAPI_URL( )                                                 // .(30507.01.7 RAM Remove getAPI_URL for data fetches in members.html).(30507.02.7) 
+                        var pMeetings = document.getElementById( "Meetings" )
+//                  pMeetings.innerHTML = fmtMeetings( pJSON )
 
+                    fetch( `${aAPI_URL}/meetings` )                                     // .(30214.05.7)
+           .then( ( res  ) => res.json( ) )
+           .then( ( json ) => {  
+                                pMeetings.innerHTML = fmtMeetingsDate( json ) } ) 
+           .catch(( err  ) =>   pMeetings.innerHTML `** ${err.message}` );                     
+
+
+        function  fmtMeetingsDate( pJSON ) {  
+            var  mMeetings =  pJSON.meetings   // .(30209.01.6 RAM As is  now defined in /projects api)
+            var  aHTML  =  mMeetings.map( fmtMeetingDate ).join( "\n" )
+         return  aHTML            
+     //     ---  -------  =  -----------------------------------
+     
+       function  fmtMeetingDate( pMeeting, i ) {
+          $( "#MeetingDateBanner" ).html(pMeeting.strMeetingDate)
+          aData = aRow
+          return aData
+                 }   // eof  fmtMeeting
+     //     ---  -------  =  ----------------------------------
+                 }   // eof  fmtMeetings
+     //--------  -------  =  -------------------------------------------------------
+     

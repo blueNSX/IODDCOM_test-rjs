@@ -51,7 +51,9 @@ function  fmtMeetings( pJSON ) {
 //     ---  -------  =  -----------------------------------
 
   function  fmtMeeting( pMeeting, i ) {
-     $( "#MeetingDateBanner" ).html(pMeeting.strMeetingDate)
+     var aMeetingDateBanner = "Next Meeting" + pMeeting.strMeetingDate
+     $( "#MeetingDateBanner" ).html(aMeetingDateBanner)
+     // $( "#MeetingDateBanner" ).html(pMeeting.strMeetingDate)
      // $( ".next-meeting-date" ).html(pMeeting.strMeetingDate)
      
        var  aClass = i % 2 == 1 ? "row-even" : "row-odd"
