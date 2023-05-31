@@ -17,6 +17,7 @@
 ##FD formr_server-fns_u1.06.mjs |  56121|  5/15/23 21:05|   732| u1-06`30515.2105
 ##FD formr_server-fns_u1.06.mjs |  65820|  5/27/23 19:00|   813| u1-06`30527.1900
 ##FD formr_server-fns_u1.06.mjs |  75099|  5/29/23 12:22|   894| u1-06`30529.1222
+##FD formr_server-fns_u1.06.mjs |  75632|  5/30/23 13:30|   897| u1-06`30530.1330
 ##DESC     .--------------------+-------+---------------+------+-----------------+
 #           This Javascript file
 ##LIC      .--------------------+----------------------------------------------+
@@ -109,6 +110,7 @@
 # .(30528.04  5/28/12 RAM  3:00p|  Add Abort to sayMsg instead of sayErr??
 # .(30528.05  5/28/12 RAM  7:45p|  No need for sndHTML to say "handler executed"
 # .(30529.01  5/29/12 RAM 12:22p|  Fix spacing for saySQL on Error
+# .(30529.02  5/30/12 RAM  1:30p|  Remove doubling of //s in Start msg
 
 ##SRCE =========================+===============================================+========================== #  ===============================  #
 #*/
@@ -159,7 +161,7 @@
        var  nID        =  aSQL.match( /INSERT/i ) ? mRecs[0].insertId : 0, aRecords                                                                 // .(30406.01.1 RAM Return InsertedId)
 
        var  nRecs      =  mRecs[0].affectedRows                                                                                                     // .(30526.03.2)
-       var  aRecords   = `${ ('* ' + nRecs).padStart(nRecs == 1 ? 5 : 4) } rec${ nRecs == 1 ? '' : 's' }`                                           // .(30528.01.1).(30526.03.15 RAM Was: 'records')..(30526.03.3 RAM Add space for singular).(30526.03.3 RAM Don't, pad it with 4, or 5)
+       var  aRecords   = `${ ('* ' + nRecs).padStart(nRecs == 1 ? 5 : 4) } rec${ nRecs == 1 ? '' : 's' }`                                           // .(30528.01.1).(30526.03.15 RAM Was: 'records').(30526.03.3 RAM Add space for singular).(30526.03.3 RAM Don't, pad it with 4, or 5)
 //      if (aDatasetName) {  aRecords = `${aRecords}${ (mRecs[0].affectedRows == 1) ? '' : 's' } ${ nID ? `, ${nID},` : '' }` }                     //#.(30406.01.2).(30526.03.4)
         if (aDatasetName) {  aRecords = `${aRecords} for '${aDatasetName}'${ nID ? ` (${nID})` : '' }` }                                            // .(30406.01.2).(30526.03.4)
 
@@ -172,7 +174,7 @@
     return [aSuccess,    `${ aRecords.substring(4) }, ${aAction}`, { affectedRows: nRecs , affectedId: nID } ]                                      // .(30406.01.3).(30526.03.6).(30527.03.2)
 
         } catch( pError ) {  var aFill = '\n'.padEnd( 18 )                                                                                          // .(30529.01.1)
-                 sayErr(   ` *** Error:  ${pError.message}.${aFill}${ saySQL( aSQL, -1 ) }\n` );                                                    // .(30529.01.2 RAM Fix SQL error fmt, 31 is not used, but 2 should be)
+                 sayErr(   ` *** Error:  ${pError.message}.${aFill}${ saySQL( aSQL, -1 ) }\n` );                                                    // .(30529.01.2 RAM Fix SQL error fmt, 31 is not used, but -1 should be)
     return  [ "error",          `Error:  ${pError.message}.  <br>
                                           &nbsp; &nbsp; &nbsp; ${     saySQL( aSQL    ) }` ]
             }
@@ -391,9 +393,9 @@
             } // eof fmtFld4SQL                                                                             //#.(30527.02.8 End)
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
-  function  saySQL( aSQL, nFill ) {                                                                         // .(30328.04.3 Beg RAM Add)
-       var  nSQL = 'SQL';  aSQL = aSQL.replace( / [\/-]{2}.*/g, '' )                                        // .(30413.01.3 RAM Remove comments: // or --).(30515.03.1 RAM Only if prefixed by a space)
-            aSQL = aSQL.replace( /^[ \n]+/, "" )                                                            // .(30527.02.14 RAM Remove leading spaces or \n)
+  function  saySQL( aSQL, nFill, aRecs ) {                                                                  // .(30528.01.4 RAM Add aRecs).(30328.04.3 Beg RAM Add)
+       var  nSQL  = 'SQL';  aSQL = aSQL.replace( / [\/-]{2}.*/g, '' )                                       // .(30413.01.3 RAM Remove comments: // or --).(30515.03.1 RAM Only if prefixed by a space)
+            aSQL  = aSQL.replace( /^[ \n]+/, "" ).replace( /[ \n]+$/, '' )                                  // .(30527.02.14 RAM Remove leading and trailing spaces or \n)
         if (aSQL.match( /^ *SQL[0-9]+/)) {
        var  nSQL  = aSQL.match( /^ *(SQL[0-9]+)/ )[1]
             aSQL  = aSQL.replace( new RegExp( `${nSQL}[ :\n]+` ), '' )
@@ -588,7 +590,7 @@
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
   function  sayMsg( pReq, aMethod_, aRoute, aWhen ) {
-//      if (bQuiet) { return }
+//      if (bQuiet) { return }                                                                              // .(30529.02.2)
 
        var  aMsg       = (typeof(aMethod_) != 'undefined') ? aMethod_ : pReq                                // .(30528.04.7)
        var  aEndMsg    = ''
@@ -603,7 +605,7 @@
      switch(aMethod) {                                                                                      // .(30528.04.10 RAM Beg Use switch stateement)
 
       case 'use':                                                                                           // .(30528.04.11 RAM Use Database)
-            aMsg       = `USE  ${aMsg}`; break
+            aMsg       = `USE  ${aMsg}`; break                                                              // .(30529.02.3)
 
 //    case 'set':                                                                                           //#.(30528.04.12)
 //          aMsg       = `${aMsg}', set`; break                                                             //#.(30528.04.12 RAM For inital route set only)
@@ -632,7 +634,7 @@
 //          aMsg       = `${aMsg}'
             }                                                                                               // .(30528.04.19 End pReq == string)
 
-        if (bQuiet) { return }
+        if (bQuiet) { return }                                                                              // .(30529.02.2 RAM Moved to here)
 /*
        var  aMsg       = `${ aMethod.toUpperCase().padEnd(4) } Route, '${aRoute}'`                          //#.(30528.04.20).(30415.03.3 RAM aRoute, set has ${aAPI_Host}).(30526.01.23)
             aMsg       =  typeof(aRoute) == 'undefined' ? aMsg1 : `${aMsg}', set`                           //#.(30528.04.20 RAM Use aMsg1).(30414.03.1 RAM aMethod == aMsg if aRoute is not defined)
@@ -662,12 +664,12 @@
          }; // eof indexObj                                                                                 // .(30402.03.1 End)
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
-  function  fncName( n ) {                                                                                  // .(30529.01.6 Beg RAM Write fncName)
+  function  fncName( n ) {                                                                                  // .(30529.01.7 Beg RAM Write fncName)
        var  mStack = (new Error).stack.split("\n"); // console.log(mStack)
 //     var  aRow   =  mStack[ n ? n : 2 ] || ''
        var  mFName = (mStack[ n ? n : 1] || '').match( /at (.+) \(/ )
     return  mFName ?  mFName[1] : ""
-        }                                                                                                   // .(30529.01.6 End)
+        }                                                                                                   // .(30529.01.7 End)
 //  ------  ---- ----- =  ------|  -------------------------------- ------------------- ------------------+
 
    function init( pApp, pDB_Config, bQuiet_, aAPI_ ) {                                                      // .(30410.03.3 RAM async).(30412.02.1)
@@ -755,7 +757,7 @@
 //     var  __filepath =  process.argv[1]                                                                   //#.(30315.01.1)
        var  __filepath =  new Error().stack.match( /IODD-Server_u.+\.mjs/ )[0]                              // .(30315.01.1 RAM get correct running server file)
 //     var  __filepath =  new Error().stack.match( /C:.+api\/IODD-Server_u.+\.mjs/ )[0]                     //#.(30315.01.2)
-            __filepath = `${__dirname.replace( /assets\/mjs\//, "" )}/${__filepath }`                       // .(30315.01.2).(30329.02.1 RAM Remove doubling of //s)
+            __filepath = `${__dirname.replace( /assets\/mjs\//, "" )}/${__filepath }`                       // .(30529.02.1 RAM Remove doubling of //s).(30315.01.2)
             console.log(   `    Server is running in: ${__filepath}\n` )                                    // .(30214.03.10 RAM Display root dir).(30315.01.3)
 
        var  bLocal     =  aAPI_Host == '',  aLocation = ''                                                  // .(30315.02.1 RAM Beg Check if running locally)
